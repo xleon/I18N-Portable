@@ -1,2 +1,2 @@
 # I18N
-Basic and easy internationalization mechanism for mobile apps
+Basic cross platform internationalization utility for mobile apps
