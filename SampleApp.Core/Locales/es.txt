@@ -1,0 +1,9 @@
+﻿one = uno
+two = dos
+three = tres
+four = cuatro
+five = cinco
+
+es = Español
+en = Inglés
+fr = Francés
