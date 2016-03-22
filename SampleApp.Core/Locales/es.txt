@@ -4,8 +4,8 @@ three = tres
 four = cuatro
 five = cinco
 
-es = Español
-en = Inglés
-fr = Francés
+# es = Español
+# en = Inglés
+# fr = Francés
 
 stars.count = Tienes {0} estrellas

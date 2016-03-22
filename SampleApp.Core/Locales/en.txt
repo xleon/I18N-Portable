@@ -4,8 +4,8 @@ three = three
 four = four
 five = five
 
-es = Spanish
-en = English
-fr = French
+# es = Spanish
+# en = English
+# fr = French
 
 stars.count = You´ve got {0} stars

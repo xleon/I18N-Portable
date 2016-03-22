@@ -9,7 +9,7 @@ namespace SampleApp.Core
 	    public App()
 	    {
 			I18N.Current.Init(GetType().GetTypeInfo().Assembly);
-		    var languages = I18N.Current.GetLanguages();
+		    var languages = I18N.Current.Languages;
 		    var one = "one".Translate();
 
 			Debug.WriteLine(one);

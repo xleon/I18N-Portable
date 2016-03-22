@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace I18NPortable
 {
-	public class I18N
+	public class I18N // TODO implement INotifyPropertyChanged (for CurrentLanguage, Languages)
 	{
 		#region Singleton
 
@@ -19,6 +19,27 @@ namespace I18NPortable
 				new I18N());
 
 		#endregion
+
+		public Language CurrentLanguage { get; set; }
+
+		private List<Language> _languages;
+
+		public List<Language> Languages
+		{
+			get
+			{
+				if(_languages != null) return _languages;
+
+				var languages = _locales.Select(x => new Language
+					{ Locale = x.Key, DisplayName = TranslateOrNull(x.Key) ?? new CultureInfo(x.Key).NativeName.CapitalizeFirstLetter() })
+					.ToList();
+
+				if (languages.Count > 0)
+					_languages = languages;
+
+				return _languages;
+			}
+		}
 
 		private readonly Dictionary<string, string> _translations = new Dictionary<string, string>();
 		private readonly Dictionary<string, string> _locales = new Dictionary<string, string>();
@@ -167,8 +188,16 @@ namespace I18NPortable
 			return $"{_notFoundSymbol}{key}{_notFoundSymbol}";
 		}
 
-		public IEnumerable<Language> GetLanguages() => 
-			_locales.Select(x => new Language {Locale = x.Key, DisplayName = Translate(x.Key)}).ToList();
+		public string TranslateOrNull(string key, params object[] args) => 
+			_translations.ContainsKey(key) 
+				? (args.Length == 0 ? _translations[key] : string.Format(_translations[key], args)) 
+				: null;
+
+		public Dictionary<T, string> TranslateEnum<T>(T enumType)
+		{
+			// TODO 
+			return null;
+		}
 
 		#endregion
 
@@ -187,7 +216,7 @@ namespace I18NPortable
 				|| x.Key.Equals(threeLetterIsoName) // ISO 639-2 three-letter code. i.e: "spa"
 				|| x.Key.Equals(threeLetterWindowsName)); // "ESP"
 
-			return valuePair.Value;
+			return valuePair.Key;
 		}
 
 		#endregion
