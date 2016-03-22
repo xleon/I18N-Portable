@@ -8,4 +8,10 @@ five = cinco
 # en = Inglés
 # fr = Francés
 
+Animals.Dog = Perro
+Animals.Cat = Gato
+Animals.Rat = Rata
+Animals.Tiger = Tigre
+Animals.Monkey = Mono
+
 stars.count = Tienes {0} estrellas

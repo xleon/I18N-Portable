@@ -4,6 +4,15 @@ using I18NPortable;
 
 namespace SampleApp.Core
 {
+	public enum Animals
+	{
+		Dog,
+		Cat,
+		Rat,
+		Tiger,
+		Monkey	
+	}
+
 	public class App
     {
 	    public App()
@@ -11,6 +20,8 @@ namespace SampleApp.Core
 			I18N.Current.Init(GetType().GetTypeInfo().Assembly);
 		    var languages = I18N.Current.Languages;
 		    var one = "one".Translate();
+
+		    var enumTranslation = I18N.Current.TranslateEnum<Animals>();
 
 			Debug.WriteLine(one);
 	    }

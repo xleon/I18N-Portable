@@ -7,9 +7,6 @@ namespace I18NPortable
 		public static string Translate(this string key, params object[] args) => 
 			I18N.Current.Translate(key, args);
 
-		public static Dictionary<T, string> TranslateEnum<T>(this T enumType) => 
-			new Dictionary<T, string>();
-
 		public static string CapitalizeFirstLetter(this string s)
 		{
 			if (string.IsNullOrEmpty(s)) return s;
