@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace I18NPortable
+﻿namespace I18NPortable
 {
 	public static class Extensions
 	{

@@ -23,7 +23,7 @@ namespace I18NPortable
 		public Language CurrentLanguage { get; set; }
 
 		private List<Language> _languages;
-		public List<Language> Languages
+		public IEnumerable<Language> Languages
 		{
 			get
 			{
