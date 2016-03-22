@@ -7,3 +7,5 @@ five = cinco
 es = Español
 en = Inglés
 fr = Francés
+
+stars.count = Tienes {0} estrellas

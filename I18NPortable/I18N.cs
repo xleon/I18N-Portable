@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -68,12 +69,19 @@ namespace I18NPortable
 
 			if (string.IsNullOrEmpty(_defaultLocale))
 			{
-				_defaultLocale = _locales.Keys.ToArray()[0];
-				Log("No default locale explicitly set. Getting the first on the list: {0}", _defaultLocale);
+				_defaultLocale = GetDefaultLocaleFromCurrentCulture();
+
+				if(_defaultLocale != null)
+					Log($"Default locale from current culture: {_defaultLocale}");
+				else
+				{
+					_defaultLocale = _locales.Keys.ToArray()[0];
+					Log($"No default locale explicitly set. Using the first on the list: {_defaultLocale}");
+				}
 			}
 			else
 			{
-				Log("Default locale: {0}", _defaultLocale);
+				Log($"Default locale: {_defaultLocale}");
 			}	
 
 			LoadLocale(_defaultLocale);
@@ -97,7 +105,7 @@ namespace I18NPortable
 			if (localeResourceNames.Length == 0)
 			{
 				throw new Exception("No locales have been found. Make sure you´ve got a folder " +
-									"called 'Locales' containing .txt files in your assembly ");
+									"called 'Locales' containing .txt files in the host PCL assembly");
 			}
 
 			foreach (var resource in localeResourceNames)
@@ -164,6 +172,26 @@ namespace I18NPortable
 
 		#endregion
 
+		#region Helpers
+
+		private string GetDefaultLocaleFromCurrentCulture()
+		{
+			var currentCulture = CultureInfo.CurrentCulture;
+
+			// only available in runtime (not from PCL) // TODO (runtime properties are working in iOS, test other platforms)
+			var threeLetterIsoName = currentCulture.GetType().GetRuntimeProperty("ThreeLetterISOLanguageName").GetValue(currentCulture);
+			var threeLetterWindowsName = currentCulture.GetType().GetRuntimeProperty("ThreeLetterWindowsLanguageName").GetValue(currentCulture);
+
+			var valuePair = _locales.FirstOrDefault(x => x.Key.Equals(currentCulture.Name) // i.e: "es-ES", "en-US"
+				|| x.Key.Equals(currentCulture.TwoLetterISOLanguageName) // ISO 639-1 two-letter code. i.e: "es"
+				|| x.Key.Equals(threeLetterIsoName) // ISO 639-2 three-letter code. i.e: "spa"
+				|| x.Key.Equals(threeLetterWindowsName)); // "ESP"
+
+			return valuePair.Value;
+		}
+
+		#endregion
+
 		#region Logging
 
 		private void LogTranslations()
@@ -175,10 +203,10 @@ namespace I18NPortable
 				Log($"{item.Key} = {item.Value}");
 		}
 
-		private void Log(string trace, params object[] args)
+		private void Log(string trace)
 		{
 			if (_logEnabled)
-				Debug.WriteLine($"[{nameof(I18N)}] {trace}", args);
+				Debug.WriteLine($"[{nameof(I18N)}] {trace}");
 		}
 
 		#endregion

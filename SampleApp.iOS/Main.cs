@@ -1,4 +1,5 @@
-﻿using UIKit;
+﻿using System.Globalization;
+using UIKit;
 
 namespace SampleApp.iOS
 {

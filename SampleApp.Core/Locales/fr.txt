@@ -1,0 +1,11 @@
+﻿one = un
+two = deux
+three = trois
+four = quatre
+five = cinq
+
+es = Espagnol
+en = Anglais
+fr = Français
+
+stars.count = Vous avez {0} étoiles
