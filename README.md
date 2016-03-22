@@ -1,17 +1,21 @@
-# I18NPortable
+## I18NPortable
 Simple Cross platform internationalization for Xamarin apps
 
-# Features
+### Features
 
 - Forget string duplication across platform projects. Your locale files will live in a PCL of your choice
-- Simple to use: `var tranlation = "someKey".Translate();`
+- Simple to use: `var tranlation = "key".Translate();`
 - Simple editing: just text. No json, no xml. i.e: `home.username.label = User name`
 - A single file for all translations
 - Default locale will be loaded acording to the system user language (unless you explicitly set one)
 - Bindable list of available languages (for UI language pickers)
 - Enum translations (for UI pickers, lists, etc)
 
-# FAQ
+### Install
+
+Nuget: // todo
+
+### FAQ
 
 **What´s wrong with Resx files?**
 
