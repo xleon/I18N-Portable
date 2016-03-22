@@ -3,10 +3,35 @@ Simple Cross platform internationalization for Xamarin apps
 
 # Features
 
-- No strings duplication across platform projects. Your locale files will live in the "core" (pcl) project
+- Forget string duplication across platform projects. Your locale files will live in a PCL of your choice
 - Simple to use: `var tranlation = "someKey".Translate();`
-- Simple editing: just text, no json, no xml. i.e: `home.username.label = User name`
-- Auto loads locales based on the system current culture
-- Auto list of available languages (bindable)
+- Simple editing: just text. No json, no xml. i.e: `home.username.label = User name`
+- A single file for all translations
+- Default locale will be loaded acording to the system user language (unless you explicitly set one)
+- Bindable list of available languages (for UI language pickers)
 - Enum translations (for UI pickers, lists, etc)
+
+# FAQ
+
+**What´s wrong with Resx files?**
+
+You like Resx format? go for it :)
+
+**Can I bind translations in my view/view models?**
+
+Yes
+
+**Can I place locales in non PCL projects?**
+
+Yes, but what´s the point? This library is intended to share locales/translations across different projects. 
+Otherwise it´s better to use the built-in localization systems
+
+**Can I use this with Mvvmcross?**
+
+You should
+
+**Can I separate translations in different files?**
+
+No. The goal of this library is to keep things simple. If you need such funcionality, there are alternatives out there.
+
 
