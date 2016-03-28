@@ -10,6 +10,7 @@ Simple Cross platform internationalization for Xamarin apps
 - Default locale will be loaded acording to the system user language (unless you explicitly set one)
 - Bindable list of available languages (for UI language pickers)
 - Enum translations (for UI pickers, lists, etc)
+- No external dependencies
 
 ### Install
 
@@ -19,7 +20,7 @@ Nuget: // todo
 
 **What´s wrong with Resx files?**
 
-You like Resx format? go for it :)
+Nothing. If you like Resx format go for it :)
 
 **Can I bind translations in my view/view models?**
 
@@ -32,7 +33,7 @@ Otherwise it´s better to use the built-in localization systems
 
 **Can I use this with Mvvmcross?**
 
-You should
+Yes. Read below for more info
 
 **Can I separate translations in different files?**
 

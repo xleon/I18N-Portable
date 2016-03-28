@@ -8,28 +8,52 @@ using System.Reflection;
 
 namespace I18NPortable
 {
-	public class I18N // TODO implement INotifyPropertyChanged (for CurrentLanguage, Languages)
+	// TODO implement INotifyPropertyChanged (for CurrentLanguage, Languages)?
+	// TODO implement bindable indexer for real time updates?
+	public class I18N 
 	{
 		#region Singleton
 
 		public static I18N Current => I18NInstance.Value;
 
 		// Lazy initialization ensures I18NPortableInstance creation is threadsafe
-		private static readonly Lazy<I18N> I18NInstance = new Lazy<I18N>(() =>
-				new I18N());
+		private static readonly Lazy<I18N> I18NInstance = new Lazy<I18N>(() => new I18N());
 
 		#endregion
 
-		public Language CurrentLanguage { get; set; }
+		public string this[string key] => Translate(key);
 
-		private List<Language> _languages;
-		public IEnumerable<Language> Languages
+		public PortableLanguage CurrentLanguage
+		{
+			get
+			{
+				return Languages.FirstOrDefault(x => x.Locale.Equals(_currentLocale));
+			}
+			set
+			{
+				LoadLocale(value.Locale); 
+				// TODO notifypropertychanged
+			}
+		}
+
+		private string _currentLocale;
+		public string CurrentLocale
+		{
+			get { return _currentLocale; }
+			set
+			{
+				LoadLocale(value);
+			}
+		}
+
+		private List<PortableLanguage> _languages;
+		public IEnumerable<PortableLanguage> Languages
 		{
 			get
 			{
 				if(_languages != null) return _languages;
 
-				var languages = _locales.Select(x => new Language
+				var languages = _locales.Select(x => new PortableLanguage
 					{ Locale = x.Key, DisplayName = TranslateOrNull(x.Key) ?? new CultureInfo(x.Key).NativeName.CapitalizeFirstLetter() })
 					.ToList();
 
@@ -46,13 +70,17 @@ namespace I18NPortable
 		private bool _logEnabled = true;
 		private bool _throwWhenKeyNotFound;
 		private string _notFoundSymbol = "?";
-		private string _defaultLocale;
-		private string _currentLocale;
+		private string _fallbackLocale;
 
 		private I18N() {}
 
 		#region Fluent API
 
+		/// <summary>
+		/// Set the symbol to wrap a key when not found. ie: if you set "##", a not found key will
+		/// be translated as "##key##". 
+		/// The default symbol is "?"
+		/// </summary>
 		public I18N SetNotFoundSymbol(string symbol)
 		{
 			if (!string.IsNullOrEmpty(symbol))
@@ -60,48 +88,65 @@ namespace I18NPortable
 			return this;
 		}
 
+		/// <summary>
+		/// Enable/disable log traces
+		/// </summary>
 		public I18N SetLogEnabled(bool enabled)
 		{
 			_logEnabled = enabled;
 			return this;
 		}
 
+		/// <summary>
+		/// Throw an exception whenever a key is not found in the locale file (fail early, fail fast)
+		/// </summary>
 		public I18N SetThrowWhenKeyNotFound(bool enabled)
 		{
 			_throwWhenKeyNotFound = enabled;
 			return this;
 		}
 
-		public I18N SetDefaultLocale(string locale)
+		/// <summary>
+		/// Set the locale that will be loaded in case the system language is not supported
+		/// </summary>
+		public I18N SetFallbackLocale(string locale)
 		{
-			_defaultLocale = locale;
+			_fallbackLocale = locale;
 			return this;
 		}
 
+		/// <summary>
+		/// Call this at your app initialiation 
+		/// ie: I18N.Current.Init(GetType().GetTypeInfo().Assembly);
+		/// </summary>
+		/// <param name="hostAssembly">The PCL assembly that hosts the locale text files</param>
 		public I18N Init(Assembly hostAssembly)
 		{
 			DiscoverLocales(hostAssembly);
 
 			_hostAssembly = hostAssembly;
 
-			if (string.IsNullOrEmpty(_defaultLocale))
-			{
-				_defaultLocale = GetDefaultLocaleFromCurrentCulture();
+			var localeToLoad = GetDefaultLocaleFromCurrentCulture();
 
-				if(_defaultLocale != null)
-					Log($"Default locale from current culture: {_defaultLocale}");
+			if (string.IsNullOrEmpty(localeToLoad))
+			{
+				if (!string.IsNullOrEmpty(_fallbackLocale) && _locales.ContainsKey(_fallbackLocale))
+				{
+					localeToLoad = _fallbackLocale;
+					Log($"Loading fallback locale: {_fallbackLocale}");
+				}
 				else
 				{
-					_defaultLocale = _locales.Keys.ToArray()[0];
-					Log($"No default locale explicitly set. Using the first on the list: {_defaultLocale}");
+					localeToLoad = _locales.Keys.ToArray()[0];
+					Log($"Loading first locale on the list: {localeToLoad}");
 				}
 			}
 			else
 			{
-				Log($"Default locale: {_defaultLocale}");
+				Log($"Default locale from current culture: {localeToLoad}");
 			}	
 
-			LoadLocale(_defaultLocale);
+			LoadLocale(localeToLoad);
 
 			return this;
 		}
@@ -136,7 +181,7 @@ namespace I18NPortable
 			Log($"Found {localeResourceNames.Length} locales: {string.Join(", ", _locales.Keys.ToArray())}");
 		}
 
-		public void LoadLanguage(Language language) => LoadLocale(language.Locale);
+		public void LoadLanguage(PortableLanguage portableLanguage) => LoadLocale(portableLanguage.Locale);
 
 		public void LoadLocale(string locale)
 		{
@@ -149,6 +194,8 @@ namespace I18NPortable
 			LoadTranslations(stream);
 
 			_currentLocale = locale;
+
+			// OnPropertyChanged("Item[]"); // TODO real time updates
 		}
 
 		private void LoadTranslations(Stream stream)
