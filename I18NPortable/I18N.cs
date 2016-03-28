@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -8,9 +9,7 @@ using System.Reflection;
 
 namespace I18NPortable
 {
-	// TODO implement INotifyPropertyChanged (for CurrentLanguage, Languages)?
-	// TODO implement bindable indexer for real time updates?
-	public class I18N 
+	public class I18N : INotifyPropertyChanged
 	{
 		#region Singleton
 
@@ -21,18 +20,28 @@ namespace I18NPortable
 
 		#endregion
 
+		// PropertyChanged
+		public event PropertyChangedEventHandler PropertyChanged;
+		private void NotifyPropertyChanged(string info) => 
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
+
+		// Indexer
 		public string this[string key] => Translate(key);
 
 		public PortableLanguage CurrentLanguage
 		{
-			get
-			{
-				return Languages.FirstOrDefault(x => x.Locale.Equals(_currentLocale));
-			}
+			get { return Languages.FirstOrDefault(x => x.Locale.Equals(_currentLocale)); }
 			set
 			{
-				LoadLocale(value.Locale); 
-				// TODO notifypropertychanged
+				if (CurrentLanguage.Locale == value.Locale)
+				{
+					Log($"{value.DisplayName} is the current language. No actions will be taken");
+					return;
+				}
+
+				LoadLocale(value.Locale);
+				NotifyPropertyChanged("CurrentLocale");
+				NotifyPropertyChanged("CurrentLanguage");
 			}
 		}
 
@@ -42,7 +51,15 @@ namespace I18NPortable
 			get { return _currentLocale; }
 			set
 			{
+				if (_currentLocale == value)
+				{
+					Log($"{value} is the current locale. No actions will be taken");
+					return;
+				}
+
 				LoadLocale(value);
+				NotifyPropertyChanged("CurrentLocale");
+				NotifyPropertyChanged("CurrentLanguage");
 			}
 		}
 
@@ -148,6 +165,9 @@ namespace I18NPortable
 
 			LoadLocale(localeToLoad);
 
+			NotifyPropertyChanged("CurrentLocale");
+			NotifyPropertyChanged("CurrentLanguage");
+
 			return this;
 		}
 
@@ -181,9 +201,9 @@ namespace I18NPortable
 			Log($"Found {localeResourceNames.Length} locales: {string.Join(", ", _locales.Keys.ToArray())}");
 		}
 
-		public void LoadLanguage(PortableLanguage portableLanguage) => LoadLocale(portableLanguage.Locale);
+		private void LoadLanguage(PortableLanguage portableLanguage) => LoadLocale(portableLanguage.Locale);
 
-		public void LoadLocale(string locale)
+		private void LoadLocale(string locale)
 		{
 			if (!_locales.ContainsKey(locale))
 				throw new KeyNotFoundException($"Locale '{locale}' is not available");
@@ -195,11 +215,13 @@ namespace I18NPortable
 
 			_currentLocale = locale;
 
-			// OnPropertyChanged("Item[]"); // TODO real time updates
+			NotifyPropertyChanged("Item[]");
 		}
 
 		private void LoadTranslations(Stream stream)
 		{
+			_translations.Clear();
+
 			using (var streamReader = new StreamReader(stream))
 			{
 				while (!streamReader.EndOfStream)
