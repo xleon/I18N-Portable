@@ -28,38 +28,38 @@ namespace I18NPortable
 		// Indexer
 		public string this[string key] => Translate(key);
 
-		public PortableLanguage CurrentLanguage
+		public PortableLanguage Language
 		{
-			get { return Languages.FirstOrDefault(x => x.Locale.Equals(_currentLocale)); }
+			get { return Languages.FirstOrDefault(x => x.Locale.Equals(_locale)); }
 			set
 			{
-				if (CurrentLanguage.Locale == value.Locale)
+				if (Language.Locale == value.Locale)
 				{
 					Log($"{value.DisplayName} is the current language. No actions will be taken");
 					return;
 				}
 
 				LoadLocale(value.Locale);
-				NotifyPropertyChanged("CurrentLocale");
-				NotifyPropertyChanged("CurrentLanguage");
+				NotifyPropertyChanged("Locale");
+				NotifyPropertyChanged("Language");
 			}
 		}
 
-		private string _currentLocale;
-		public string CurrentLocale
+		private string _locale;
+		public string Locale
 		{
-			get { return _currentLocale; }
+			get { return _locale; }
 			set
 			{
-				if (_currentLocale == value)
+				if (_locale == value)
 				{
 					Log($"{value} is the current locale. No actions will be taken");
 					return;
 				}
 
 				LoadLocale(value);
-				NotifyPropertyChanged("CurrentLocale");
-				NotifyPropertyChanged("CurrentLanguage");
+				NotifyPropertyChanged("Locale");
+				NotifyPropertyChanged("Language");
 			}
 		}
 
@@ -165,8 +165,8 @@ namespace I18NPortable
 
 			LoadLocale(localeToLoad);
 
-			NotifyPropertyChanged("CurrentLocale");
-			NotifyPropertyChanged("CurrentLanguage");
+			NotifyPropertyChanged("Locale");
+			NotifyPropertyChanged("Language");
 
 			return this;
 		}
@@ -213,8 +213,9 @@ namespace I18NPortable
 
 			LoadTranslations(stream);
 
-			_currentLocale = locale;
+			_locale = locale;
 
+			// Update bindings to indexer (useful from views in mvvm frameworks)
 			NotifyPropertyChanged("Item[]");
 		}
 
@@ -248,7 +249,7 @@ namespace I18NPortable
 				return args.Length == 0 ? _translations[key] : string.Format(_translations[key], args);
 
 			if(_throwWhenKeyNotFound)
-				throw new KeyNotFoundException($"[{nameof(I18N)}] key '{key}' not found in the current language '{_currentLocale}'");
+				throw new KeyNotFoundException($"[{nameof(I18N)}] key '{key}' not found in the current language '{_locale}'");
 
 			return $"{_notFoundSymbol}{key}{_notFoundSymbol}";
 		}
@@ -280,7 +281,7 @@ namespace I18NPortable
 		{
 			var currentCulture = CultureInfo.CurrentCulture;
 
-			// only available in runtime (not from PCL) // TODO (runtime properties are working in iOS, test other platforms)
+			// only available in runtime (not from PCL) // TODO (runtime properties are working in iOS and android, test other platforms)
 			var threeLetterIsoName = currentCulture.GetType().GetRuntimeProperty("ThreeLetterISOLanguageName").GetValue(currentCulture);
 			var threeLetterWindowsName = currentCulture.GetType().GetRuntimeProperty("ThreeLetterWindowsLanguageName").GetValue(currentCulture);
 
