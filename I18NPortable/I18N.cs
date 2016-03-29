@@ -281,14 +281,14 @@ namespace I18NPortable
 		{
 			var currentCulture = CultureInfo.CurrentCulture;
 
-			// only available in runtime (not from PCL) // TODO (runtime properties are working in iOS and android, test other platforms)
-			var threeLetterIsoName = currentCulture.GetType().GetRuntimeProperty("ThreeLetterISOLanguageName").GetValue(currentCulture);
-			var threeLetterWindowsName = currentCulture.GetType().GetRuntimeProperty("ThreeLetterWindowsLanguageName").GetValue(currentCulture);
+			// only available in runtime (not from PCL) on the simulator
+			// var threeLetterIsoName = currentCulture.GetType().GetRuntimeProperty("ThreeLetterISOLanguageName").GetValue(currentCulture);
+			// var threeLetterWindowsName = currentCulture.GetType().GetRuntimeProperty("ThreeLetterWindowsLanguageName").GetValue(currentCulture);
 
 			var valuePair = _locales.FirstOrDefault(x => x.Key.Equals(currentCulture.Name) // i.e: "es-ES", "en-US"
-				|| x.Key.Equals(currentCulture.TwoLetterISOLanguageName) // ISO 639-1 two-letter code. i.e: "es"
-				|| x.Key.Equals(threeLetterIsoName) // ISO 639-2 three-letter code. i.e: "spa"
-				|| x.Key.Equals(threeLetterWindowsName)); // "ESP"
+				|| x.Key.Equals(currentCulture.TwoLetterISOLanguageName)); // ISO 639-1 two-letter code. i.e: "es"
+				// || x.Key.Equals(threeLetterIsoName) // ISO 639-2 three-letter code. i.e: "spa"
+				// || x.Key.Equals(threeLetterWindowsName)); // "ESP"
 
 			return valuePair.Key;
 		}
