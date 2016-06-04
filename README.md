@@ -115,15 +115,15 @@ The easiest way to bind your views to `I18N` translations is to create a propert
     
  You will get live updates when loading another locale at run time because `I18N` implements `INotifyPropertyChanged`.
 
-** Xaml sample**
+**Xaml sample**
 
     <Button Content="{Binding Strings[key]}" />
     
-** Android/MvvmCross sample **
+**Android/MvvmCross sample**
 
     <TextView local:MvxBind="Text Strings[key]" />
                 
-** iOS/MvvmCross sample **
+**iOS/MvvmCross sample**
 
     var set = this.CreateBindingSet<YourView, YourViewModel>();
     set.Bind(anyUIText).To("Strings[key]");
