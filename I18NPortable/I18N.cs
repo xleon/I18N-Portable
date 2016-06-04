@@ -59,13 +59,14 @@ namespace I18NPortable
 				}
 
 				LoadLocale(value);
+
 				NotifyPropertyChanged("Locale");
 				NotifyPropertyChanged("Language");
 			}
 		}
 
 		private List<PortableLanguage> _languages;
-		public IEnumerable<PortableLanguage> Languages
+		public List<PortableLanguage> Languages
 		{
 			get
 			{
@@ -202,7 +203,8 @@ namespace I18NPortable
 			Log($"Found {localeResourceNames.Length} locales: {string.Join(", ", _locales.Keys.ToArray())}");
 		}
 
-		private void LoadLanguage(PortableLanguage portableLanguage) => LoadLocale(portableLanguage.Locale);
+		private void LoadLanguage(PortableLanguage portableLanguage) => 
+			LoadLocale(portableLanguage.Locale);
 
 		private void LoadLocale(string locale)
 		{
@@ -302,7 +304,7 @@ namespace I18NPortable
 		{
 			if (!_logEnabled) return;
 
-			Log("========== I18N translations ==========");
+			Log("========== I18NPortable translations ==========");
 			foreach (var item in _translations)
 				Log($"{item.Key} = {item.Value}");
 		}
