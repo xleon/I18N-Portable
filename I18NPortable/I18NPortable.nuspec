@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>I18NPortable</id>
+    <version>0.1.4</version>
+    <title>I18NPortable</title>
+    <authors>Diego Ponce de Leon</authors>
+    <owners>Diego Ponce de Leon</owners>
+    <licenseUrl>https://github.com/xleon/I18N-Portable/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/xleon/I18N-Portable</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Simple cross platform internationalization/translations for Xamarin and Windows apps</description>
+    <releaseNotes>List of languages is now a generic list</releaseNotes>
+    <copyright>Copyright 2016</copyright>
+    <tags>I18N, Internationalization, Translations, Xamarin, Xamarin.Forms, Mvvm, MvvmCross, Xamarin.iOS, Xamarin.Android, iOS, Android, UWP, Windows Universal</tags>
+  </metadata>
+	<files>
+		<!-- portable -->
+		<file src=".\bin\Release\I18NPortable.dll" target="lib\portable-net45+win+wp80+Wpa81+MonoAndroid10+MonoTouch1+Xamarin.iOS\I18NPortable.dll" />
+		<file src=".\bin\Release\I18NPortable.pdb" target="lib\portable-net45+win+wp80+Wpa81+MonoAndroid10+MonoTouch1+Xamarin.iOS\I18NPortable.pdb" />
+		<file src=".\**\*.cs" target="src\I18NPortable" />
+	</files>
+</package>
