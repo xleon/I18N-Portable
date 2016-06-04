@@ -86,7 +86,11 @@ Option 2: pass a `PortableLanguage` instance coming from `I18N.Current.Languages
 
     var language = I18N.Current.Languages[1];
 	I18N.Current.Language = language;
+    
+You can also get the current language/locale:
 
+    var currentLanguage = I18N.Current.Language;
+    var currentLocale = I18N.Current.Locale;
     
 ### Get translations
 
@@ -103,9 +107,17 @@ reproducing `string.Format(params object[] args)` functionality:
     var notification = "Mailbox.Notification".Translate("Diego", 3);
     var notification2 = I18N.Current.Translate("Mailbox.Notification", "Maria", 5);
     
+If the key your are looking for is not present in the current locale, you´ll get the following:
+
+    "?key?"
+    
+You can change the symbol to show when a key is not found:
+
+    I18N.Current.SetNotFoundSymbol("$$"); 
+    
 ### Data binding and MvvM frameworks
     
-The easiest way to bind your views to `I18N` translations is to create a property in your ViewModel as proxy:
+The easiest way to bind your views to `I18N` translations is to create a property in your ViewModel as a proxy:
 
     public abstract class BaseViewModel
 	{
@@ -131,7 +143,61 @@ The easiest way to bind your views to `I18N` translations is to create a propert
 
     var set = this.CreateBindingSet<YourView, YourViewModel>();
     set.Bind(anyUIText).To("Strings[key]");
+
+### Misc
+
+**Disable log**
+
+    I18N.Current.SetLogEnabled(false);
     
+**Throw an exception whenever a key is not found**
+
+If you prefer to get exceptions rather than not found symbols (like "?"):
+
+    I18N.Current.SetThrowWhenKeyNotFound(true);
+    
+**TranslateOrNull**
+
+If you want to get null when a key is not found:
+
+    var fake = "anyKey".TranslateOrNull();
+    var fake2 = I18N.Current.TranslateOrNull("anyKey");
+
+**Fluent initialization**
+
+    I18N.Current
+        .SetLogEnabled(false)
+        .SetThrowWhenKeyNotFound(true)
+        .SetNotFoundSymbol("$$")
+        .SetFallbackLocale("en")
+        .Init(GetType().GetTypeInfo().Assembly);
+        
+**Translate Enum**
+
+Given this enum:
+
+    public enum Animals
+	{
+		Dog,
+		Cat,
+		Rat,
+		Tiger,
+		Monkey
+	}
+    
+and these lines in your locale text file:
+
+    Animals.Dog = Perro
+    Animals.Cat = Gato
+    Animals.Rat = Rata
+    Animals.Tiger = Tigre
+    Animals.Monkey = Mono
+    
+You can get a `Dictionary<T, string>` where T is the enum value:
+
+    var animals = I18N.Current.TranslateEnum<Animals>();
+	var monkey = animals[Animals.Monkey]; // Mono
+
 ### TODO
 
 - Sample projects
