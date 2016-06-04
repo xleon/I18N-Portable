@@ -83,8 +83,8 @@ namespace I18NPortable
 			}
 		}
 
-		private readonly Dictionary<string, string> _translations = new Dictionary<string, string>();
-		private readonly Dictionary<string, string> _locales = new Dictionary<string, string>();
+		private Dictionary<string, string> _translations;
+		private Dictionary<string, string> _locales;
 		private Assembly _hostAssembly;
 		private bool _logEnabled = true;
 		private bool _throwWhenKeyNotFound;
@@ -141,6 +141,8 @@ namespace I18NPortable
 		/// <param name="hostAssembly">The PCL assembly that hosts the locale text files</param>
 		public I18N Init(Assembly hostAssembly)
 		{
+			Unload();
+
 			DiscoverLocales(hostAssembly);
 
 			_hostAssembly = hostAssembly;
@@ -308,7 +310,7 @@ namespace I18NPortable
 			foreach (var item in _translations)
 				Log($"{item.Key} = {item.Value}");
 		}
-
+		 
 		private void Log(string trace)
 		{
 			if (_logEnabled)
@@ -316,5 +318,11 @@ namespace I18NPortable
 		}
 
 		#endregion
+
+		public void Unload()
+		{
+			_translations = new Dictionary<string, string>();
+			_locales = new Dictionary<string, string>();
+		}
 	}
 }
