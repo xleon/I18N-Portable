@@ -30,7 +30,7 @@ namespace I18NPortable
 
 		public PortableLanguage Language
 		{
-			get { return Languages.FirstOrDefault(x => x.Locale.Equals(_locale)); }
+			get { return Languages.FirstOrDefault(x => x.Locale.Equals(Locale)); }
 			set
 			{
 				if (Language.Locale == value.Locale)
@@ -40,6 +40,7 @@ namespace I18NPortable
 				}
 
 				LoadLocale(value.Locale);
+
 				NotifyPropertyChanged("Locale");
 				NotifyPropertyChanged("Language");
 			}
