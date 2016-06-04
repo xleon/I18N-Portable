@@ -119,6 +119,10 @@ The easiest way to bind your views to `I18N` translations is to create a propert
 
     <Button Content="{Binding Strings[key]}" />
     
+**Xamarin.Forms sample**
+
+    <Button Text="{Binding Strings[key]}" />`
+    
 **Android/MvvmCross sample**
 
     <TextView local:MvxBind="Text Strings[key]" />
