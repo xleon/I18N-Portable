@@ -135,7 +135,7 @@ namespace I18NPortable
 		}
 
 		/// <summary>
-		/// Call this at your app initialiation 
+		/// Call this at your app initialization 
 		/// ie: I18N.Current.Init(GetType().GetTypeInfo().Assembly);
 		/// </summary>
 		/// <param name="hostAssembly">The PCL assembly that hosts the locale text files</param>
