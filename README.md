@@ -117,7 +117,7 @@ You can change the symbol to show when a key is not found:
     
 ### Data binding and MvvM frameworks
     
-The easiest way to bind your views to `I18N` translations is to create a property in your ViewModel as a proxy:
+The easiest way to bind your views to `I18N` translations is to use the built-in indexer by creating a proxy property in your ViewModel:
 
     public abstract class BaseViewModel
 	{
@@ -125,7 +125,7 @@ The easiest way to bind your views to `I18N` translations is to create a propert
         ...
     }
     
- You will get live updates when loading another locale at run time because `I18N` implements `INotifyPropertyChanged`.
+ You will get live updates when loading another locale at run time because `I18N.Current` implements `INotifyPropertyChanged` and references to the indexer will be updated.
 
 **Xaml sample**
 
