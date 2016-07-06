@@ -146,9 +146,10 @@ The easiest way to bind your views to `I18N` translations is to create a propert
 
 ### Misc
 
-**Disable log**
+**Enable logger**
 
-    I18N.Current.SetLogEnabled(false);
+    Action<string> logger = text => Debug.WriteLine(text);
+    I18N.Current.SetLogger(logger);
     
 **Throw an exception whenever a key is not found**
 

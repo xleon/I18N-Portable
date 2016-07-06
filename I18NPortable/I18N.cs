@@ -90,6 +90,7 @@ namespace I18NPortable
 		private bool _throwWhenKeyNotFound;
 		private string _notFoundSymbol = "?";
 		private string _fallbackLocale;
+		private Action<string> _logger;
 
 		private I18N() {}
 
@@ -108,11 +109,12 @@ namespace I18NPortable
 		}
 
 		/// <summary>
-		/// Enable/disable log traces
+		/// Enable I18N logs
 		/// </summary>
-		public I18N SetLogEnabled(bool enabled)
+		/// <param name="output">Action to be invoked as the output of the logger</param>
+		public I18N SetLogger(Action<string> output)
 		{
-			_logEnabled = enabled;
+			_logger = output;
 			return this;
 		}
 
@@ -314,7 +316,7 @@ namespace I18NPortable
 		private void Log(string trace)
 		{
 			if (_logEnabled)
-				Debug.WriteLine($"[{nameof(I18N)}] {trace}");
+				_logger?.Invoke($"[{nameof(I18N)}] {trace}");
 		}
 
 		#endregion
@@ -323,6 +325,8 @@ namespace I18NPortable
 		{
 			_translations = new Dictionary<string, string>();
 			_locales = new Dictionary<string, string>();
+
+			_logger?.Invoke($"[{nameof(I18N)}] Unloaded");
 		}
 	}
 }
