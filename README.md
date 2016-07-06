@@ -171,6 +171,7 @@ If you want to get null when a key is not found:
         .SetThrowWhenKeyNotFound(true)
         .SetNotFoundSymbol("$$")
         .SetFallbackLocale("en")
+		.SetLogger(text => Debug.WriteLine(text))
         .Init(GetType().GetTypeInfo().Assembly);
         
 **Translate Enum**
