@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -153,6 +154,19 @@ namespace I18NPortable.Tests
 			Assert.AreEqual("Perro", animals[Animals.Dog]);
 			Assert.AreEqual("Gato", animals[Animals.Cat]);
 			Assert.AreEqual("Rata", animals[Animals.Rat]);
+		}
+
+		[TestMethod]
+		public void Logger_CanBeSet_AsAction()
+		{
+			var logs = new List<string>();
+			Action<string> logger = text => logs.Add(text);
+
+			I18N.Current.SetLogger(logger);
+			I18N.Current.Locale = "en";
+			I18N.Current.Locale = "es";
+
+			Assert.IsTrue(logs.Count > 0);
 		}
 	}
 
