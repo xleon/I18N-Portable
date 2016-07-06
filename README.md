@@ -167,7 +167,6 @@ If you want to get null when a key is not found:
 **Fluent initialization**
 
     I18N.Current
-        .SetLogEnabled(false)
         .SetThrowWhenKeyNotFound(true)
         .SetNotFoundSymbol("$$")
         .SetFallbackLocale("en")
