@@ -1,5 +1,5 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/ogaeiar24scm9c8e?svg=true)](https://ci.appveyor.com/project/xleon/i18n-portable)
-[![I18NPortable](https://img.shields.io/nuget/v/I18NPortable.svg?maxAge=2592000)]()
+[![I18NPortable](https://img.shields.io/nuget/v/I18NPortable.svg?maxAge=2592000)](https://www.nuget.org/packages/I18NPortable/)
 
 ### Install
 
