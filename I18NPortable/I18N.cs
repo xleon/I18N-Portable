@@ -206,9 +206,6 @@ namespace I18NPortable
 			Log($"Found {localeResourceNames.Length} locales: {string.Join(", ", _locales.Keys.ToArray())}");
 		}
 
-		private void LoadLanguage(PortableLanguage portableLanguage) => 
-			LoadLocale(portableLanguage.Locale);
-
 		private void LoadLocale(string locale)
 		{
 			if (!_locales.ContainsKey(locale))
