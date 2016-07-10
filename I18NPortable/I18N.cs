@@ -86,7 +86,6 @@ namespace I18NPortable
 		private Dictionary<string, string> _translations;
 		private Dictionary<string, string> _locales;
 		private Assembly _hostAssembly;
-		private bool _logEnabled = true;
 		private bool _throwWhenKeyNotFound;
 		private string _notFoundSymbol = "?";
 		private string _fallbackLocale;
@@ -306,27 +305,22 @@ namespace I18NPortable
 
 		private void LogTranslations()
 		{
-			if (!_logEnabled) return;
-
 			Log("========== I18NPortable translations ==========");
 			foreach (var item in _translations)
 				Log($"{item.Key} = {item.Value}");
-		}
+            Log("====== I18NPortable end of translations =======");
+        }
 		 
-		private void Log(string trace)
-		{
-			if (_logEnabled)
-				_logger?.Invoke($"[{nameof(I18N)}] {trace}");
-		}
+		private void Log(string trace) => _logger?.Invoke($"[{nameof(I18N)}] {trace}");
 
-		#endregion
+        #endregion
 
-		public void Unload()
+        public void Unload()
 		{
 			_translations = new Dictionary<string, string>();
 			_locales = new Dictionary<string, string>();
 
-			_logger?.Invoke($"[{nameof(I18N)}] Unloaded");
+            Log("Unloaded");
 		}
 	}
 }
