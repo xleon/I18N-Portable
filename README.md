@@ -60,38 +60,6 @@ Though you can specify which locale will be loaded in case you don´t support it
     // load en.txt if the system current language is not supported
     I18N.Current.SetFallbackLocale("en").Init(assembly); 
 
-### Show a list of supported languages in your application
-
-Some times you need to show a picker/list with supported languages so the user can change it. 
-`I18N` provides a List of `PortableLanguage` objects:
-
-    List<PortableLanguage> languages = I18N.Current.Languages;
-    
-Each of those have a "Locale" property indicating the ISO code (ie: en, es) and a "DisplayName" property with a human description of the language (ie: English, Spanish)
-
-    public class PortableLanguage
-	{
-		public string Locale { get; set; }
-		public string DisplayName { get; set; }
-		public override string ToString() => DisplayName;
-	}
-
-### Change language at run time
-
-Option 1: pass a locale ISO code:
-
-    I18N.Current.Locale = "es";
-
-Option 2: pass a `PortableLanguage` instance coming from `I18N.Current.Languages`:
-
-    var language = I18N.Current.Languages[1];
-	I18N.Current.Language = language;
-    
-You can also get the current language/locale:
-
-    var currentLanguage = I18N.Current.Language;
-    var currentLocale = I18N.Current.Locale;
-    
 ### Get translations
 
 There are 3 ways to translate a key. Use the one you like, as all of them will produce the same result:
@@ -143,6 +111,39 @@ The easiest way to bind your views to `I18N` translations is to use the built-in
 
     var set = this.CreateBindingSet<YourView, YourViewModel>();
     set.Bind(anyUIText).To("Strings[key]");
+
+### Show a list of supported languages in your application
+
+Some times you need to show a picker/list with supported languages so the user can change it. 
+`I18N` provides a List of `PortableLanguage` objects:
+
+    List<PortableLanguage> languages = I18N.Current.Languages;
+    
+Each of those have a "Locale" property indicating the ISO code (ie: en, es) and a "DisplayName" property with a human description of the language (ie: English, Spanish)
+
+    public class PortableLanguage
+	{
+		public string Locale { get; set; }
+		public string DisplayName { get; set; }
+		public override string ToString() => DisplayName;
+	}
+
+### Change language at run time
+
+Option 1: pass a locale ISO code:
+
+    I18N.Current.Locale = "es";
+
+Option 2: pass a `PortableLanguage` instance coming from `I18N.Current.Languages`:
+
+    var language = I18N.Current.Languages[1];
+	I18N.Current.Language = language;
+    
+You can also get the current language/locale:
+
+    var currentLanguage = I18N.Current.Language;
+    var currentLocale = I18N.Current.Locale;
+    
 
 ### Misc
 
@@ -198,7 +199,3 @@ You can get a `Dictionary<T, string>` where T is the enum value:
 
     var animals = I18N.Current.TranslateEnum<Animals>();
 	var monkey = animals[Animals.Monkey]; // Mono
-
-### TODO
-
-- Sample projects
