@@ -67,16 +67,16 @@ Though you can specify which locale will be loaded in case you don´t support it
 
 There are 3 ways to translate a key. Use the one you like, as all of them will produce the same result:
 
-    var one = I18N.Current.Translate("one");
-    var two = "two".Translate(); // string extension method
-	var three = I18N.Current["three"]; // indexer
+    string one = I18N.Current.Translate("one");
+    string two = "two".Translate(); // string extension method
+	string three = I18N.Current["three"]; // indexer
 	
 The first and second methods allow additional arguments 
 reproducing `string.Format(params object[] args)` functionality: 
 
     // in your locale file: Mailbox.Notification = Hello {0}, you´ve got {1} emails
-    var notification = "Mailbox.Notification".Translate("Diego", 3);
-    var notification2 = I18N.Current.Translate("Mailbox.Notification", "Maria", 5);
+    string notification = "Mailbox.Notification".Translate("Diego", 3);
+    string notification2 = I18N.Current.Translate("Mailbox.Notification", "Maria", 5);
     
 If the key your are looking for is not present in the current locale, you´ll get the following:
 
@@ -144,8 +144,8 @@ Option 2: pass a `PortableLanguage` instance coming from `I18N.Current.Languages
     
 You can also get the current language/locale:
 
-    var currentLanguage = I18N.Current.Language;
-    var currentLocale = I18N.Current.Locale;
+    PortableLanguage currentLanguage = I18N.Current.Language;
+    string currentLocale = I18N.Current.Locale;
     
 
 ### Misc
@@ -165,8 +165,8 @@ If you prefer to get exceptions rather than not found symbols (like "?"):
 
 If you want to get null when a key is not found:
 
-    var fake = "anyKey".TranslateOrNull();
-    var fake2 = I18N.Current.TranslateOrNull("anyKey");
+    string fake = "anyKey".TranslateOrNull();
+    string fake2 = I18N.Current.TranslateOrNull("anyKey");
 
 **Fluent initialization**
 
@@ -200,5 +200,5 @@ and these lines in your locale text file:
     
 You can get a `Dictionary<T, string>` where T is the enum value:
 
-    var animals = I18N.Current.TranslateEnum<Animals>();
-	var monkey = animals[Animals.Monkey]; // Mono
+    Dictionary<T, string> animals = I18N.Current.TranslateEnum<Animals>();
+	string monkey = animals[Animals.Monkey]; // Mono
