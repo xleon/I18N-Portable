@@ -7,9 +7,9 @@
 - Use it everywhere: simple projects, cross platform Mvvm frameworks, etc.
 - Really simple to setup (less than 5 mins to get up and running).
 - Simple locale files (.txt with key/value pairs) rather than json or xml.
-- Simple to use: `"TranslationKey".Translate()`
-- Very tiny: less than 10kb
-- Tested with 100% code coverage. This library is also being used in serveral production projects.
+- Simple to use: `"TranslationKey".Translate()`.
+- Very tiny: less than 10kb.
+- Tested with 100% code coverage.
 
 
 ### Install
@@ -27,7 +27,7 @@ In your PCL/Core project, create a directory called "Locales".
 Create a `{two letter ISO code}.txt` file for each language you want to support 
 (Don´t forget to set "Build Action" to "Embedded Resource" on the properties of each file) :
 
-    YourProject.Core
+    YourProjectPCL.Core
         |-- Locales
             |-- en.txt
             |-- es.txt
@@ -59,11 +59,6 @@ I18NPortable needs to know which PCL assembly hosts your locale files. Assuming 
 initialization code and your locales live on the Core PCL itself (recommended):
 
     I18N.Current.Init(GetType().GetTypeInfo().Assembly);
-
-To initialize `I18N` from another project (ie: ios/android/uwp/other PCL):
-
-    var assembly = typeof(AnyClassInYourHostPCL).GetTypeInfo().Assembly;
-    I18N.Current.Init(assembly);
     
 `I18N` will scan the "Locales" directory to get the available/supported languages. 
 Then it will try to load the correct locale matching the system/OS current culture.
@@ -150,7 +145,7 @@ Option 1: pass a locale ISO code:
 
 Option 2: pass a `PortableLanguage` instance coming from `I18N.Current.Languages`:
 
-    var language = I18N.Current.Languages[1];
+    PortableLanguage language = I18N.Current.Languages[1];
 	I18N.Current.Language = language;
     
 You can also get the current language/locale:
@@ -186,7 +181,7 @@ If you want to get null when a key is not found:
         .SetNotFoundSymbol("$$")
         .SetFallbackLocale("en")
 		.SetLogger(text => Debug.WriteLine(text))
-        .Init(GetType().GetTypeInfo().Assembly);
+        .Init(GetType().GetTypeInfo().Assembly); // set `Init()` at the end
         
 **Translate Enum**
 
