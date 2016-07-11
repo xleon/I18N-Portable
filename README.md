@@ -9,6 +9,7 @@
 - Simple locale files (.txt with key/value pairs) rather than json or xml.
 - Simple to use: `"TranslationKey".Translate()`.
 - Very tiny: less than 10kb.
+- No dependencies.
 - Tested with 100% code coverage.
 
 
