@@ -14,12 +14,10 @@
 
 ### Install
 
+Install it on your PCL and platform projects.
 From nuget package manager console: 
 
 `PM> Install-Package I18NPortable`
-
-You will usually install it on your PCL project. 
-If you need to get translations/strings from platform projects, you will need to install it in those as well.
 
 ### Setup locales
 
