@@ -126,7 +126,7 @@ Some times you need to show a picker/list with supported languages so the user c
 
     List<PortableLanguage> languages = I18N.Current.Languages;
     
-Each of those have a "Locale" property indicating the ISO code (ie: en, es) and a "DisplayName" property with a human description of the language (ie: English, Spanish)
+Each of those have a "Locale" property indicating the ISO code (ie: en, es) and a "DisplayName" property with a human translated description of the language (ie: English, Español)
 
     public class PortableLanguage
 	{
