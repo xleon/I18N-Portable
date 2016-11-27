@@ -4,6 +4,13 @@ three = three
 
 Mailbox.Notification = Hello {0}, you´ve got {1} emails
 
+TextWithLineBreakCharacters = Line One\nLine Two\r\nLine Three
+
+Multiline = Line One
+	Line Two
+	Line Three
+
 Animals.Dog = Dog
 Animals.Cat = Cat
 Animals.Rat = Rat
+Animals.Snake = Good\nSnake

@@ -32,8 +32,8 @@ namespace I18NPortable.Tests
 			var es = languages.FirstOrDefault(x => x.Locale.Equals("es"));
 			var en = languages.FirstOrDefault(x => x.Locale.Equals("en"));
 
-			Assert.AreEqual("English", en.DisplayName);
-			Assert.AreEqual("Español", es.ToString());
+			Assert.AreEqual("English", en?.DisplayName);
+			Assert.AreEqual("Español", es?.ToString());
 		}
 
 	    [TestMethod]
@@ -172,7 +172,7 @@ namespace I18NPortable.Tests
 		public void WillThrow_WhenKeyNotFound_AndSetupToDoSo()
 		{
 			I18N.Current.SetThrowWhenKeyNotFound(true);
-			var fake = "fake".Translate();
+			"fake".Translate();
 		}
 
 		[TestMethod]
@@ -232,6 +232,16 @@ namespace I18NPortable.Tests
 			Assert.IsTrue(logs.Count > 0);
 		}
 
+	    [TestMethod]
+	    public void UnescapeLineBreaks_ShouldWork()
+	    {
+	        const string sample = "Hello\\r\\nfrom\\nthe other side";
+	        var unescaped = sample.UnescapeLineBreaks();
+	        var expected = $"Hello{Environment.NewLine}from{Environment.NewLine}the other side";
+
+            Assert.AreEqual(expected, unescaped);
+	    }
+
         [TestMethod]
         public void CapitalizeFirstLetter_ShouldWork()
         {
@@ -242,12 +252,53 @@ namespace I18NPortable.Tests
             string nullString = null;
             Assert.IsNull(nullString.CapitalizeFirstLetter());
         }
+
+	    [TestMethod]
+	    public void Translation_ShouldConsider_LineBreakCharacters()
+	    {
+            I18N.Current.Locale = "en";
+
+            var textWithLineBreaks = "TextWithLineBreakCharacters".Translate();
+	        var textWithLineBreaksOrNull = "TextWithLineBreakCharacters".TranslateOrNull();
+
+            var expected = $"Line One{Environment.NewLine}Line Two{Environment.NewLine}Line Three";
+
+            Assert.AreEqual(expected, textWithLineBreaks);
+            Assert.AreEqual(expected, textWithLineBreaksOrNull);
+        }
+
+        [TestMethod]
+        public void EnumTranslation_ShouldConsider_LineBreakCharacters()
+        {
+            I18N.Current.Locale = "en";
+
+            var animals = I18N.Current.TranslateEnum<Animals>();
+
+            Assert.AreEqual($"Good{Environment.NewLine}Snake", animals[Animals.Snake]);
+        }
+
+	    [TestMethod]
+	    public void TranslationValue_Supports_Multiline()
+	    {
+            I18N.Current.Locale = "en";
+	        var multilineValue = "Multiline".Translate();
+	        var expected = $"Line One{Environment.NewLine}Line Two{Environment.NewLine}Line Three";
+
+            Assert.AreEqual(expected, multilineValue);
+
+            I18N.Current.Locale = "es";
+            multilineValue = "Multiline".Translate();
+            expected = $"Línea Uno{Environment.NewLine}Línea Dos{Environment.NewLine}Línea Tres";
+
+            Assert.AreEqual(expected, multilineValue);
+        }
     }
 
 	public enum Animals
 	{
 		Dog,
 		Cat,
-		Rat
+		Rat,
+        Snake
 	}
 }

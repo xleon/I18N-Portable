@@ -1,12 +1,14 @@
-﻿namespace I18NPortable
+﻿using System;
+
+namespace I18NPortable
 {
 	public static class Extensions
 	{
-		public static string Translate(this string key, params object[] args) => 
-			I18N.Current.Translate(key, args);
+		public static string Translate(this string key, params object[] args) 
+            => I18N.Current.Translate(key, args);
 
-		public static string TranslateOrNull(this string key, params object[] args) =>
-			I18N.Current.TranslateOrNull(key, args);
+		public static string TranslateOrNull(this string key, params object[] args) 
+            => I18N.Current.TranslateOrNull(key, args);
 
 		public static string CapitalizeFirstLetter(this string s)
 		{
@@ -14,5 +16,10 @@
 			if (s.Length == 1) return s.ToUpper();
 			return s.Remove(1).ToUpper() + s.Substring(1);
 		}
+
+	    public static string UnescapeLineBreaks(this string str)
+	        => str
+                .Replace("\\r\\n", Environment.NewLine)
+                .Replace("\\n", Environment.NewLine);
 	}
 }

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace I18NPortable
 {
@@ -214,30 +214,57 @@ namespace I18NPortable
 			var resourceName = _locales[locale];
 			var stream = _hostAssembly.GetManifestResourceStream(resourceName);
 
-			LoadTranslations(stream);
+			ParseTranslations(stream);
 
 			_locale = locale;
 
-			// Update bindings to indexer (useful from views in mvvm frameworks)
+			// Update bindings to indexer (useful for views in MVVM frameworks)
 			NotifyPropertyChanged("Item[]");
 		}
 
-		private void LoadTranslations(Stream stream)
+		private void ParseTranslations(Stream stream)
 		{
 			_translations.Clear();
 
 			using (var streamReader = new StreamReader(stream))
 			{
+			    string key = null;
+			    string value = null;
+
 				while (!streamReader.EndOfStream)
 				{
-					var line = streamReader.ReadLine();
-					if (string.IsNullOrWhiteSpace(line) || line.Trim().StartsWith("#"))
-						continue;
+					var line = streamReader.ReadLine();                
+                    var isEmpty = string.IsNullOrWhiteSpace(line);
+                    var isComment = !isEmpty && line.Trim().StartsWith("#");
+                    var isKeyValuePair = !isEmpty && !isComment && line.Contains("=");
 
-					var columns = line.Split(new[] { '=' }, 2);
-					_translations.Add(columns[0].Trim(), columns[1].Trim());
+                    if ((isEmpty || isComment || isKeyValuePair) && key != null && value != null)
+				    {
+                        _translations.Add(key, value);
+
+                        key = null;
+                        value = null;
+                    }
+
+                    if (isEmpty || isComment)
+                        continue;
+
+                    if (isKeyValuePair)
+				    {
+                        var kvp = line.Split(new[] { '=' }, 2);
+
+                        key = kvp[0].Trim();
+                        value = kvp[1].Trim().UnescapeLineBreaks();
+                    }
+				    else if(key != null && value != null)
+				    {
+				        value = value + Environment.NewLine + line.Trim().UnescapeLineBreaks();
+				    }
 				}
-			}
+
+                if(key != null && value != null)
+                    _translations.Add(key, value);
+            }
 
 			LogTranslations();
 		}
@@ -249,7 +276,9 @@ namespace I18NPortable
 		public string Translate(string key, params object[] args)
 		{
 			if (_translations.ContainsKey(key))
-				return args.Length == 0 ? _translations[key] : string.Format(_translations[key], args);
+				return args.Length == 0 
+                    ? _translations[key]
+                    : string.Format(_translations[key], args);
 
 			if(_throwWhenKeyNotFound)
 				throw new KeyNotFoundException($"[{nameof(I18N)}] key '{key}' not found in the current language '{_locale}'");
@@ -308,7 +337,8 @@ namespace I18NPortable
             Log("====== I18NPortable end of translations =======");
         }
 		 
-		private void Log(string trace) => _logger?.Invoke($"[{nameof(I18N)}] {trace}");
+		private void Log(string trace) 
+            => _logger?.Invoke($"[{nameof(I18N)}] {trace}");
 
         #endregion
 

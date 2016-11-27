@@ -12,7 +12,7 @@
     <description>Simple cross platform internationalization/translations for Xamarin and Windows apps</description>
     <releaseNotes>Set logger as an Action</releaseNotes>
     <copyright>Copyright 2016</copyright>
-    <tags>I18N, Internationalization, Translations, Xamarin, Xamarin.Forms, Mvvm, MvvmCross, Xamarin.iOS, Xamarin.Android, iOS, Android, UWP, Windows Universal</tags>
+    <tags>I18N, Internationalization, Translations, Xamarin, Xamarin.Forms, Mvvm, Xamarin.iOS, Xamarin.Android, iOS, Android, UWP, Windows Universal</tags>
   </metadata>
 	<files>
 		<!-- portable -->
