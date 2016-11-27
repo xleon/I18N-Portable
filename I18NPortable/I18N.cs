@@ -73,7 +73,7 @@ namespace I18NPortable
 				if(_languages != null) return _languages;
 
 				var languages = _locales.Select(x => new PortableLanguage
-					{ Locale = x.Key, DisplayName = TranslateOrNull(x.Key) ?? new CultureInfo(x.Key).NativeName.CapitalizeFirstLetter() })
+					{ Locale = x.Key, DisplayName = TranslateOrNull(x.Key) ?? new CultureInfo(x.Key).NativeName.CapitalizeFirstCharacter() })
 					.ToList();
 
 				if (languages.Count > 0)
@@ -291,25 +291,54 @@ namespace I18NPortable
 				? (args.Length == 0 ? _translations[key] : string.Format(_translations[key], args)) 
 				: null;
 
-		public Dictionary<T, string> TranslateEnum<T>()
-		{
-			var type = typeof(T);
-			var dic = new Dictionary<T, string>();
+        // TODO mark as deprecated
+	    public Dictionary<TEnum, string> TranslateEnum<TEnum>()
+	        => TranslateEnumToDictionary<TEnum>();
 
-			foreach (var value in Enum.GetValues(type))
-			{
-				var name = Enum.GetName(type, value);
-				dic.Add((T)value, Translate($"{type.Name}.{name}"));
-			}
+        public Dictionary<TEnum, string> TranslateEnumToDictionary<TEnum>()
+        {
+            var type = typeof(TEnum);
+            var dic = new Dictionary<TEnum, string>();
 
-			return dic;
-		}
+            foreach (var value in Enum.GetValues(type))
+            {
+                var name = Enum.GetName(type, value);
+                dic.Add((TEnum)value, Translate($"{type.Name}.{name}"));
+            }
 
-		#endregion
+            return dic;
+        }
 
-		#region Helpers
+        public List<string> TranslateEnumToList<TEnum>()
+        {
+            var type = typeof(TEnum);
 
-		private string GetDefaultLocaleFromCurrentCulture()
+            return (from object value in Enum.GetValues(type)
+                    select Enum.GetName(type, value) into name
+                    select Translate($"{type.Name}.{name}"))
+                    .ToList();
+        }
+
+	    public List<Tuple<TEnum, string>> TranslateEnumToTupleList<TEnum>()
+	    {
+            var type = typeof(TEnum);
+            var list = new List<Tuple<TEnum, string>>();
+
+            foreach (var value in Enum.GetValues(type))
+            {
+                var name = Enum.GetName(type, value);
+                var tuple = new Tuple<TEnum, string>((TEnum)value, Translate($"{type.Name}.{name}"));
+                list.Add(tuple);
+            }
+
+	        return list;
+	    }
+
+        #endregion
+
+        #region Helpers
+
+        private string GetDefaultLocaleFromCurrentCulture()
 		{
 			var currentCulture = CultureInfo.CurrentCulture;
 

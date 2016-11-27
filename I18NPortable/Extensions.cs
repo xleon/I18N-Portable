@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 
 namespace I18NPortable
 {
@@ -10,10 +11,14 @@ namespace I18NPortable
 		public static string TranslateOrNull(this string key, params object[] args) 
             => I18N.Current.TranslateOrNull(key, args);
 
-		public static string CapitalizeFirstLetter(this string s)
+		public static string CapitalizeFirstCharacter(this string s)
 		{
-			if (string.IsNullOrEmpty(s)) return s;
-			if (s.Length == 1) return s.ToUpper();
+			if (string.IsNullOrEmpty(s))
+                return s;
+
+			if (s.Length == 1)
+                return s.ToUpper();
+
 			return s.Remove(1).ToUpper() + s.Substring(1);
 		}
 
@@ -21,5 +26,13 @@ namespace I18NPortable
 	        => str
                 .Replace("\\r\\n", Environment.NewLine)
                 .Replace("\\n", Environment.NewLine);
+
+	    public static string Translate(this Enum value)
+	    {
+	        var fieldInfo = value.GetType().GetRuntimeField(value.ToString());
+	        var fieldName = fieldInfo.FieldType.Name;
+
+	        return $"{fieldName}.{value}".Translate();
+	    }
 	}
 }

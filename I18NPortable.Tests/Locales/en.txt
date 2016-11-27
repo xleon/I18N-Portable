@@ -14,3 +14,7 @@ Animals.Dog = Dog
 Animals.Cat = Cat
 Animals.Rat = Rat
 Animals.Snake = Good\nSnake
+
+Fruit.Orange = great orange
+Fruit.Apple = big apple
+Fruit.Banana = nice banana

@@ -9,7 +9,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace I18NPortable.Tests
 {
 	[TestClass]
-	public class I18NPortableTests
+	public class I18NTests
 	{
 		[TestInitialize]
 		public void Init() => 
@@ -44,7 +44,7 @@ namespace I18NPortable.Tests
 	    }
 
 	    [TestMethod]
-	    public void TryingToLoad_TheSameLanguageTwice_WillHaveNoEffect()
+	    public void TryingToReload_CurrentLoadedLanguage_WillDoNothing()
 	    {
 	        I18N.Current.Locale = "en";
 	        I18N.Current.Locale = "es";
@@ -84,15 +84,15 @@ namespace I18NPortable.Tests
 	    [TestMethod]
 	    public void LoadLanguage_ShouldLoad_LanguageLocale()
 	    {
-	        var language = new PortableLanguage {Locale = "en", DisplayName = "English"};
+	        var language = new PortableLanguage { Locale = "en", DisplayName = "English" };
 	        I18N.Current.Language = language;
 
-            Assert.AreEqual("one", "one".Translate());
+            Assert.AreEqual("one", I18N.Current.Translate("one"));
 
             language = new PortableLanguage { Locale = "es", DisplayName = "Español" };
             I18N.Current.Language = language;
 
-            Assert.AreEqual("uno", "one".Translate());
+            Assert.AreEqual("uno", I18N.Current.Translate("one"));
         }
 
 		[TestMethod]
@@ -127,32 +127,22 @@ namespace I18NPortable.Tests
 		}
 
 		[TestMethod]
-		public void CanTranslate_WithStringExtensionMethod()
-		{
-			I18N.Current.Locale = "en";
-			Assert.AreEqual("one", "one".Translate());
-
-			I18N.Current.Locale = "es";
-			Assert.AreEqual("uno", "one".Translate());
-		}
-
-		[TestMethod]
 		public void Translate_Should_FormatString()
 		{
 			I18N.Current.Locale = "en";
-			Assert.AreEqual("Hello Marta, you´ve got 56 emails", 
-				"Mailbox.Notification".Translate("Marta", 56));
+			Assert.AreEqual("Hello Marta, you´ve got 56 emails",
+                I18N.Current.Translate("Mailbox.Notification", "Marta", 56));
 
 			I18N.Current.Locale = "es";
 			Assert.AreEqual("Hola David, tienes 47 emails",
-				"Mailbox.Notification".Translate("David", 47));
+                I18N.Current.Translate("Mailbox.Notification", "David", 47));
 		}
 
 		[TestMethod]
 		public void NotFoundSymbol_CanBe_Changed()
 		{
 			I18N.Current.SetNotFoundSymbol("$$");
-			var nonExistent = "nonExistentKey".Translate();
+			var nonExistent = I18N.Current.Translate("nonExistentKey");
 
 			Assert.AreEqual("$$nonExistentKey$$", nonExistent);
 		}
@@ -160,37 +150,15 @@ namespace I18NPortable.Tests
 		[TestMethod]
 		public void TranslateOrNull_ShouldReturn_Null_WhenKeyIsNotFound()
 		{
-			var result = I18N.Current.TranslateOrNull("nonExistentKey");
-			var result2 = "nonExistentKey".TranslateOrNull();
-
-			Assert.IsNull(result);
-			Assert.IsNull(result2);
+			Assert.IsNull(I18N.Current.TranslateOrNull("nonExistentKey"));
 		}
 
-		[TestMethod]
+        [TestMethod]
 		[ExpectedException(typeof(KeyNotFoundException))]
 		public void WillThrow_WhenKeyNotFound_AndSetupToDoSo()
 		{
 			I18N.Current.SetThrowWhenKeyNotFound(true);
-			"fake".Translate();
-		}
-
-		[TestMethod]
-		public void Enums_ShouldBe_Translated()
-		{
-			I18N.Current.Locale = "en";
-			var animals = I18N.Current.TranslateEnum<Animals>();
-
-			Assert.AreEqual("Dog", animals[Animals.Dog]);
-			Assert.AreEqual("Cat", animals[Animals.Cat]);
-			Assert.AreEqual("Rat", animals[Animals.Rat]);
-
-			I18N.Current.Locale = "es";
-			animals = I18N.Current.TranslateEnum<Animals>();
-
-			Assert.AreEqual("Perro", animals[Animals.Dog]);
-			Assert.AreEqual("Gato", animals[Animals.Cat]);
-			Assert.AreEqual("Rata", animals[Animals.Rat]);
+            I18N.Current.Translate("fake");
 		}
 
 	    [TestMethod]
@@ -233,33 +201,12 @@ namespace I18NPortable.Tests
 		}
 
 	    [TestMethod]
-	    public void UnescapeLineBreaks_ShouldWork()
-	    {
-	        const string sample = "Hello\\r\\nfrom\\nthe other side";
-	        var unescaped = sample.UnescapeLineBreaks();
-	        var expected = $"Hello{Environment.NewLine}from{Environment.NewLine}the other side";
-
-            Assert.AreEqual(expected, unescaped);
-	    }
-
-        [TestMethod]
-        public void CapitalizeFirstLetter_ShouldWork()
-        {
-            Assert.AreEqual("English", "english".CapitalizeFirstLetter());
-            Assert.AreEqual("E", "e".CapitalizeFirstLetter());
-            Assert.AreEqual(" ", " ".CapitalizeFirstLetter());
-
-            string nullString = null;
-            Assert.IsNull(nullString.CapitalizeFirstLetter());
-        }
-
-	    [TestMethod]
 	    public void Translation_ShouldConsider_LineBreakCharacters()
 	    {
             I18N.Current.Locale = "en";
 
-            var textWithLineBreaks = "TextWithLineBreakCharacters".Translate();
-	        var textWithLineBreaksOrNull = "TextWithLineBreakCharacters".TranslateOrNull();
+            var textWithLineBreaks = I18N.Current.Translate("TextWithLineBreakCharacters");
+	        var textWithLineBreaksOrNull = I18N.Current.Translate("TextWithLineBreakCharacters");
 
             var expected = $"Line One{Environment.NewLine}Line Two{Environment.NewLine}Line Three";
 
@@ -272,7 +219,7 @@ namespace I18NPortable.Tests
         {
             I18N.Current.Locale = "en";
 
-            var animals = I18N.Current.TranslateEnum<Animals>();
+            var animals = I18N.Current.TranslateEnumToDictionary<Animals>();
 
             Assert.AreEqual($"Good{Environment.NewLine}Snake", animals[Animals.Snake]);
         }
@@ -281,16 +228,77 @@ namespace I18NPortable.Tests
 	    public void TranslationValue_Supports_Multiline()
 	    {
             I18N.Current.Locale = "en";
-	        var multilineValue = "Multiline".Translate();
+	        var multilineValue = I18N.Current.Translate("Multiline");
 	        var expected = $"Line One{Environment.NewLine}Line Two{Environment.NewLine}Line Three";
 
             Assert.AreEqual(expected, multilineValue);
 
             I18N.Current.Locale = "es";
-            multilineValue = "Multiline".Translate();
+            multilineValue = I18N.Current.Translate("Multiline");
             expected = $"Línea Uno{Environment.NewLine}Línea Dos{Environment.NewLine}Línea Tres";
 
             Assert.AreEqual(expected, multilineValue);
+        }
+
+        [TestMethod]
+        public void Enum_CanBeTranslated_ToStringList()
+        {
+            I18N.Current.Locale = "es";
+            var list = I18N.Current.TranslateEnumToList<Animals>();
+
+            Assert.AreEqual(4, list.Count);
+            Assert.AreEqual("Perro", list[0]);
+            Assert.AreEqual("Gato", list[1]);
+            Assert.AreEqual("Rata", list[2]);
+        }
+
+        [TestMethod]
+        public void Enum_CanBeTranslated_ToDictionary()
+        {
+            I18N.Current.Locale = "en";
+            var animals = I18N.Current.TranslateEnumToDictionary<Animals>();
+
+            Assert.AreEqual("Dog", animals[Animals.Dog]);
+            Assert.AreEqual("Cat", animals[Animals.Cat]);
+            Assert.AreEqual("Rat", animals[Animals.Rat]);
+
+            I18N.Current.Locale = "es";
+            animals = I18N.Current.TranslateEnumToDictionary<Animals>();
+
+            Assert.AreEqual("Perro", animals[Animals.Dog]);
+            Assert.AreEqual("Gato", animals[Animals.Cat]);
+            Assert.AreEqual("Rata", animals[Animals.Rat]);
+        }
+
+	    [TestMethod]
+	    public void TranslateEnum_ShouldTranslateToDictionary()
+	    {
+            I18N.Current.Locale = "en";
+            var animals = I18N.Current.TranslateEnum<Animals>();
+
+            Assert.AreEqual("Dog", animals[Animals.Dog]);
+            Assert.AreEqual("Cat", animals[Animals.Cat]);
+            Assert.AreEqual("Rat", animals[Animals.Rat]);
+
+            I18N.Current.Locale = "es";
+            animals = I18N.Current.TranslateEnum<Animals>();
+
+            Assert.AreEqual("Perro", animals[Animals.Dog]);
+            Assert.AreEqual("Gato", animals[Animals.Cat]);
+            Assert.AreEqual("Rata", animals[Animals.Rat]);
+        }
+
+        [TestMethod]
+        public void Enum_CanBeTranslated_ToTupleList()
+        {
+            I18N.Current.Locale = "en";
+            var animalsTupleList = I18N.Current.TranslateEnumToTupleList<Animals>();
+            
+            Assert.AreEqual(4, animalsTupleList.Count);
+            Assert.AreEqual("Dog", animalsTupleList[0].Item2);
+            Assert.AreEqual(animalsTupleList[0].Item1, Animals.Dog);
+            Assert.AreEqual("Rat", animalsTupleList[2].Item2);
+            Assert.AreEqual(animalsTupleList[2].Item1, Animals.Rat);
         }
     }
 
