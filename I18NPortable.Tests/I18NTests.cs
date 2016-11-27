@@ -293,7 +293,7 @@ namespace I18NPortable.Tests
         {
             I18N.Current.Locale = "en";
             var animalsTupleList = I18N.Current.TranslateEnumToTupleList<Animals>();
-            
+           
             Assert.AreEqual(4, animalsTupleList.Count);
             Assert.AreEqual("Dog", animalsTupleList[0].Item2);
             Assert.AreEqual(animalsTupleList[0].Item1, Animals.Dog);

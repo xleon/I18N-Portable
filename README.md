@@ -6,11 +6,12 @@
 - Share translations across platforms (iOS, Android, UWP, etc) from a PCL project.
 - Use it everywhere: simple projects, cross platform Mvvm frameworks, etc.
 - Really simple to setup (less than 5 mins to get up and running).
-- Simple locale files (.txt with key/value pairs) rather than json or xml.
-- Simple to use: `"TranslationKey".Translate()`.
+- Readable locale files (.txt with key/value pairs) rather than json or xml.
+- Simple to use: `"key".Translate()`.
 - Very tiny: less than 10kb.
 - No dependencies.
-- Tested with 100% code coverage.
+- Pure PCL, no platform code
+- Unit Tested with 100% code coverage.
 
 
 ### Install
@@ -35,22 +36,29 @@ Create a `{two letter ISO code}.txt` file for each language you want to support
 
 **Locale content sample**
 
-    # key = value (the key will be the same across locales)
-    one = uno
-    two = dos
-    three = tres
-    four = cuatro
-    five = cinco
-    
-    # Enums are supported
-    Animals.Dog = Perro
-    Animals.Cat = Gato
-    Animals.Rat = Rata
-    Animals.Tiger = Tigre
-    Animals.Monkey = Mono
+> # key = value (the key will be the same across locales)
+> one = uno
+> two = dos
+> three = tres
+> four = cuatro
+> five = cinco
+>     
+> # Enums are supported
+> Animals.Dog = Perro
+> Animals.Cat = Gato
+> Animals.Rat = Rata
+> Animals.Tiger = Tigre
+> Animals.Monkey = Mono
+> 
+> # Support for string.Format()
+> stars.count = Tienes {0} estrellas
+> 
+> TextWithLineBreakCharacters = Line One\nLine Two\r\nLine Three
+> 
+> Multiline = Line One
+> 	Line Two
+> 	Line Three
 
-    # Support for string.Format()
-    stars.count = Tienes {0} estrellas
 
 ### Initialization
 
@@ -90,16 +98,21 @@ string notification2 = I18N.Current.Translate("Mailbox.Notification", "Maria", 5
 
 If the key your are looking for is not present in the current locale, you´ll get the following:
 
-    "?key?"
-    
+```csharp
+var missing = "missing".Translate(); // ?missing?
+```
 You can change the symbol to show when a key is not found:
+
 ```csharp
 I18N.Current.SetNotFoundSymbol("$$"); 
+var missing = "missing".Translate(); // $$missing$$
 ```
     
 ### Data binding and MvvM frameworks
     
-The easiest way to bind your views to `I18N` translations is to use the built-in indexer by creating a proxy property in your ViewModel:
+The easiest way to bind your views to `I18N` translations is to use the built-in indexer 
+by creating a proxy property in your ViewModel:
+
 ```csharp
 public abstract class BaseViewModel
 {
@@ -107,7 +120,9 @@ public abstract class BaseViewModel
     ...
 }
 ```
- You will get live updates when loading another locale at run time because `I18N.Current` implements `INotifyPropertyChanged` and references to the indexer will be updated.
+
+You will get live updates when loading another locale at run time because `I18N.Current` 
+implements `INotifyPropertyChanged` and references to the indexer will be updated.
 
 **Xaml sample**
 ```xaml
@@ -122,6 +137,7 @@ public abstract class BaseViewModel
 <TextView local:MvxBind="Text Strings[key]" />
 ```                
 **iOS/MvvmCross sample**
+
 ```csharp
 var set = this.CreateBindingSet<YourView, YourViewModel>();
 set.Bind(anyUIText).To("Strings[key]");
@@ -129,11 +145,14 @@ set.Bind(anyUIText).To("Strings[key]");
 ### Show a list of supported languages in your application
 
 Some times you need to show a picker/list with supported languages so the user can change it. 
+
 `I18N` provides a List of `PortableLanguage` objects:
 ```csharp
 List<PortableLanguage> languages = I18N.Current.Languages;
 ```
-Each of those have a "Locale" property indicating the ISO code (ie: en, es) and a "DisplayName" property with a human translated description of the language (ie: English, Español)
+Each of those have a "Locale" property indicating the ISO code (ie: en, es) and a "DisplayName" 
+property with a human translated description of the language (ie: English, Español)
+
 ```csharp
 public class PortableLanguage
 {
@@ -142,6 +161,7 @@ public class PortableLanguage
     public override string ToString() => DisplayName;
 }
 ```
+
 ### Change language at run time
 
 Option 1: pass a locale ISO code:
@@ -162,6 +182,7 @@ string currentLocale = I18N.Current.Locale;
 ### Misc
 
 **Enable logger**
+
 ```csharp
 Action<string> logger = text => Debug.WriteLine(text);
 I18N.Current.SetLogger(logger);
@@ -172,6 +193,20 @@ If you prefer to get exceptions rather than not found symbols (like "?"):
 ```csharp
 I18N.Current.SetThrowWhenKeyNotFound(true);
 ```    
+
+**Fluent initialization**
+
+```csharp
+I18N.Current
+    .SetThrowWhenKeyNotFound(true)
+    .SetNotFoundSymbol("$$")
+    .SetFallbackLocale("en")
+    .SetLogger(text => Debug.WriteLine(text))
+    .Init(GetType().GetTypeInfo().Assembly); // call `Init()` at the end
+```     
+
+### Translation helpers
+
 **TranslateOrNull**
 
 If you want to get null when a key is not found:
@@ -179,38 +214,72 @@ If you want to get null when a key is not found:
 string fake = "anyKey".TranslateOrNull();
 string fake2 = I18N.Current.TranslateOrNull("anyKey");
 ```
-**Fluent initialization**
-```csharp
-I18N.Current
-    .SetThrowWhenKeyNotFound(true)
-    .SetNotFoundSymbol("$$")
-    .SetFallbackLocale("en")
-    .SetLogger(text => Debug.WriteLine(text))
-    .Init(GetType().GetTypeInfo().Assembly); // set `Init()` at the end
-```        
-**Translate Enum**
+   
+**Translate Enums**
 
 Given this enum:
+
 ```csharp
 public enum Animals
 {
     Dog,
     Cat,
-    Rat,
-    Tiger,
-    Monkey
+    Rat
 }
 ```    
-and these lines in your locale text file:
+and these lines in your locale text file
+
+> Animals.Dog = Perro
+> Animals.Cat = Gato
+> Animals.Rat = Rata  
+
+there are multiple choices to get the translated values:
+
 ```csharp
-Animals.Dog = Perro
-Animals.Cat = Gato
-Animals.Rat = Rata
-Animals.Tiger = Tigre
-Animals.Monkey = Mono
-```    
-You can get a `Dictionary<T, string>` where T is the enum value:
+// Direct method
+var dog = Animals.Dog.Translate(); // Perro
+var cat = Animals.Cat.Translate(); // Gato
+var rat = Animals.Rat.Translate(); // Rata
+```
+
 ```csharp
-Dictionary<T, string> animals = I18N.Current.TranslateEnum<Animals>();
-string monkey = animals[Animals.Monkey]; // Mono
+// Probably the most useful for picker lists
+List<Tuple<Animals, string>> animals = I18N.Current.TranslateEnumToTupleList<Animals>();
+string dog = animals[0].Item2; // Perro
+// animals[0].Item1 equals the Animals.Dog value
+```
+
+```csharp
+List<string> animals = I18N.Current.TranslateEnumToList<Animals>();
+string dog = animals[0]; // Perro
+```
+
+```csharp
+Dictionary<Animals, string> animals = I18N.Current.TranslateEnumToDictionary<Animals>();
+string dog = animals[Animals.Dog]; // Perro
+```
+
+**Translate Types and instances**
+
+Given these translations:
+
+> RecipeDetailScreen = The recipe detail
+> Recipe = A fun recipe
+> I18NPortable.Tests.WorkoutScreen = Workout
+> I18NPortable.Tests.WorkoutRecord = Workout Detail
+
+```csharp
+string detailScren = I18N.Current.Translate<RecipeDetailScreen>(); // The recipe detail
+string recipe = I18N.Current.Translate<Recipe>(); // A fun recipe
+
+var detailScrenInstance = new RecipeDetailScreen();
+string detailScreen = detailScrenInstance.Translate(); // The recipe detail
+
+using I18NPortable.Tests;
+
+string workout = I18N.Current.Translate<WorkoutScreen>(); // Workout
+string workoutRecord = I18N.Current.Translate<WorkoutRecord>(); // Workout Detail
+
+var workoutInstance = new WorkoutScreen();
+string workout = workoutInstance.Translate(); // Workout
 ```
