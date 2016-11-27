@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable MemberCanBeMadeStatic.Global
+// ReSharper disable UnusedMethodReturnValue.Global
 
 namespace I18NPortable
 {
@@ -158,12 +159,12 @@ namespace I18NPortable
 			return this;
 		}
 
-		/// <summary>
-		/// Call this when your app starts
-		/// ie: I18N.Current.Init(GetType().GetTypeInfo().Assembly);
-		/// </summary>
-		/// <param name="hostAssembly">The PCL assembly that hosts the locale text files</param>
-		public I18N Init(Assembly hostAssembly)
+        /// <summary>
+        /// Call this when your app starts
+        /// ie: <code>I18N.Current.Init(GetType().GetTypeInfo().Assembly);</code>
+        /// </summary>
+        /// <param name="hostAssembly">The PCL assembly that hosts the locale text files</param>
+        public I18N Init(Assembly hostAssembly)
 		{
 			Unload();
 
@@ -324,8 +325,8 @@ namespace I18NPortable
         /// <summary>
         /// Get the translation for a given Type name or Type full name.
         /// 
-        /// i.e: Given a class <code>MainScreen</code>, <code>Translate<MainScreen>()</code> will search a key "MainScreen" in the locale file.
-        /// If not found, it will search for a key [Namespace].MainScreen
+        /// i.e: Given a class <code>MainScreen</code>, <code>Translate&lt;MainScreen&gt;()</code> will search a key "MainScreen" in the locale file.
+        /// If not found, it will search for a key <code>[Namespace].MainScreen</code>
         /// </summary>
 	    public string Translate<T>()
 	    {
@@ -344,7 +345,7 @@ namespace I18NPortable
 	        => TranslateEnumToDictionary<TEnum>();
 
         /// <summary>
-        /// Convert Enum Type values to a Dictionary<TEnum, string> where the key is the Enum value and the string is the translated value.
+        /// Convert Enum Type values to a Dictionary&lt;TEnum, string&gt; where the key is the Enum value and the string is the translated value.
         /// </summary>
         public Dictionary<TEnum, string> TranslateEnumToDictionary<TEnum>()
         {
@@ -374,7 +375,7 @@ namespace I18NPortable
         }
 
         /// <summary>
-        /// Converts Enum Type values to a List of Tuple<TEnum, string> where the Item2 (string) is the enum value translation
+        /// Converts Enum Type values to a List of <code>Tuple&lt;TEnum, string&gt;</code> where the Item2 (string) is the enum value translation
         /// </summary>
         /// <typeparam name="TEnum"></typeparam>
         /// <returns></returns>

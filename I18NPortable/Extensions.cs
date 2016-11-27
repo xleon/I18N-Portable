@@ -54,7 +54,7 @@ namespace I18NPortable
         /// i.e: <code>var mainScreen = new MainScreen(); 
         /// var title = mainScreen.Translate();
         /// </code>
-        /// It will look for "MainScreen" or [Namespace].MainScreen at your locale file
+        /// It will look for <code>MainScreen</code> or <code>[Namespace].MainScreen</code> at your locale file
         /// </summary>
 	    public static string Translate(this object instance)
 	    {
