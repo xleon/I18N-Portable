@@ -303,7 +303,7 @@ namespace I18NPortable
             return fullNameTranslation ?? type.Name.Translate();
         }
 
-        // TODO mark as deprecated
+        [Obsolete("This method is deprecated and will be removed on future versions. Please, use 'TranslateEnumToDictionary' to get the same result")]
 	    public Dictionary<TEnum, string> TranslateEnum<TEnum>()
 	        => TranslateEnumToDictionary<TEnum>();
 
