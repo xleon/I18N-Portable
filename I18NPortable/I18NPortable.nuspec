@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>I18NPortable</id>
-    <version>0.1.7</version>
+    <version>0.2</version>
     <title>I18NPortable</title>
     <authors>Diego Ponce de Leon</authors>
     <owners>Diego Ponce de Leon</owners>
@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/xleon/I18N-Portable</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Simple cross platform internationalization/translations for Xamarin and Windows apps</description>
-    <releaseNotes>Set logger as an Action</releaseNotes>
+    <releaseNotes>Multiline and line break characters support. More translation extensions and utilities</releaseNotes>
     <copyright>Copyright 2016</copyright>
     <tags>I18N, Internationalization, Translations, Xamarin, Xamarin.Forms, Mvvm, Xamarin.iOS, Xamarin.Android, iOS, Android, UWP, Windows Universal</tags>
   </metadata>
