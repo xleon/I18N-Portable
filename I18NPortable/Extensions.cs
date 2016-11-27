@@ -5,9 +5,16 @@ namespace I18NPortable
 {
 	public static class Extensions
 	{
+        /// <summary>
+        /// Get a translation from a key, formatting the string with the given params, if any
+        /// </summary>
 		public static string Translate(this string key, params object[] args) 
             => I18N.Current.Translate(key, args);
 
+        /// <summary>
+        /// Get a translation from a key, formatting the string with the given params, if any. 
+        /// It will return null when the translation is not found
+        /// </summary>
 		public static string TranslateOrNull(this string key, params object[] args) 
             => I18N.Current.TranslateOrNull(key, args);
 
@@ -27,6 +34,12 @@ namespace I18NPortable
                 .Replace("\\r\\n", Environment.NewLine)
                 .Replace("\\n", Environment.NewLine);
 
+        /// <summary>
+        /// Translates an Enum value.
+        /// 
+        /// i.e: <code>var dog = Animals.Dog.Translate()</code> will give "perro" if the the locale
+        /// text file contains a line with "Animal.Dog = perro"
+        /// </summary>
 	    public static string Translate(this Enum value)
 	    {
 	        var fieldInfo = value.GetType().GetRuntimeField(value.ToString());
@@ -35,6 +48,14 @@ namespace I18NPortable
 	        return $"{fieldName}.{value}".Translate();
 	    }
 
+        /// <summary>
+        /// Translates any object by its name or full name.
+        /// 
+        /// i.e: <code>var mainScreen = new MainScreen(); 
+        /// var title = mainScreen.Translate();
+        /// </code>
+        /// It will look for "MainScreen" or [Namespace].MainScreen at your locale file
+        /// </summary>
 	    public static string Translate(this object instance)
 	    {
 	        var nameTranslation = instance.GetType().Name.TranslateOrNull();

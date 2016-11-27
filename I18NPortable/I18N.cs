@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 // ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable MemberCanBeMadeStatic.Global
 
 namespace I18NPortable
 {
@@ -13,6 +14,9 @@ namespace I18NPortable
 	{
 		#region Singleton
 
+        /// <summary>
+        /// Unique instance (Singleton) of I18N
+        /// </summary>
 		public static I18N Current => I18NInstance.Value;
 
 		// Lazy initialization ensures I18NPortableInstance creation is threadsafe
@@ -25,9 +29,15 @@ namespace I18NPortable
 		private void NotifyPropertyChanged(string info) => 
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
 
-		// Indexer
-		public string this[string key] => Translate(key);
+        /// <summary>
+        /// Use the indexer to translate keys. If you need string formatting, use <code>Translate()</code> instead
+        /// </summary>
+        public string this[string key] 
+            => Translate(key);
 
+        /// <summary>
+        /// The current loaded Language, if any
+        /// </summary>
 		public PortableLanguage Language
 		{
 			get { return Languages.FirstOrDefault(x => x.Locale.Equals(Locale)); }
@@ -47,6 +57,10 @@ namespace I18NPortable
 		}
 
 		private string _locale;
+
+        /// <summary>
+        /// The current loaded locale 2 letter string
+        /// </summary>
 		public string Locale
 		{
 			get { return _locale; }
@@ -66,15 +80,24 @@ namespace I18NPortable
 		}
 
 		private List<PortableLanguage> _languages;
+
+        /// <summary>
+        /// A list of supported languages
+        /// </summary>
 		public List<PortableLanguage> Languages
 		{
 			get
 			{
-				if(_languages != null) return _languages;
+				if(_languages != null)
+                    return _languages;
 
 				var languages = _locales.Select(x => new PortableLanguage
-					{ Locale = x.Key, DisplayName = TranslateOrNull(x.Key) ?? new CultureInfo(x.Key).NativeName.CapitalizeFirstCharacter() })
-					.ToList();
+				{
+                    Locale = x.Key,
+                    DisplayName = TranslateOrNull(x.Key) 
+                        ?? new CultureInfo(x.Key).NativeName.CapitalizeFirstCharacter()
+                })
+				.ToList();
 
 				if (languages.Count > 0)
 					_languages = languages;
@@ -108,7 +131,7 @@ namespace I18NPortable
 		}
 
 		/// <summary>
-		/// Enable I18N logs
+		/// Enable I18N logs with an action
 		/// </summary>
 		/// <param name="output">Action to be invoked as the output of the logger</param>
 		public I18N SetLogger(Action<string> output)
@@ -136,7 +159,7 @@ namespace I18NPortable
 		}
 
 		/// <summary>
-		/// Call this at your app initialization 
+		/// Call this when your app starts
 		/// ie: I18N.Current.Init(GetType().GetTypeInfo().Assembly);
 		/// </summary>
 		/// <param name="hostAssembly">The PCL assembly that hosts the locale text files</param>
@@ -273,6 +296,9 @@ namespace I18NPortable
 
 		#region Translations
 
+        /// <summary>
+        /// Get a translation from a key, formatting the string with the given params, if any
+        /// </summary>
 		public string Translate(string key, params object[] args)
 		{
 			if (_translations.ContainsKey(key))
@@ -286,11 +312,21 @@ namespace I18NPortable
 			return $"{_notFoundSymbol}{key}{_notFoundSymbol}";
 		}
 
+        /// <summary>
+        /// Get a translation from a key, formatting the string with the given params, if any. 
+        /// It will return null when the translation is not found
+        /// </summary>
 		public string TranslateOrNull(string key, params object[] args) => 
 			_translations.ContainsKey(key) 
 				? (args.Length == 0 ? _translations[key] : string.Format(_translations[key], args)) 
 				: null;
 
+        /// <summary>
+        /// Get the translation for a given Type name or Type full name.
+        /// 
+        /// i.e: Given a class <code>MainScreen</code>, <code>Translate<MainScreen>()</code> will search a key "MainScreen" in the locale file.
+        /// If not found, it will search for a key [Namespace].MainScreen
+        /// </summary>
 	    public string Translate<T>()
 	    {
 	        var type = typeof(T);
@@ -303,10 +339,13 @@ namespace I18NPortable
             return fullNameTranslation ?? type.Name.Translate();
         }
 
-        [Obsolete("This method is deprecated and will be removed on future versions. Please, use 'TranslateEnumToDictionary' to get the same result")]
+        [Obsolete("This method is deprecated and will be removed on future versions. Please, use 'TranslateEnumToDictionary' to get the same result. In most cases, TranslateEnumToTupleList will be of more help")]
 	    public Dictionary<TEnum, string> TranslateEnum<TEnum>()
 	        => TranslateEnumToDictionary<TEnum>();
 
+        /// <summary>
+        /// Convert Enum Type values to a Dictionary<TEnum, string> where the key is the Enum value and the string is the translated value.
+        /// </summary>
         public Dictionary<TEnum, string> TranslateEnumToDictionary<TEnum>()
         {
             var type = typeof(TEnum);
@@ -321,6 +360,9 @@ namespace I18NPortable
             return dic;
         }
 
+        /// <summary>
+        /// Convert Enum Type values to a List of translated strings
+        /// </summary>
         public List<string> TranslateEnumToList<TEnum>()
         {
             var type = typeof(TEnum);
@@ -331,6 +373,11 @@ namespace I18NPortable
                     .ToList();
         }
 
+        /// <summary>
+        /// Converts Enum Type values to a List of Tuple<TEnum, string> where the Item2 (string) is the enum value translation
+        /// </summary>
+        /// <typeparam name="TEnum"></typeparam>
+        /// <returns></returns>
 	    public List<Tuple<TEnum, string>> TranslateEnumToTupleList<TEnum>()
 	    {
             var type = typeof(TEnum);
@@ -385,8 +432,8 @@ namespace I18NPortable
 
         public void Unload()
 		{
-			_translations = new Dictionary<string, string>();
-			_locales = new Dictionary<string, string>();
+            _translations = new Dictionary<string, string>();
+            _locales = new Dictionary<string, string>();
 
             Log("Unloaded");
 		}
