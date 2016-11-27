@@ -300,13 +300,19 @@ namespace I18NPortable.Tests
             Assert.AreEqual("Rat", animalsTupleList[2].Item2);
             Assert.AreEqual(animalsTupleList[2].Item1, Animals.Rat);
         }
-    }
 
-	public enum Animals
-	{
-		Dog,
-		Cat,
-		Rat,
-        Snake
-	}
+        [TestMethod]
+        public void AnyType_CanBeTranslated_ByItsTypeNameOrFullName()
+        {
+            I18N.Current.Locale = "en";
+
+            Assert.AreEqual("The recipe detail", I18N.Current.Translate<RecipeDetailScreen>());
+            Assert.AreEqual("A fun recipe", I18N.Current.Translate<Recipe>());
+
+            Assert.AreEqual("Workout", I18N.Current.Translate<WorkoutScreen>());
+            Assert.AreEqual("Workout Detail", I18N.Current.Translate<WorkoutRecord>());
+
+            Assert.AreEqual("List of animals", I18N.Current.Translate<Animals>());
+        }
+    }
 }

@@ -77,17 +77,29 @@ namespace I18NPortable.Tests
         {
             Assert.AreEqual("?TestEnum.TestEnumValue1?", TestEnum.TestEnumValue1.Translate());
         }
-    }
 
-    public enum Fruit
-    {
-        Orange,
-        Apple,
-        Banana
-    }
+        [TestMethod]
+        public void AnyClassInstance_CanBeTranslated_ByItsTypeNameOrFullName()
+        {
+            I18N.Current.Locale = "en";
 
-    public enum TestEnum
-    {
-        TestEnumValue1
+            var screen = new RecipeDetailScreen();
+            Assert.AreEqual("The recipe detail", screen.Translate());
+
+            var workoutScreen = new WorkoutScreen();
+            Assert.AreEqual("Workout", workoutScreen.Translate());
+        }
+
+        [TestMethod]
+        public void AnyStruct_CanBeTranslated_ByItsTypeNameOrFullName()
+        {
+            I18N.Current.Locale = "en";
+
+            var recipe = new Recipe();
+            Assert.AreEqual("A fun recipe", recipe.Translate());
+
+            var workoutRecord = new WorkoutRecord();
+            Assert.AreEqual("Workout Detail", workoutRecord.Translate());
+        }
     }
 }

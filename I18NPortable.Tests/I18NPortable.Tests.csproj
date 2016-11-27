@@ -56,6 +56,7 @@
     <Compile Include="I18NTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ExtensionTests.cs" />
+    <Compile Include="Stuff.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Locales\en.txt" />

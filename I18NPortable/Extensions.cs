@@ -34,5 +34,15 @@ namespace I18NPortable
 
 	        return $"{fieldName}.{value}".Translate();
 	    }
+
+	    public static string Translate(this object instance)
+	    {
+	        var nameTranslation = instance.GetType().Name.TranslateOrNull();
+	        if (nameTranslation != null)
+	            return nameTranslation;
+
+            var fullNameTranslation = instance.GetType().FullName.TranslateOrNull();
+	        return fullNameTranslation ?? instance.GetType().Name.Translate();
+	    }
 	}
 }

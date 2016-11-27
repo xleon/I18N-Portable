@@ -291,6 +291,18 @@ namespace I18NPortable
 				? (args.Length == 0 ? _translations[key] : string.Format(_translations[key], args)) 
 				: null;
 
+	    public string Translate<T>()
+	    {
+	        var type = typeof(T);
+
+            var nameTranslation = type.Name.TranslateOrNull();
+            if (nameTranslation != null)
+                return nameTranslation;
+
+            var fullNameTranslation = type.FullName.TranslateOrNull();
+            return fullNameTranslation ?? type.Name.Translate();
+        }
+
         // TODO mark as deprecated
 	    public Dictionary<TEnum, string> TranslateEnum<TEnum>()
 	        => TranslateEnumToDictionary<TEnum>();

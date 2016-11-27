@@ -10,6 +10,7 @@ Multiline = Línea Uno
 		Línea Dos
 		Línea Tres
 
+Animals = Lista de animales
 Animals.Dog = Perro
 Animals.Cat = Gato
 Animals.Rat = Rata
@@ -18,3 +19,6 @@ Animals.Snake = Serpiente\nBuena
 Fruit.Orange = gran naranja
 Fruit.Apple = manzana grande
 Fruit.Banana = buena banana
+
+I18NPortable.Tests.WorkoutScreen = Entrenamiento
+I18NPortable.Tests.WorkoutRecord = Detalle de entrenamiento
