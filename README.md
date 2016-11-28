@@ -263,10 +263,10 @@ string dog = animals[Animals.Dog]; // Perro
 
 Given these translations:
 
-> RecipeDetailScreen = The recipe detail
-> Recipe = A fun recipe
-> I18NPortable.Tests.WorkoutScreen = Workout
-> I18NPortable.Tests.WorkoutRecord = Workout Detail
+    RecipeDetailScreen = The recipe detail
+    Recipe = A fun recipe
+    I18NPortable.Tests.WorkoutScreen = Workout
+    I18NPortable.Tests.WorkoutRecord = Workout Detail
 
 ```csharp
 string detailScren = I18N.Current.Translate<RecipeDetailScreen>(); // The recipe detail
