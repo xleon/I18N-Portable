@@ -36,28 +36,28 @@ Create a `{two letter ISO code}.txt` file for each language you want to support
 
 **Locale content sample**
 
-> # key = value (the key will be the same across locales)
-> one = uno
-> two = dos
-> three = tres
-> four = cuatro
-> five = cinco
->     
-> # Enums are supported
-> Animals.Dog = Perro
-> Animals.Cat = Gato
-> Animals.Rat = Rata
-> Animals.Tiger = Tigre
-> Animals.Monkey = Mono
-> 
-> # Support for string.Format()
-> stars.count = Tienes {0} estrellas
-> 
-> TextWithLineBreakCharacters = Line One\nLine Two\r\nLine Three
-> 
-> Multiline = Line One
-> 	Line Two
-> 	Line Three
+    # key = value (the key will be the same across locales)
+    one = uno
+    two = dos
+    three = tres 
+    four = cuatro
+    five = cinco
+      
+    # Enums are supported
+    Animals.Dog = Perro
+    Animals.Cat = Gato
+    Animals.Rat = Rata
+    Animals.Tiger = Tigre
+    Animals.Monkey = Mono
+     
+    # Support for string.Format()
+    stars.count = Tienes {0} estrellas
+     
+    TextWithLineBreakCharacters = Line One\nLine Two\r\nLine Three
+     
+    Multiline = Line One
+        Line Two
+        Line Three
 
 
 ### Initialization
@@ -229,9 +229,9 @@ public enum Animals
 ```    
 and these lines in your locale text file
 
-> Animals.Dog = Perro
-> Animals.Cat = Gato
-> Animals.Rat = Rata  
+    Animals.Dog = Perro
+    Animals.Cat = Gato
+    Animals.Rat = Rata  
 
 there are multiple choices to get the translated values:
 
