@@ -270,24 +270,6 @@ namespace I18NPortable.Tests
             Assert.AreEqual("Rata", animals[Animals.Rat]);
         }
 
-	    [TestMethod]
-	    public void TranslateEnum_ShouldTranslateToDictionary()
-	    {
-            I18N.Current.Locale = "en";
-            var animals = I18N.Current.TranslateEnum<Animals>();
-
-            Assert.AreEqual("Dog", animals[Animals.Dog]);
-            Assert.AreEqual("Cat", animals[Animals.Cat]);
-            Assert.AreEqual("Rat", animals[Animals.Rat]);
-
-            I18N.Current.Locale = "es";
-            animals = I18N.Current.TranslateEnum<Animals>();
-
-            Assert.AreEqual("Perro", animals[Animals.Dog]);
-            Assert.AreEqual("Gato", animals[Animals.Cat]);
-            Assert.AreEqual("Rata", animals[Animals.Rat]);
-        }
-
         [TestMethod]
         public void Enum_CanBeTranslated_ToTupleList()
         {

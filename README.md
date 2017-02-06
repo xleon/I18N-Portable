@@ -258,28 +258,3 @@ string dog = animals[0]; // Perro
 Dictionary<Animals, string> animals = I18N.Current.TranslateEnumToDictionary<Animals>();
 string dog = animals[Animals.Dog]; // Perro
 ```
-
-**Translate Types and instances**
-
-Given these translations:
-
-    RecipeDetailScreen = The recipe detail
-    Recipe = A fun recipe
-    I18NPortable.Tests.WorkoutScreen = Workout
-    I18NPortable.Tests.WorkoutRecord = Workout Detail
-
-```csharp
-string detailScren = I18N.Current.Translate<RecipeDetailScreen>(); // The recipe detail
-string recipe = I18N.Current.Translate<Recipe>(); // A fun recipe
-
-var detailScrenInstance = new RecipeDetailScreen();
-string detailScreen = detailScrenInstance.Translate(); // The recipe detail
-
-using I18NPortable.Tests;
-
-string workout = I18N.Current.Translate<WorkoutScreen>(); // Workout
-string workoutRecord = I18N.Current.Translate<WorkoutRecord>(); // Workout Detail
-
-var workoutInstance = new WorkoutScreen();
-string workout = workoutInstance.Translate(); // Workout
-```

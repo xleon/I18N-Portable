@@ -330,10 +330,6 @@ namespace I18NPortable
             return fullNameTranslation ?? type.Name.Translate();
         }
 
-        [Obsolete("This method is deprecated and will be removed on future versions. Please, use 'TranslateEnumToDictionary' to get the same result. In most cases, TranslateEnumToTupleList will be of more help")]
-	    public Dictionary<TEnum, string> TranslateEnum<TEnum>()
-	        => TranslateEnumToDictionary<TEnum>();
-
         /// <summary>
         /// Convert Enum Type values to a Dictionary&lt;TEnum, string&gt; where the key is the Enum value and the string is the translated value.
         /// </summary>

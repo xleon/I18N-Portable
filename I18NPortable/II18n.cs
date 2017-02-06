@@ -24,7 +24,7 @@ namespace I18NPortable
         string TranslateOrNull(string key, params object[] args);
 
         string Translate<T>();
-        Dictionary<TEnum, string> TranslateEnum<TEnum>();
+
         Dictionary<TEnum, string> TranslateEnumToDictionary<TEnum>();
         List<string> TranslateEnumToList<TEnum>();
         List<Tuple<TEnum, string>> TranslateEnumToTupleList<TEnum>();

@@ -47,23 +47,5 @@ namespace I18NPortable
 
 	        return $"{fieldName}.{value}".Translate();
 	    }
-
-        /// <summary>
-        /// Translates any object by its name or full name.
-        /// 
-        /// i.e: <code>var mainScreen = new MainScreen(); 
-        /// var title = mainScreen.Translate();
-        /// </code>
-        /// It will look for <code>MainScreen</code> or <code>[Namespace].MainScreen</code> at your locale file
-        /// </summary>
-	    public static string Translate(this object instance)
-	    {
-	        var nameTranslation = instance.GetType().Name.TranslateOrNull();
-	        if (nameTranslation != null)
-	            return nameTranslation;
-
-            var fullNameTranslation = instance.GetType().FullName.TranslateOrNull();
-	        return fullNameTranslation ?? instance.GetType().Name.Translate();
-	    }
 	}
 }
