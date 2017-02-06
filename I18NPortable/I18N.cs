@@ -11,19 +11,9 @@ using System.Reflection;
 
 namespace I18NPortable
 {
-	public class I18N : INotifyPropertyChanged
+	public class I18N : II18N
 	{
-		#region Singleton
-
-        /// <summary>
-        /// Unique instance (Singleton) of I18N
-        /// </summary>
-		public static I18N Current => I18NInstance.Value;
-
-		// Lazy initialization ensures I18NPortableInstance creation is threadsafe
-		private static readonly Lazy<I18N> I18NInstance = new Lazy<I18N>(() => new I18N());
-
-		#endregion
+	    public static I18N Current { get; set; } = new I18N();
 
 		// PropertyChanged
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -36,7 +26,7 @@ namespace I18NPortable
         public string this[string key] 
             => Translate(key);
 
-        /// <summary>
+	    /// <summary>
         /// The current loaded Language, if any
         /// </summary>
 		public PortableLanguage Language
@@ -398,7 +388,7 @@ namespace I18NPortable
 
         #region Helpers
 
-        private string GetDefaultLocaleFromCurrentCulture()
+        public string GetDefaultLocaleFromCurrentCulture()
 		{
 			var currentCulture = CultureInfo.CurrentCulture;
 

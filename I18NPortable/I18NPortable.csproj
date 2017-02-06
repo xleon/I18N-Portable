@@ -43,11 +43,11 @@
   <ItemGroup>
     <Compile Include="Extensions.cs" />
     <Compile Include="I18N.cs" />
+    <Compile Include="II18n.cs" />
     <Compile Include="PortableLanguage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
-
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
