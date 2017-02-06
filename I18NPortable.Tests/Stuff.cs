@@ -30,7 +30,7 @@ namespace I18NPortable.Tests
         public event PropertyChangedEventHandler PropertyChanged;
         public void Dispose()
         {
-            throw new NotImplementedException();
+           
         }
 
         public string this[string key]

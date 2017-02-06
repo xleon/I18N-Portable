@@ -18,6 +18,10 @@ namespace I18NPortable.Tests
 				.SetThrowWhenKeyNotFound(false)
 				.Init(GetType().GetTypeInfo().Assembly);
 
+	    [TestCleanup]
+	    public void Finish() => 
+            I18N.Current.Dispose();
+
 		[TestMethod]
 		public void EmbbededLocales_ShouldBe_Discovered()
 		{
@@ -321,9 +325,7 @@ namespace I18NPortable.Tests
             I18N.Current.PropertyChanged += (sender, args) =>
             {
                 if (args.PropertyName.Equals("Item[]"))
-                {
                     translation = I18N.Current.Translate("one");
-                }
             };
 
 	        I18N.Current.Locale = "en";
@@ -333,6 +335,48 @@ namespace I18NPortable.Tests
             I18N.Current.Locale = "es";
 
             Assert.AreEqual("uno", translation);
+        }
+
+        [TestMethod]
+        public void Language_Is_Bindable()
+        {
+            I18N.Current.Locale = "es";
+            var language = I18N.Current.Language;
+
+            I18N.Current.PropertyChanged += (sender, args) =>
+            {
+                if (args.PropertyName.Equals("Language"))
+                    language = I18N.Current.Language;
+            };
+
+            I18N.Current.Locale = "en";
+
+            Assert.AreEqual("en", language.Locale);
+
+            I18N.Current.Locale = "es";
+
+            Assert.AreEqual("es", language.Locale);
+        }
+
+        [TestMethod]
+        public void Locale_Is_Bindable()
+        {
+            I18N.Current.Locale = "es";
+            var locale = I18N.Current.Locale;
+
+            I18N.Current.PropertyChanged += (sender, args) =>
+            {
+                if (args.PropertyName.Equals("Locale"))
+                    locale = I18N.Current.Locale;
+            };
+
+            I18N.Current.Locale = "en";
+
+            Assert.AreEqual("en", locale);
+
+            I18N.Current.Locale = "es";
+
+            Assert.AreEqual("es", locale);
         }
     }
 }
