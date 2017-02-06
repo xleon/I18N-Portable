@@ -13,7 +13,7 @@ namespace I18NPortable.Tests
 	{
 		[TestInitialize]
 		public void Init() => 
-			I18N.Current
+			I18N.Current = new I18N()
 				.SetNotFoundSymbol("?")
 				.SetThrowWhenKeyNotFound(false)
 				.Init(GetType().GetTypeInfo().Assembly);
@@ -151,7 +151,16 @@ namespace I18NPortable.Tests
 		public void TranslateOrNull_ShouldReturn_Null_WhenKeyIsNotFound()
 		{
 			Assert.IsNull(I18N.Current.TranslateOrNull("nonExistentKey"));
+			Assert.IsNull(I18N.Current.TranslateOrNull("nonExistentKey", "one", "two"));
 		}
+
+        [TestMethod]
+        public void TranslateOrNull_Should_Translate()
+        {
+            I18N.Current.Locale = "es";
+            Assert.AreEqual("uno", I18N.Current.TranslateOrNull("one"));
+            Assert.AreEqual("Hola Diego, tienes 3 emails", I18N.Current.TranslateOrNull("Mailbox.Notification", "Diego", "3"));
+        }
 
         [TestMethod]
 		[ExpectedException(typeof(KeyNotFoundException))]
@@ -283,18 +292,47 @@ namespace I18NPortable.Tests
             Assert.AreEqual(animalsTupleList[2].Item1, Animals.Rat);
         }
 
-        [TestMethod]
-        public void AnyType_CanBeTranslated_ByItsTypeNameOrFullName()
-        {
-            I18N.Current.Locale = "en";
+	    [TestMethod]
+	    public void I18N_CanBeMocked()
+	    {
+	        var mock = new I18NMock();
+	        I18N.Current = mock;
 
-            Assert.AreEqual("The recipe detail", I18N.Current.Translate<RecipeDetailScreen>());
-            Assert.AreEqual("A fun recipe", I18N.Current.Translate<Recipe>());
+            Assert.AreEqual("mocked translation", I18N.Current.Translate("something"));
+	    }
 
-            Assert.AreEqual("Workout", I18N.Current.Translate<WorkoutScreen>());
-            Assert.AreEqual("Workout Detail", I18N.Current.Translate<WorkoutRecord>());
+	    [TestMethod]
+	    public void I18n_CanBeDisposed()
+	    {
+            I18N.Current.PropertyChanged += (sender, args) => { };
+            I18N.Current.Dispose();
 
-            Assert.AreEqual("List of animals", I18N.Current.Translate<Animals>());
+            Assert.IsNull(I18N.Current.Language);
+            Assert.IsNull(I18N.Current.Languages);
+            Assert.IsNull(I18N.Current.Locale);
+	    }
+
+	    [TestMethod]
+	    public void Indexer_Is_Bindable()
+	    {
+	        I18N.Current.Locale = "es";
+	        var translation = I18N.Current.Translate("one");
+
+            I18N.Current.PropertyChanged += (sender, args) =>
+            {
+                if (args.PropertyName.Equals("Item[]"))
+                {
+                    translation = I18N.Current.Translate("one");
+                }
+            };
+
+	        I18N.Current.Locale = "en";
+
+            Assert.AreEqual("one", translation);
+
+            I18N.Current.Locale = "es";
+
+            Assert.AreEqual("uno", translation);
         }
     }
 }

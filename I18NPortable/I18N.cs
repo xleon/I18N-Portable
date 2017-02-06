@@ -13,7 +13,7 @@ namespace I18NPortable
 {
 	public class I18N : II18N
 	{
-	    public static I18N Current { get; set; } = new I18N();
+	    public static II18N Current { get; set; } = new I18N();
 
 		// PropertyChanged
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -31,7 +31,7 @@ namespace I18NPortable
         /// </summary>
 		public PortableLanguage Language
 		{
-			get { return Languages.FirstOrDefault(x => x.Locale.Equals(Locale)); }
+			get { return Languages?.FirstOrDefault(x => x.Locale.Equals(Locale)); }
 			set
 			{
 				if (Language.Locale == value.Locale)
@@ -82,7 +82,7 @@ namespace I18NPortable
 				if(_languages != null)
                     return _languages;
 
-				var languages = _locales.Select(x => new PortableLanguage
+				var languages = _locales?.Select(x => new PortableLanguage
 				{
                     Locale = x.Key,
                     DisplayName = TranslateOrNull(x.Key) 
@@ -90,7 +90,7 @@ namespace I18NPortable
                 })
 				.ToList();
 
-				if (languages.Count > 0)
+				if (languages?.Count > 0)
 					_languages = languages;
 
 				return _languages;
@@ -105,8 +105,6 @@ namespace I18NPortable
 		private string _fallbackLocale;
 		private Action<string> _logger;
 
-		private I18N() {}
-
 		#region Fluent API
 
 		/// <summary>
@@ -114,7 +112,7 @@ namespace I18NPortable
 		/// be translated as "##key##". 
 		/// The default symbol is "?"
 		/// </summary>
-		public I18N SetNotFoundSymbol(string symbol)
+		public II18N SetNotFoundSymbol(string symbol)
 		{
 			if (!string.IsNullOrEmpty(symbol))
 				_notFoundSymbol = symbol;
@@ -125,7 +123,7 @@ namespace I18NPortable
 		/// Enable I18N logs with an action
 		/// </summary>
 		/// <param name="output">Action to be invoked as the output of the logger</param>
-		public I18N SetLogger(Action<string> output)
+		public II18N SetLogger(Action<string> output)
 		{
 			_logger = output;
 			return this;
@@ -134,7 +132,7 @@ namespace I18NPortable
 		/// <summary>
 		/// Throw an exception whenever a key is not found in the locale file (fail early, fail fast)
 		/// </summary>
-		public I18N SetThrowWhenKeyNotFound(bool enabled)
+		public II18N SetThrowWhenKeyNotFound(bool enabled)
 		{
 			_throwWhenKeyNotFound = enabled;
 			return this;
@@ -143,7 +141,7 @@ namespace I18NPortable
 		/// <summary>
 		/// Set the locale that will be loaded in case the system language is not supported
 		/// </summary>
-		public I18N SetFallbackLocale(string locale)
+		public II18N SetFallbackLocale(string locale)
 		{
 			_fallbackLocale = locale;
 			return this;
@@ -154,7 +152,7 @@ namespace I18NPortable
         /// ie: <code>I18N.Current.Init(GetType().GetTypeInfo().Assembly);</code>
         /// </summary>
         /// <param name="hostAssembly">The PCL assembly that hosts the locale text files</param>
-        public I18N Init(Assembly hostAssembly)
+        public II18N Init(Assembly hostAssembly)
 		{
 			Unload();
 
@@ -313,24 +311,6 @@ namespace I18NPortable
 				: null;
 
         /// <summary>
-        /// Get the translation for a given Type name or Type full name.
-        /// 
-        /// i.e: Given a class <code>MainScreen</code>, <code>Translate&lt;MainScreen&gt;()</code> will search a key "MainScreen" in the locale file.
-        /// If not found, it will search for a key <code>[Namespace].MainScreen</code>
-        /// </summary>
-	    public string Translate<T>()
-	    {
-	        var type = typeof(T);
-
-            var nameTranslation = type.Name.TranslateOrNull();
-            if (nameTranslation != null)
-                return nameTranslation;
-
-            var fullNameTranslation = type.FullName.TranslateOrNull();
-            return fullNameTranslation ?? type.Name.Translate();
-        }
-
-        /// <summary>
         /// Convert Enum Type values to a Dictionary&lt;TEnum, string&gt; where the key is the Enum value and the string is the translated value.
         /// </summary>
         public Dictionary<TEnum, string> TranslateEnumToDictionary<TEnum>()
@@ -424,5 +404,24 @@ namespace I18NPortable
 
             Log("Unloaded");
 		}
+
+	    public void Dispose()
+	    {
+	        if (PropertyChanged != null)
+	        {
+                foreach (var @delegate in PropertyChanged.GetInvocationList())
+                {
+                    PropertyChanged -= (PropertyChangedEventHandler)@delegate;
+                }
+
+                PropertyChanged = null;
+            }
+
+            _translations = null;
+            _locales = null;
+            _locale = null;
+            _languages = null;
+            _logger = null;
+        }
 	}
 }

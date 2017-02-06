@@ -9,7 +9,7 @@ namespace I18NPortable.Tests
     {
         [TestInitialize]
         public void Init() =>
-            I18N.Current
+            I18N.Current = new I18N()
                 .SetNotFoundSymbol("?")
                 .SetThrowWhenKeyNotFound(false)
                 .Init(GetType().GetTypeInfo().Assembly);

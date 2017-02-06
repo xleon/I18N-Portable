@@ -19,9 +19,3 @@ Animals.Snake = Good\nSnake
 Fruit.Orange = great orange
 Fruit.Apple = big apple
 Fruit.Banana = nice banana
-
-RecipeDetailScreen = The recipe detail
-Recipe = A fun recipe
-
-I18NPortable.Tests.WorkoutScreen = Workout
-I18NPortable.Tests.WorkoutRecord = Workout Detail

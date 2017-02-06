@@ -19,6 +19,3 @@ Animals.Snake = Serpiente\nBuena
 Fruit.Orange = gran naranja
 Fruit.Apple = manzana grande
 Fruit.Banana = buena banana
-
-I18NPortable.Tests.WorkoutScreen = Entrenamiento
-I18NPortable.Tests.WorkoutRecord = Detalle de entrenamiento

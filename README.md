@@ -1,5 +1,5 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/ogaeiar24scm9c8e?svg=true)](https://ci.appveyor.com/project/xleon/i18n-portable)
-[![I18NPortable](https://img.shields.io/nuget/v/I18NPortable.svg?maxAge=2592000)](https://www.nuget.org/packages/I18NPortable/)
+[![I18NPortable](https://img.shields.io/nuget/v/I18NPortable.svg?maxAge=92000)](https://www.nuget.org/packages/I18NPortable/)
 
 ### Why I18NPortable?
 
@@ -11,7 +11,7 @@
 - Very tiny: less than 10kb.
 - No dependencies.
 - Pure PCL, no platform code
-- Unit Tested with 100% code coverage.
+- Unit Tested with nearly 100% code coverage.
 
 
 ### Install
@@ -202,7 +202,7 @@ I18N.Current
     .SetNotFoundSymbol("$$")
     .SetFallbackLocale("en")
     .SetLogger(text => Debug.WriteLine(text))
-    .Init(GetType().GetTypeInfo().Assembly); // call `Init()` at the end
+    .Init(GetType().GetTypeInfo().Assembly);
 ```     
 
 ### Translation helpers
