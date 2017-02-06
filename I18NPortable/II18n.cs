@@ -18,7 +18,7 @@ namespace I18NPortable
         II18N SetFallbackLocale(string locale);
         II18N Init(Assembly hostAssembly);
 
-        string GetDefaultLocaleFromCurrentCulture();
+        string GetDefaultLocale();
 
         string Translate(string key, params object[] args);
         string TranslateOrNull(string key, params object[] args);

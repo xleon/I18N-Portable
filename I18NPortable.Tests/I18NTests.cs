@@ -378,5 +378,20 @@ namespace I18NPortable.Tests
 
             Assert.AreEqual("es", locale);
         }
+
+	    [TestMethod]
+	    public void DefaultLocale_Respects_CurentCulture()
+	    {
+            I18N.Current.Dispose();
+
+            CultureInfo.DefaultThreadCurrentCulture =
+                CultureInfo.DefaultThreadCurrentUICulture =
+                    Thread.CurrentThread.CurrentCulture =
+                        Thread.CurrentThread.CurrentUICulture = new CultureInfo("es-ES");
+
+            I18N.Current = new I18N().Init(GetType().GetTypeInfo().Assembly);
+
+            Assert.AreEqual("es", I18N.Current.GetDefaultLocale());
+        }
     }
 }

@@ -66,7 +66,7 @@ namespace I18NPortable.Tests
             throw new NotImplementedException();
         }
 
-        public string GetDefaultLocaleFromCurrentCulture()
+        public string GetDefaultLocale()
         {
             throw new NotImplementedException();
         }

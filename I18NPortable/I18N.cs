@@ -160,7 +160,7 @@ namespace I18NPortable
 
 			_hostAssembly = hostAssembly;
 
-			var localeToLoad = GetDefaultLocaleFromCurrentCulture();
+			var localeToLoad = GetDefaultLocale();
 
 			if (string.IsNullOrEmpty(localeToLoad))
 			{
@@ -364,7 +364,7 @@ namespace I18NPortable
 
         #region Helpers
 
-        public string GetDefaultLocaleFromCurrentCulture()
+        public string GetDefaultLocale()
 		{
 			var currentCulture = CultureInfo.CurrentCulture;
 
