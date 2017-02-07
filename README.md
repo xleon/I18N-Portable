@@ -69,14 +69,17 @@ initialization code and your locales live on the Core PCL itself (recommended):
 I18N.Current.Init(GetType().GetTypeInfo().Assembly);
 ```
 
-In case you use any DI or Service Locator pattern, you can create your own instance of `II18N` interface:
+In case you use any DI or Service Locator pattern, you can create your own instance of `II18N` interface.
+`II18N` can be easily mocked for unit testing purposes. 
 
 ```csharp
 var translator = new I18N().Init(GetType().GetTypeInfo().Assembly);
 I18N.Current = translator; // needed for method extensions to work
-// add translator to your container
+// add translator to your container. i.e (Splat): 
+// Locator.CurrentMutable.RegisterConstant(translator, typeof(II18N));
 ```
-    
+
+
 `I18N` will scan the "Locales" directory to get the available/supported languages. 
 Then it will try to load the correct locale matching the system/OS current culture.
 In case the current culture is not supported (your system is in French but "fr.txt" does not exists), 
