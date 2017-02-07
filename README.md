@@ -95,9 +95,9 @@ I18N.Current.SetFallbackLocale("en").Init(assembly);
 
 There are 3 ways to translate a key. Use the one you like, as all of them will produce the same result:
 ```csharp
-string one = I18N.Current.Translate("one");
-string two = "two".Translate(); // string extension method
-string three = I18N.Current["three"]; // indexer
+string two = "key".Translate(); // string extension method
+string three = I18N.Current["key"]; // indexer
+string one = I18N.Current.Translate("key");
 ```	
 The first and second methods allow additional arguments 
 reproducing `string.Format(params object[] args)` functionality: 
