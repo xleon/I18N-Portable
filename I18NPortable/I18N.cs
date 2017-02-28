@@ -213,6 +213,13 @@ namespace I18NPortable
 
             _translations = _locales[locale].GetLocaleTranslationDictionary();
 
+            //Trying to load fallback locale
+            if(_translations == null)
+            {
+                _translations = TryLoadFallbackLocale();
+                locale = _fallbackLocale;
+            }
+
 			LogTranslations();
 
 			_locale = locale;
@@ -220,14 +227,23 @@ namespace I18NPortable
 			// Update bindings to indexer (useful for views in MVVM frameworks)
 			NotifyPropertyChanged("Item[]");
 		}
-		#endregion
 
-		#region Translations
+        private Dictionary<string, string> TryLoadFallbackLocale()
+        {
+            if (string.IsNullOrEmpty(_fallbackLocale))
+            {
+                throw new Exception("No locales present");
+            }
+            return _locales[_fallbackLocale].GetLocaleTranslationDictionary();
+        }
+        #endregion
 
-		/// <summary>
-		/// Get a translation from a key, formatting the string with the given params, if any
-		/// </summary>
-		public string Translate(string key, params object[] args)
+        #region Translations
+
+        /// <summary>
+        /// Get a translation from a key, formatting the string with the given params, if any
+        /// </summary>
+        public string Translate(string key, params object[] args)
 		{
 			if (_translations.ContainsKey(key))
 				return args.Length == 0

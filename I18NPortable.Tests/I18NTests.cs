@@ -195,9 +195,50 @@ namespace I18NPortable.Tests
                     Thread.CurrentThread.CurrentCulture =
                         Thread.CurrentThread.CurrentUICulture = new CultureInfo("pt-BR");
 
-            I18N.Current.SetFallbackLocale("fr").Init();
+            I18N.Current.SetFallbackLocale("en").Init();
 
             Assert.AreEqual("en", I18N.Current.Locale);
+        }
+
+        [TestMethod]
+        public void FallbackLocale_When_All_Strategies_Fail()
+        {
+            CultureInfo.DefaultThreadCurrentCulture =
+                CultureInfo.DefaultThreadCurrentUICulture =
+                    Thread.CurrentThread.CurrentCulture =
+                        Thread.CurrentThread.CurrentUICulture = new CultureInfo("pt-BR");
+
+
+
+            I18N.Current = new I18N(new TestLocaleProvider(GetType().GetTypeInfo().Assembly));
+
+            I18N.Current.SetFallbackLocale("en");
+
+            I18N.Current.Init();
+
+            string result = I18N.Current.Translate("one");
+
+            Assert.AreEqual("one", result);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(Exception))]
+        public void Crash_When_All_Strategies_Fail_And_No_Fallback()
+        {
+            CultureInfo.DefaultThreadCurrentCulture =
+                CultureInfo.DefaultThreadCurrentUICulture =
+                    Thread.CurrentThread.CurrentCulture =
+                        Thread.CurrentThread.CurrentUICulture = new CultureInfo("pt-BR");
+
+
+
+            I18N.Current = new I18N(new TestLocaleProvider(GetType().GetTypeInfo().Assembly));
+
+            I18N.Current.Init();
+
+            string result = I18N.Current.Translate("one");
+
+            Assert.AreEqual("one", result);
         }
 
         [TestMethod]

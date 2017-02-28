@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
+using I18NPortable.Strategies;
+using System.Linq;
 
 namespace I18NPortable.Tests
 {
@@ -24,6 +26,38 @@ namespace I18NPortable.Tests
     {
         TestEnumValue1
     }
+
+    public class TestLocaleProvider : I18NPortable.ILocaleProvider
+    {
+        private Assembly _hostAssembly;
+
+        public TestLocaleProvider(Assembly hostAssembly)
+        {
+            _hostAssembly = hostAssembly;
+        }
+
+        public Dictionary<string, LocaleStrategieCollection> GetAvailableLocales()
+        {
+            var returnValue = new Dictionary<string, LocaleStrategieCollection>();
+
+            var localeResourceNames = _hostAssembly
+                .GetManifestResourceNames()
+                .Where(x => x.Contains("Locales.") && x.EndsWith(".txt"))
+                .ToArray();
+
+            foreach (var resource in localeResourceNames)
+            {
+                var parts = resource.Split('.');
+                var localeName = parts[parts.Length - 2];
+
+                returnValue.Add(localeName, new I18NPortable.Strategies.LocaleStrategieCollection(new I18NPortable.Strategies.EmbeddedLocaleReceiveStrategy(_hostAssembly, resource)));
+            }
+
+            returnValue.Add("pt", new LocaleStrategieCollection(new Strategies.StrategiesTest.FailingStrategie()));
+            return returnValue;
+        }
+    }
+
 
     public class I18NMock : II18N
     {

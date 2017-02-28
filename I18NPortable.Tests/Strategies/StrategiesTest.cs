@@ -8,7 +8,7 @@ namespace I18NPortable.Tests.Strategies
     [TestClass]
     public class StrategiesTest
     {
-        class FailingStrategie : I18NPortable.Strategies.ILocaleReceiveStrategy
+        public class FailingStrategie : I18NPortable.Strategies.ILocaleReceiveStrategy
         {
             public bool TryGetTranslationDictionary(out Dictionary<string, string> result)
             {
@@ -17,7 +17,7 @@ namespace I18NPortable.Tests.Strategies
             }
         }
 
-        class SusseccesfulStrategie : I18NPortable.Strategies.ILocaleReceiveStrategy
+        public class SusseccesfulStrategie : I18NPortable.Strategies.ILocaleReceiveStrategy
         {
             private string rString;
 
