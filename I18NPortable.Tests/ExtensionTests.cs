@@ -9,10 +9,10 @@ namespace I18NPortable.Tests
     {
         [TestInitialize]
         public void Init() =>
-            I18N.Current = new I18N()
+            I18N.Current = new I18N( new EmbeddedLocaleProvider( GetType().GetTypeInfo().Assembly ) )
                 .SetNotFoundSymbol("?")
                 .SetThrowWhenKeyNotFound(false)
-                .Init(GetType().GetTypeInfo().Assembly);
+                .Init();
 
         [TestMethod]
         public void CanTranslate_WithStringExtensionMethod()

@@ -61,7 +61,7 @@ namespace I18NPortable.Tests
             throw new NotImplementedException();
         }
 
-        public II18N Init(Assembly hostAssembly)
+        public II18N Init()
         {
             throw new NotImplementedException();
         }

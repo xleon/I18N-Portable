@@ -13,12 +13,7 @@ namespace I18NPortable
 {
 	public class I18N : II18N
 	{
-		public static II18N Current { get; set; } = new I18N();
-
-		public I18N() : this(new DefaultLocaleProvider())
-		{
-
-		}
+		public static II18N Current { get; set; }
 
 		public I18N(ILocaleProvider localeProvider)
 		{
@@ -108,8 +103,7 @@ namespace I18NPortable
 		}
 
 		private Dictionary<string, string> _translations;
-		private Dictionary<string, string> _locales;
-		private Assembly _hostAssembly;
+		private Dictionary<string, Strategies.LocaleStrategieCollection> _locales;
 		private bool _throwWhenKeyNotFound;
 		private string _notFoundSymbol = "?";
 		private string _fallbackLocale;
@@ -163,13 +157,11 @@ namespace I18NPortable
 		/// ie: <code>I18N.Current.Init(GetType().GetTypeInfo().Assembly);</code>
 		/// </summary>
 		/// <param name="hostAssembly">The PCL assembly that hosts the locale text files</param>
-		public II18N Init(Assembly hostAssembly)
+		public II18N Init()
 		{
 			Unload();
 
-			DiscoverLocales(hostAssembly);
-
-			_hostAssembly = hostAssembly;
+			DiscoverLocales();
 
 			var localeToLoad = GetDefaultLocale();
 
@@ -203,11 +195,11 @@ namespace I18NPortable
 
 		#region Load stuff
 
-		private void DiscoverLocales(Assembly hostAssembly)
+		private void DiscoverLocales()
 		{
 			Log("Getting available locales...");
 
-			_locales = _localeProvider.GetAvailableLocales(hostAssembly);
+			_locales = _localeProvider.GetAvailableLocales();
 
 			Log($"Found {_locales.Count} locales: {string.Join(", ", _locales.Keys.ToArray())}");
 		}
@@ -219,7 +211,7 @@ namespace I18NPortable
 
 			var resourcePath = _locales[locale];
 
-			_translations = _localeProvider.PrepareTranslationForLocale(_hostAssembly, resourcePath);
+            _translations = _locales[locale].GetLocaleTranslationDictionary();
 
 			LogTranslations();
 
@@ -347,7 +339,7 @@ namespace I18NPortable
 		public void Unload()
 		{
 			_translations = new Dictionary<string, string>();
-			_locales = new Dictionary<string, string>();
+			_locales = new Dictionary<string, Strategies.LocaleStrategieCollection>();
 
 			Log("Unloaded");
 		}
