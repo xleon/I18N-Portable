@@ -16,7 +16,7 @@ namespace I18NPortable
         II18N SetLogger(Action<string> output);
         II18N SetThrowWhenKeyNotFound(bool enabled);
         II18N SetFallbackLocale(string locale);
-        II18N Init(Assembly hostAssembly);
+        II18N Init();
 
         string GetDefaultLocale();
 

@@ -13,10 +13,10 @@ namespace I18NPortable.Tests
 	{
 		[TestInitialize]
 		public void Init() => 
-			I18N.Current = new I18N()
+			I18N.Current = new I18N(new EmbeddedLocaleProvider(GetType().GetTypeInfo().Assembly))
 				.SetNotFoundSymbol("?")
 				.SetThrowWhenKeyNotFound(false)
-				.Init(GetType().GetTypeInfo().Assembly);
+				.Init();
 
 	    [TestCleanup]
 	    public void Finish() => 
@@ -44,7 +44,7 @@ namespace I18NPortable.Tests
         [ExpectedException(typeof(Exception))]
         public void DiscoverLocales_ShouldThrow_If_NoLocalesAvailable()
 	    {
-	        I18N.Current.Init(I18N.Current.GetType().GetTypeInfo().Assembly);
+            I18N.Current = new I18N(new EmbeddedLocaleProvider(typeof(I18N).GetTypeInfo().Assembly)).Init();
 	    }
 
 	    [TestMethod]
@@ -182,7 +182,7 @@ namespace I18NPortable.Tests
                     Thread.CurrentThread.CurrentCulture =
                         Thread.CurrentThread.CurrentUICulture = new CultureInfo("pt-BR");
             
-            I18N.Current.SetFallbackLocale("en").Init(GetType().GetTypeInfo().Assembly);
+            I18N.Current.SetFallbackLocale("en").Init();
 
             Assert.AreEqual("en", I18N.Current.Locale);
 	    }
@@ -195,9 +195,50 @@ namespace I18NPortable.Tests
                     Thread.CurrentThread.CurrentCulture =
                         Thread.CurrentThread.CurrentUICulture = new CultureInfo("pt-BR");
 
-            I18N.Current.SetFallbackLocale("fr").Init(GetType().GetTypeInfo().Assembly);
+            I18N.Current.SetFallbackLocale("en").Init();
 
             Assert.AreEqual("en", I18N.Current.Locale);
+        }
+
+        [TestMethod]
+        public void FallbackLocale_When_All_Strategies_Fail()
+        {
+            CultureInfo.DefaultThreadCurrentCulture =
+                CultureInfo.DefaultThreadCurrentUICulture =
+                    Thread.CurrentThread.CurrentCulture =
+                        Thread.CurrentThread.CurrentUICulture = new CultureInfo("pt-BR");
+
+
+
+            I18N.Current = new I18N(new TestLocaleProvider(GetType().GetTypeInfo().Assembly));
+
+            I18N.Current.SetFallbackLocale("en");
+
+            I18N.Current.Init();
+
+            string result = I18N.Current.Translate("one");
+
+            Assert.AreEqual("one", result);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(Exception))]
+        public void Crash_When_All_Strategies_Fail_And_No_Fallback()
+        {
+            CultureInfo.DefaultThreadCurrentCulture =
+                CultureInfo.DefaultThreadCurrentUICulture =
+                    Thread.CurrentThread.CurrentCulture =
+                        Thread.CurrentThread.CurrentUICulture = new CultureInfo("pt-BR");
+
+
+
+            I18N.Current = new I18N(new TestLocaleProvider(GetType().GetTypeInfo().Assembly));
+
+            I18N.Current.Init();
+
+            string result = I18N.Current.Translate("one");
+
+            Assert.AreEqual("one", result);
         }
 
         [TestMethod]
@@ -389,7 +430,7 @@ namespace I18NPortable.Tests
                     Thread.CurrentThread.CurrentCulture =
                         Thread.CurrentThread.CurrentUICulture = new CultureInfo("es-ES");
 
-            I18N.Current = new I18N().Init(GetType().GetTypeInfo().Assembly);
+            I18N.Current = new I18N( new EmbeddedLocaleProvider(this.GetType().GetTypeInfo().Assembly) ).Init();
 
             Assert.AreEqual("es", I18N.Current.GetDefaultLocale());
         }
