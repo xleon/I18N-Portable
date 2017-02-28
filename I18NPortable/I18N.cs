@@ -27,18 +27,18 @@ namespace I18NPortable
 
 		// PropertyChanged
 		public event PropertyChangedEventHandler PropertyChanged;
-		private void NotifyPropertyChanged(string info) =>
+		private void NotifyPropertyChanged(string info) => 
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
 
-		/// <summary>
-		/// Use the indexer to translate keys. If you need string formatting, use <code>Translate()</code> instead
-		/// </summary>
-		public string this[string key]
-			=> Translate(key);
+        /// <summary>
+        /// Use the indexer to translate keys. If you need string formatting, use <code>Translate()</code> instead
+        /// </summary>
+        public string this[string key] 
+            => Translate(key);
 
-		/// <summary>
-		/// The current loaded Language, if any
-		/// </summary>
+	    /// <summary>
+        /// The current loaded Language, if any
+        /// </summary>
 		public PortableLanguage Language
 		{
 			get { return Languages?.FirstOrDefault(x => x.Locale.Equals(Locale)); }
@@ -59,9 +59,9 @@ namespace I18NPortable
 
 		private string _locale;
 
-		/// <summary>
-		/// The current loaded locale 2 letter string
-		/// </summary>
+        /// <summary>
+        /// The current loaded locale 2 letter string
+        /// </summary>
 		public string Locale
 		{
 			get { return _locale; }
@@ -82,22 +82,22 @@ namespace I18NPortable
 
 		private List<PortableLanguage> _languages;
 
-		/// <summary>
-		/// A list of supported languages
-		/// </summary>
+        /// <summary>
+        /// A list of supported languages
+        /// </summary>
 		public List<PortableLanguage> Languages
 		{
 			get
 			{
-				if (_languages != null)
-					return _languages;
+				if(_languages != null)
+                    return _languages;
 
 				var languages = _locales?.Select(x => new PortableLanguage
 				{
-					Locale = x.Key,
-					DisplayName = TranslateOrNull(x.Key)
-						?? new CultureInfo(x.Key).NativeName.CapitalizeFirstCharacter()
-				})
+                    Locale = x.Key,
+                    DisplayName = TranslateOrNull(x.Key) 
+                        ?? new CultureInfo(x.Key).NativeName.CapitalizeFirstCharacter()
+                })
 				.ToList();
 
 				if (languages?.Count > 0)
@@ -158,12 +158,12 @@ namespace I18NPortable
 			return this;
 		}
 
-		/// <summary>
-		/// Call this when your app starts
-		/// ie: <code>I18N.Current.Init(GetType().GetTypeInfo().Assembly);</code>
-		/// </summary>
-		/// <param name="hostAssembly">The PCL assembly that hosts the locale text files</param>
-		public II18N Init(Assembly hostAssembly)
+        /// <summary>
+        /// Call this when your app starts
+        /// ie: <code>I18N.Current.Init(GetType().GetTypeInfo().Assembly);</code>
+        /// </summary>
+        /// <param name="hostAssembly">The PCL assembly that hosts the locale text files</param>
+        public II18N Init(Assembly hostAssembly)
 		{
 			Unload();
 
@@ -189,7 +189,7 @@ namespace I18NPortable
 			else
 			{
 				Log($"Default locale from current culture: {localeToLoad}");
-			}
+			}	
 
 			LoadLocale(localeToLoad);
 
@@ -232,86 +232,86 @@ namespace I18NPortable
 
 		#region Translations
 
-		/// <summary>
-		/// Get a translation from a key, formatting the string with the given params, if any
-		/// </summary>
+        /// <summary>
+        /// Get a translation from a key, formatting the string with the given params, if any
+        /// </summary>
 		public string Translate(string key, params object[] args)
 		{
 			if (_translations.ContainsKey(key))
-				return args.Length == 0
-					? _translations[key]
-					: string.Format(_translations[key], args);
+				return args.Length == 0 
+                    ? _translations[key]
+                    : string.Format(_translations[key], args);
 
-			if (_throwWhenKeyNotFound)
+			if(_throwWhenKeyNotFound)
 				throw new KeyNotFoundException($"[{nameof(I18N)}] key '{key}' not found in the current language '{_locale}'");
 
 			return $"{_notFoundSymbol}{key}{_notFoundSymbol}";
 		}
 
-		/// <summary>
-		/// Get a translation from a key, formatting the string with the given params, if any. 
-		/// It will return null when the translation is not found
-		/// </summary>
-		public string TranslateOrNull(string key, params object[] args) =>
-			_translations.ContainsKey(key)
-				? (args.Length == 0 ? _translations[key] : string.Format(_translations[key], args))
+        /// <summary>
+        /// Get a translation from a key, formatting the string with the given params, if any. 
+        /// It will return null when the translation is not found
+        /// </summary>
+		public string TranslateOrNull(string key, params object[] args) => 
+			_translations.ContainsKey(key) 
+				? (args.Length == 0 ? _translations[key] : string.Format(_translations[key], args)) 
 				: null;
 
-		/// <summary>
-		/// Convert Enum Type values to a Dictionary&lt;TEnum, string&gt; where the key is the Enum value and the string is the translated value.
-		/// </summary>
-		public Dictionary<TEnum, string> TranslateEnumToDictionary<TEnum>()
-		{
-			var type = typeof(TEnum);
-			var dic = new Dictionary<TEnum, string>();
+        /// <summary>
+        /// Convert Enum Type values to a Dictionary&lt;TEnum, string&gt; where the key is the Enum value and the string is the translated value.
+        /// </summary>
+        public Dictionary<TEnum, string> TranslateEnumToDictionary<TEnum>()
+        {
+            var type = typeof(TEnum);
+            var dic = new Dictionary<TEnum, string>();
 
-			foreach (var value in Enum.GetValues(type))
-			{
-				var name = Enum.GetName(type, value);
-				dic.Add((TEnum)value, Translate($"{type.Name}.{name}"));
-			}
+            foreach (var value in Enum.GetValues(type))
+            {
+                var name = Enum.GetName(type, value);
+                dic.Add((TEnum)value, Translate($"{type.Name}.{name}"));
+            }
 
-			return dic;
-		}
+            return dic;
+        }
 
-		/// <summary>
-		/// Convert Enum Type values to a List of translated strings
-		/// </summary>
-		public List<string> TranslateEnumToList<TEnum>()
-		{
-			var type = typeof(TEnum);
+        /// <summary>
+        /// Convert Enum Type values to a List of translated strings
+        /// </summary>
+        public List<string> TranslateEnumToList<TEnum>()
+        {
+            var type = typeof(TEnum);
 
-			return (from object value in Enum.GetValues(type)
-					select Enum.GetName(type, value) into name
-					select Translate($"{type.Name}.{name}"))
-					.ToList();
-		}
+            return (from object value in Enum.GetValues(type)
+                    select Enum.GetName(type, value) into name
+                    select Translate($"{type.Name}.{name}"))
+                    .ToList();
+        }
 
-		/// <summary>
-		/// Converts Enum Type values to a List of <code>Tuple&lt;TEnum, string&gt;</code> where the Item2 (string) is the enum value translation
-		/// </summary>
-		/// <typeparam name="TEnum"></typeparam>
-		/// <returns></returns>
-		public List<Tuple<TEnum, string>> TranslateEnumToTupleList<TEnum>()
-		{
-			var type = typeof(TEnum);
-			var list = new List<Tuple<TEnum, string>>();
+        /// <summary>
+        /// Converts Enum Type values to a List of <code>Tuple&lt;TEnum, string&gt;</code> where the Item2 (string) is the enum value translation
+        /// </summary>
+        /// <typeparam name="TEnum"></typeparam>
+        /// <returns></returns>
+	    public List<Tuple<TEnum, string>> TranslateEnumToTupleList<TEnum>()
+	    {
+            var type = typeof(TEnum);
+            var list = new List<Tuple<TEnum, string>>();
 
-			foreach (var value in Enum.GetValues(type))
-			{
-				var name = Enum.GetName(type, value);
-				var tuple = new Tuple<TEnum, string>((TEnum)value, Translate($"{type.Name}.{name}"));
-				list.Add(tuple);
-			}
+            foreach (var value in Enum.GetValues(type))
+            {
+                var name = Enum.GetName(type, value);
+                var tuple = new Tuple<TEnum, string>((TEnum)value, Translate($"{type.Name}.{name}"));
+                list.Add(tuple);
+            }
 
-			return list;
-		}
+	        return list;
+	    }
 
-		#endregion
+        #endregion
 
-		#region Helpers
+        #region Helpers
 
-		public string GetDefaultLocale()
+        public string GetDefaultLocale()
 		{
 			var currentCulture = CultureInfo.CurrentCulture;
 
@@ -321,8 +321,8 @@ namespace I18NPortable
 
 			var valuePair = _locales.FirstOrDefault(x => x.Key.Equals(currentCulture.Name) // i.e: "es-ES", "en-US"
 				|| x.Key.Equals(currentCulture.TwoLetterISOLanguageName)); // ISO 639-1 two-letter code. i.e: "es"
-																		   // || x.Key.Equals(threeLetterIsoName) // ISO 639-2 three-letter code. i.e: "spa"
-																		   // || x.Key.Equals(threeLetterWindowsName)); // "ESP"
+				// || x.Key.Equals(threeLetterIsoName) // ISO 639-2 three-letter code. i.e: "spa"
+				// || x.Key.Equals(threeLetterWindowsName)); // "ESP"
 
 			return valuePair.Key;
 		}
@@ -336,20 +336,20 @@ namespace I18NPortable
 			Log("========== I18NPortable translations ==========");
 			foreach (var item in _translations)
 				Log($"{item.Key} = {item.Value}");
-			Log("====== I18NPortable end of translations =======");
-		}
+            Log("====== I18NPortable end of translations =======");
+        }
+		 
+		private void Log(string trace) 
+            => _logger?.Invoke($"[{nameof(I18N)}] {trace}");
 
-		private void Log(string trace)
-			=> _logger?.Invoke($"[{nameof(I18N)}] {trace}");
+        #endregion
 
-		#endregion
-
-		public void Unload()
+        public void Unload()
 		{
-			_translations = new Dictionary<string, string>();
-			_locales = new Dictionary<string, string>();
+            _translations = new Dictionary<string, string>();
+            _locales = new Dictionary<string, string>();
 
-			Log("Unloaded");
+            Log("Unloaded");
 		}
 
 		public void Dispose()
