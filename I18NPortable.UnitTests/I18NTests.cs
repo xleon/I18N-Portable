@@ -4,32 +4,32 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
-namespace I18NPortable.Tests
+namespace I18NPortable.UnitTests
 {
-	[TestClass]
+	[TestFixture()]
 	public class I18NTests
 	{
-		[TestInitialize]
+		[SetUp]
 		public void Init() => 
 			I18N.Current = new I18N()
 				.SetNotFoundSymbol("?")
 				.SetThrowWhenKeyNotFound(false)
 				.Init(GetType().GetTypeInfo().Assembly);
 
-	    [TestCleanup]
+	    [TearDown]
 	    public void Finish() => 
             I18N.Current.Dispose();
 
-		[TestMethod]
+		[Test]
 		public void EmbbededLocales_ShouldBe_Discovered()
 		{
 			var languages = I18N.Current.Languages;
 			Assert.AreEqual(2, languages.Count);
 		}
 
-		[TestMethod]
+		[Test]
 		public void Languages_ShouldHave_CorrectDisplayName()
 		{
 			var languages = I18N.Current.Languages;
@@ -40,14 +40,14 @@ namespace I18NPortable.Tests
 			Assert.AreEqual("Español", es?.ToString());
 		}
 
-	    [TestMethod]
-        [ExpectedException(typeof(Exception))]
+	    [Test]
         public void DiscoverLocales_ShouldThrow_If_NoLocalesAvailable()
 	    {
-	        I18N.Current.Init(I18N.Current.GetType().GetTypeInfo().Assembly);
+            Assert.Throws<Exception>(() =>
+                I18N.Current.Init(I18N.Current.GetType().GetTypeInfo().Assembly));
 	    }
 
-	    [TestMethod]
+	    [Test]
 	    public void TryingToReload_CurrentLoadedLanguage_WillDoNothing()
 	    {
 	        I18N.Current.Locale = "en";
@@ -61,7 +61,7 @@ namespace I18NPortable.Tests
             Assert.AreEqual(1, logs.Count);
 	    }
 
-		[TestMethod]
+		[Test]
 		public void CorrectLocale_IsLoaded_WhenSettingLanguage()
 		{
 			var languages = I18N.Current.Languages;
@@ -75,7 +75,7 @@ namespace I18NPortable.Tests
 			Assert.AreEqual("en", I18N.Current.Locale);
 		}
 
-		[TestMethod]
+		[Test]
 		public void CurrentLanguage_Match_LoadedLocale()
 		{
 			I18N.Current.Locale = "en";
@@ -85,7 +85,7 @@ namespace I18NPortable.Tests
 			Assert.AreEqual("es", I18N.Current.Language.Locale);
 		}
 
-	    [TestMethod]
+	    [Test]
 	    public void LoadLanguage_ShouldLoad_LanguageLocale()
 	    {
 	        var language = new PortableLanguage { Locale = "en", DisplayName = "English" };
@@ -99,14 +99,13 @@ namespace I18NPortable.Tests
             Assert.AreEqual("uno", I18N.Current.Translate("one"));
         }
 
-		[TestMethod]
-		[ExpectedException(typeof(KeyNotFoundException))]
+		[Test]
 		public void LoadingNonExistentLocale_ShouldThrow()
 		{
-			I18N.Current.Locale = "fr";
+		    Assert.Throws<KeyNotFoundException>(() => I18N.Current.Locale = "fr");
 		}
 
-		[TestMethod]
+		[Test]
 		public void Keys_ShouldBe_Translated()
 		{
 			I18N.Current.Locale = "en";
@@ -120,7 +119,7 @@ namespace I18NPortable.Tests
 			Assert.AreEqual("tres", I18N.Current.Translate("three"));
 		}
 
-		[TestMethod]
+		[Test]
 		public void Indexer_Should_TranslateKey()
 		{
 			I18N.Current.Locale = "en";
@@ -130,7 +129,7 @@ namespace I18NPortable.Tests
 			Assert.AreEqual("uno", I18N.Current["one"]);
 		}
 
-		[TestMethod]
+		[Test]
 		public void Translate_Should_FormatString()
 		{
 			I18N.Current.Locale = "en";
@@ -142,7 +141,7 @@ namespace I18NPortable.Tests
                 I18N.Current.Translate("Mailbox.Notification", "David", 47));
 		}
 
-		[TestMethod]
+		[Test]
 		public void NotFoundSymbol_CanBe_Changed()
 		{
 			I18N.Current.SetNotFoundSymbol("$$");
@@ -151,14 +150,14 @@ namespace I18NPortable.Tests
 			Assert.AreEqual("$$nonExistentKey$$", nonExistent);
 		}
 
-		[TestMethod]
+		[Test]
 		public void TranslateOrNull_ShouldReturn_Null_WhenKeyIsNotFound()
 		{
 			Assert.IsNull(I18N.Current.TranslateOrNull("nonExistentKey"));
 			Assert.IsNull(I18N.Current.TranslateOrNull("nonExistentKey", "one", "two"));
 		}
 
-        [TestMethod]
+        [Test]
         public void TranslateOrNull_Should_Translate()
         {
             I18N.Current.Locale = "es";
@@ -166,15 +165,17 @@ namespace I18NPortable.Tests
             Assert.AreEqual("Hola Diego, tienes 3 emails", I18N.Current.TranslateOrNull("Mailbox.Notification", "Diego", "3"));
         }
 
-        [TestMethod]
-		[ExpectedException(typeof(KeyNotFoundException))]
+        [Test]
 		public void WillThrow_WhenKeyNotFound_AndSetupToDoSo()
 		{
-			I18N.Current.SetThrowWhenKeyNotFound(true);
-            I18N.Current.Translate("fake");
+            Assert.Throws<KeyNotFoundException>(() =>
+            {
+                I18N.Current.SetThrowWhenKeyNotFound(true);
+                I18N.Current.Translate("fake");
+            });
 		}
 
-	    [TestMethod]
+	    [Test]
 	    public void FallbackLocale_ShouldBeLoaded_WhenRequestedLocale_IsNotAvailable()
 	    {
             CultureInfo.DefaultThreadCurrentCulture = 
@@ -187,7 +188,7 @@ namespace I18NPortable.Tests
             Assert.AreEqual("en", I18N.Current.Locale);
 	    }
 
-        [TestMethod]
+        [Test]
         public void FallbackLocale_ShouldBeIgnored_IfNotAvailable()
         {
             CultureInfo.DefaultThreadCurrentCulture =
@@ -200,7 +201,7 @@ namespace I18NPortable.Tests
             Assert.AreEqual("en", I18N.Current.Locale);
         }
 
-        [TestMethod]
+        [Test]
 		public void Logger_CanBeSet_AsAction()
 		{
 			var logs = new List<string>();
@@ -213,7 +214,7 @@ namespace I18NPortable.Tests
 			Assert.IsTrue(logs.Count > 0);
 		}
 
-	    [TestMethod]
+	    [Test]
 	    public void Translation_ShouldConsider_LineBreakCharacters()
 	    {
             I18N.Current.Locale = "en";
@@ -227,7 +228,7 @@ namespace I18NPortable.Tests
             Assert.AreEqual(expected, textWithLineBreaksOrNull);
         }
 
-        [TestMethod]
+        [Test]
         public void EnumTranslation_ShouldConsider_LineBreakCharacters()
         {
             I18N.Current.Locale = "en";
@@ -237,7 +238,7 @@ namespace I18NPortable.Tests
             Assert.AreEqual($"Good{Environment.NewLine}Snake", animals[Animals.Snake]);
         }
 
-	    [TestMethod]
+	    [Test]
 	    public void TranslationValue_Supports_Multiline()
 	    {
             I18N.Current.Locale = "en";
@@ -253,7 +254,7 @@ namespace I18NPortable.Tests
             Assert.AreEqual(expected, multilineValue);
         }
 
-        [TestMethod]
+        [Test]
         public void Enum_CanBeTranslated_ToStringList()
         {
             I18N.Current.Locale = "es";
@@ -265,7 +266,7 @@ namespace I18NPortable.Tests
             Assert.AreEqual("Rata", list[2]);
         }
 
-        [TestMethod]
+        [Test]
         public void Enum_CanBeTranslated_ToDictionary()
         {
             I18N.Current.Locale = "en";
@@ -283,7 +284,7 @@ namespace I18NPortable.Tests
             Assert.AreEqual("Rata", animals[Animals.Rat]);
         }
 
-        [TestMethod]
+        [Test]
         public void Enum_CanBeTranslated_ToTupleList()
         {
             I18N.Current.Locale = "en";
@@ -296,7 +297,7 @@ namespace I18NPortable.Tests
             Assert.AreEqual(animalsTupleList[2].Item1, Animals.Rat);
         }
 
-	    [TestMethod]
+	    [Test]
 	    public void I18N_CanBeMocked()
 	    {
 	        var mock = new I18NMock();
@@ -305,7 +306,7 @@ namespace I18NPortable.Tests
             Assert.AreEqual("mocked translation", I18N.Current.Translate("something"));
 	    }
 
-	    [TestMethod]
+	    [Test]
 	    public void I18n_CanBeDisposed()
 	    {
             I18N.Current.PropertyChanged += (sender, args) => { };
@@ -316,7 +317,7 @@ namespace I18NPortable.Tests
             Assert.IsNull(I18N.Current.Locale);
 	    }
 
-	    [TestMethod]
+	    [Test]
 	    public void Indexer_Is_Bindable()
 	    {
 	        I18N.Current.Locale = "es";
@@ -337,7 +338,7 @@ namespace I18NPortable.Tests
             Assert.AreEqual("uno", translation);
         }
 
-        [TestMethod]
+        [Test]
         public void Language_Is_Bindable()
         {
             I18N.Current.Locale = "es";
@@ -358,7 +359,7 @@ namespace I18NPortable.Tests
             Assert.AreEqual("es", language.Locale);
         }
 
-        [TestMethod]
+        [Test]
         public void Locale_Is_Bindable()
         {
             I18N.Current.Locale = "es";
@@ -379,7 +380,7 @@ namespace I18NPortable.Tests
             Assert.AreEqual("es", locale);
         }
 
-	    [TestMethod]
+	    [Test]
 	    public void DefaultLocale_Respects_CurentCulture()
 	    {
             I18N.Current.Dispose();

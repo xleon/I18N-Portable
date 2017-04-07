@@ -1,20 +1,20 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Reflection;
+using NUnit.Framework;
 
-namespace I18NPortable.Tests
+namespace I18NPortable.UnitTests
 {
-    [TestClass]
+    [TestFixture]
     public class ExtensionTests
     {
-        [TestInitialize]
+        [SetUp]
         public void Init() =>
             I18N.Current = new I18N()
                 .SetNotFoundSymbol("?")
                 .SetThrowWhenKeyNotFound(false)
                 .Init(GetType().GetTypeInfo().Assembly);
 
-        [TestMethod]
+        [TearDown]
         public void CanTranslate_WithStringExtensionMethod()
         {
             I18N.Current.Locale = "en";
@@ -24,20 +24,20 @@ namespace I18NPortable.Tests
             Assert.AreEqual("uno", "one".Translate());
         }
 
-        [TestMethod]
+        [Test]
         public void TranslateOrNullExtension_ShouldReturn_Null_WhenKeyIsNotFound()
         {
             Assert.IsNull("nonExistentKey".TranslateOrNull());
         }
 
-        [TestMethod]
+        [Test]
         public void TranslateOrNullExtension_ShouldTranslateKeys()
         {
             I18N.Current.Locale = "es";
             Assert.AreEqual("uno", "one".TranslateOrNull());
         }
 
-        [TestMethod]
+        [Test]
         public void UnescapeLineBreaks_ShouldWork()
         {
             const string sample = "Hello\\r\\nfrom\\nthe other side";
@@ -47,7 +47,7 @@ namespace I18NPortable.Tests
             Assert.AreEqual(expected, unescaped);
         }
 
-        [TestMethod]
+        [Test]
         public void CapitalizeFirstLetter_ShouldWork()
         {
             Assert.AreEqual("English", "english".CapitalizeFirstCharacter());
@@ -58,7 +58,7 @@ namespace I18NPortable.Tests
             Assert.IsNull(nullString.CapitalizeFirstCharacter());
         }
 
-        [TestMethod]
+        [Test]
         public void EveryEnum_CanBeTranslated_WithExtension()
         {
             I18N.Current.Locale = "en";
@@ -72,7 +72,7 @@ namespace I18NPortable.Tests
             Assert.AreEqual("nice banana", banana);
         }
 
-        [TestMethod]
+        [Test]
         public void NonLocalizedEnums_CanBeTranslated()
         {
             Assert.AreEqual("?TestEnum.TestEnumValue1?", TestEnum.TestEnumValue1.Translate());

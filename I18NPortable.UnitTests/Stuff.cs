@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
 
-namespace I18NPortable.Tests
+namespace I18NPortable.UnitTests
 {
     public enum Animals
     {
