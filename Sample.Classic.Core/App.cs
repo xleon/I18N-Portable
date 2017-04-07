@@ -13,6 +13,7 @@ namespace Sample.Classic.Core
             I18N
                 .Current
                 .SetLogger(text => Debug.WriteLine(text))
+                .SetNotFoundSymbol("⛔")
                 .SetFallbackLocale("en")
                 .Init(currentAssembly);
         }

@@ -13,7 +13,6 @@ namespace Sample.Classic.iOS
         {
         }
 
-
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
@@ -38,7 +37,7 @@ namespace Sample.Classic.iOS
             EnumLabel.Text = string.Join(", ", I18N.Current.TranslateEnumToList<Animals>());
 
             GreetingTitle.Text = "Greeting.Title".Translate();
-            GreetingValue.Text = "Greeting.Value".Translate("Diego");
+            GreetingValue.Text = "Greeting.Value".Translate("iOS");
 
             MultilineTitle.Text = "Multiline.Title".Translate();
             MultilineValue.Text = "Multiline.Value".Translate();

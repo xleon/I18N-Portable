@@ -57,6 +57,58 @@ namespace Sample.Classic.Droid
 			}
 		}
 		
+		public partial class Id
+		{
+			
+			// aapt resource value: 0x7f040002
+			public const int availableLanguagesTitle = 2130968578;
+			
+			// aapt resource value: 0x7f040003
+			public const int availableLanguagesValue = 2130968579;
+			
+			// aapt resource value: 0x7f04000c
+			public const int changeLanguageButton = 2130968588;
+			
+			// aapt resource value: 0x7f040006
+			public const int enumTitle = 2130968582;
+			
+			// aapt resource value: 0x7f040007
+			public const int enumValue = 2130968583;
+			
+			// aapt resource value: 0x7f040008
+			public const int greetingTitle = 2130968584;
+			
+			// aapt resource value: 0x7f040009
+			public const int greetingValue = 2130968585;
+			
+			// aapt resource value: 0x7f040000
+			public const int loadedLanguageTitle = 2130968576;
+			
+			// aapt resource value: 0x7f040001
+			public const int loadedLanguageValue = 2130968577;
+			
+			// aapt resource value: 0x7f04000a
+			public const int multilineTitle = 2130968586;
+			
+			// aapt resource value: 0x7f04000b
+			public const int multilineValue = 2130968587;
+			
+			// aapt resource value: 0x7f040004
+			public const int singleEnumTitle = 2130968580;
+			
+			// aapt resource value: 0x7f040005
+			public const int singleEnumValue = 2130968581;
+			
+			static Id()
+			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
+			
+			private Id()
+			{
+			}
+		}
+		
 		public partial class Layout
 		{
 			
