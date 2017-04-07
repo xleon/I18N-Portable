@@ -5,147 +5,149 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable MemberCanBeMadeStatic.Global
 // ReSharper disable UnusedMethodReturnValue.Global
 
 namespace I18NPortable
 {
-	public class I18N : II18N
-	{
-	    public static II18N Current { get; set; } = new I18N();
+    public class I18N : II18N
+    {
+        public static II18N Current { get; set; } = new I18N();
 
-		// PropertyChanged
-		public event PropertyChangedEventHandler PropertyChanged;
-		private void NotifyPropertyChanged(string info) => 
-			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
+        // PropertyChanged
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void NotifyPropertyChanged(string info) =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
 
         /// <summary>
         /// Use the indexer to translate keys. If you need string formatting, use <code>Translate()</code> instead
         /// </summary>
-        public string this[string key] 
+        public string this[string key]
             => Translate(key);
 
-	    /// <summary>
+        /// <summary>
         /// The current loaded Language, if any
         /// </summary>
-		public PortableLanguage Language
-		{
-			get { return Languages?.FirstOrDefault(x => x.Locale.Equals(Locale)); }
-			set
-			{
-				if (Language.Locale == value.Locale)
-				{
-					Log($"{value.DisplayName} is the current language. No actions will be taken");
-					return;
-				}
+        public PortableLanguage Language
+        {
+            get { return Languages?.FirstOrDefault(x => x.Locale.Equals(Locale)); }
+            set
+            {
+                if (Language.Locale == value.Locale)
+                {
+                    Log($"{value.DisplayName} is the current language. No actions will be taken");
+                    return;
+                }
 
-				LoadLocale(value.Locale);
+                LoadLocale(value.Locale);
 
-				NotifyPropertyChanged("Locale");
-				NotifyPropertyChanged("Language");
-			}
-		}
+                NotifyPropertyChanged("Locale");
+                NotifyPropertyChanged("Language");
+            }
+        }
 
-		private string _locale;
+        private string _locale;
 
         /// <summary>
         /// The current loaded locale 2 letter string
         /// </summary>
-		public string Locale
-		{
-			get { return _locale; }
-			set
-			{
-				if (_locale == value)
-				{
-					Log($"{value} is the current locale. No actions will be taken");
-					return;
-				}
+        public string Locale
+        {
+            get { return _locale; }
+            set
+            {
+                if (_locale == value)
+                {
+                    Log($"{value} is the current locale. No actions will be taken");
+                    return;
+                }
 
-				LoadLocale(value);
+                LoadLocale(value);
 
-				NotifyPropertyChanged("Locale");
-				NotifyPropertyChanged("Language");
-			}
-		}
+                NotifyPropertyChanged("Locale");
+                NotifyPropertyChanged("Language");
+            }
+        }
 
-		private List<PortableLanguage> _languages;
+        private List<PortableLanguage> _languages;
 
         /// <summary>
         /// A list of supported languages
         /// </summary>
-		public List<PortableLanguage> Languages
-		{
-			get
-			{
-				if(_languages != null)
+        public List<PortableLanguage> Languages
+        {
+            get
+            {
+                if (_languages != null)
                     return _languages;
 
-				var languages = _locales?.Select(x => new PortableLanguage
-				{
-                    Locale = x.Key,
-                    DisplayName = TranslateOrNull(x.Key) 
-                        ?? new CultureInfo(x.Key).NativeName.CapitalizeFirstCharacter()
-                })
-				.ToList();
+                var languages = _locales?.Select(x => new PortableLanguage
+                    {
+                        Locale = x.Key,
+                        DisplayName = TranslateOrNull(x.Key)
+                                      ?? new CultureInfo(x.Key).NativeName.CapitalizeFirstCharacter()
+                    })
+                    .ToList();
 
-				if (languages?.Count > 0)
-					_languages = languages;
+                if (languages?.Count > 0)
+                    _languages = languages;
 
-				return _languages;
-			}
-		}
+                return _languages;
+            }
+        }
 
-		private Dictionary<string, string> _translations;
-		private Dictionary<string, string> _locales;
-		private Assembly _hostAssembly;
-		private bool _throwWhenKeyNotFound;
-		private string _notFoundSymbol = "?";
-		private string _fallbackLocale;
-		private Action<string> _logger;
+        private Dictionary<string, string> _translations;
+        private Dictionary<string, string> _locales;
+        private Assembly _hostAssembly;
+        private bool _throwWhenKeyNotFound;
+        private string _notFoundSymbol = "?";
+        private string _fallbackLocale;
+        private Action<string> _logger;
 
-		#region Fluent API
+        #region Fluent API
 
-		/// <summary>
-		/// Set the symbol to wrap a key when not found. ie: if you set "##", a not found key will
-		/// be translated as "##key##". 
-		/// The default symbol is "?"
-		/// </summary>
-		public II18N SetNotFoundSymbol(string symbol)
-		{
-			if (!string.IsNullOrEmpty(symbol))
-				_notFoundSymbol = symbol;
-			return this;
-		}
+        /// <summary>
+        /// Set the symbol to wrap a key when not found. ie: if you set "##", a not found key will
+        /// be translated as "##key##". 
+        /// The default symbol is "?"
+        /// </summary>
+        public II18N SetNotFoundSymbol(string symbol)
+        {
+            if (!string.IsNullOrEmpty(symbol))
+                _notFoundSymbol = symbol;
+            return this;
+        }
 
-		/// <summary>
-		/// Enable I18N logs with an action
-		/// </summary>
-		/// <param name="output">Action to be invoked as the output of the logger</param>
-		public II18N SetLogger(Action<string> output)
-		{
-			_logger = output;
-			return this;
-		}
+        /// <summary>
+        /// Enable I18N logs with an action
+        /// </summary>
+        /// <param name="output">Action to be invoked as the output of the logger</param>
+        public II18N SetLogger(Action<string> output)
+        {
+            _logger = output;
+            return this;
+        }
 
-		/// <summary>
-		/// Throw an exception whenever a key is not found in the locale file (fail early, fail fast)
-		/// </summary>
-		public II18N SetThrowWhenKeyNotFound(bool enabled)
-		{
-			_throwWhenKeyNotFound = enabled;
-			return this;
-		}
+        /// <summary>
+        /// Throw an exception whenever a key is not found in the locale file (fail early, fail fast)
+        /// </summary>
+        public II18N SetThrowWhenKeyNotFound(bool enabled)
+        {
+            _throwWhenKeyNotFound = enabled;
+            return this;
+        }
 
-		/// <summary>
-		/// Set the locale that will be loaded in case the system language is not supported
-		/// </summary>
-		public II18N SetFallbackLocale(string locale)
-		{
-			_fallbackLocale = locale;
-			return this;
-		}
+        /// <summary>
+        /// Set the locale that will be loaded in case the system language is not supported
+        /// </summary>
+        public II18N SetFallbackLocale(string locale)
+        {
+            _fallbackLocale = locale;
+            return this;
+        }
 
         /// <summary>
         /// Call this when your app starts
@@ -153,105 +155,105 @@ namespace I18NPortable
         /// </summary>
         /// <param name="hostAssembly">The PCL assembly that hosts the locale text files</param>
         public II18N Init(Assembly hostAssembly)
-		{
-			Unload();
+        {
+            Unload();
 
-			DiscoverLocales(hostAssembly);
+            DiscoverLocales(hostAssembly);
 
-			_hostAssembly = hostAssembly;
+            _hostAssembly = hostAssembly;
 
-			var localeToLoad = GetDefaultLocale();
+            var localeToLoad = GetDefaultLocale();
 
-			if (string.IsNullOrEmpty(localeToLoad))
-			{
-				if (!string.IsNullOrEmpty(_fallbackLocale) && _locales.ContainsKey(_fallbackLocale))
-				{
-					localeToLoad = _fallbackLocale;
-					Log($"Loading fallback locale: {_fallbackLocale}");
-				}
-				else
-				{
-					localeToLoad = _locales.Keys.ToArray()[0];
-					Log($"Loading first locale on the list: {localeToLoad}");
-				}
-			}
-			else
-			{
-				Log($"Default locale from current culture: {localeToLoad}");
-			}	
+            if (string.IsNullOrEmpty(localeToLoad))
+            {
+                if (!string.IsNullOrEmpty(_fallbackLocale) && _locales.ContainsKey(_fallbackLocale))
+                {
+                    localeToLoad = _fallbackLocale;
+                    Log($"Loading fallback locale: {_fallbackLocale}");
+                }
+                else
+                {
+                    localeToLoad = _locales.Keys.ToArray()[0];
+                    Log($"Loading first locale on the list: {localeToLoad}");
+                }
+            }
+            else
+            {
+                Log($"Default locale from current culture: {localeToLoad}");
+            }
 
-			LoadLocale(localeToLoad);
+            LoadLocale(localeToLoad);
 
-			NotifyPropertyChanged("Locale");
-			NotifyPropertyChanged("Language");
+            NotifyPropertyChanged("Locale");
+            NotifyPropertyChanged("Language");
 
-			return this;
-		}
+            return this;
+        }
 
-		#endregion
+        #endregion
 
-		#region Load stuff
+        #region Load stuff
 
-		private void DiscoverLocales(Assembly hostAssembly)
-		{
-			Log("Getting available locales...");
+        private void DiscoverLocales(Assembly hostAssembly)
+        {
+            Log("Getting available locales...");
 
-			var localeResourceNames = hostAssembly
-				.GetManifestResourceNames()
-				.Where(x => x.Contains("Locales.") && x.EndsWith(".txt"))
-				.ToArray();
+            var localeResourceNames = hostAssembly
+                .GetManifestResourceNames()
+                .Where(x => x.Contains("Locales.") && x.EndsWith(".txt"))
+                .ToArray();
 
-			if (localeResourceNames.Length == 0)
-			{
-				throw new Exception("No locales have been found. Make sure you´ve got a folder " +
-									"called 'Locales' containing .txt files in the host PCL assembly");
-			}
+            if (localeResourceNames.Length == 0)
+            {
+                throw new Exception("No locales have been found. Make sure you´ve got a folder " +
+                                    "called 'Locales' containing .txt files in the host PCL assembly");
+            }
 
-			foreach (var resource in localeResourceNames)
-			{
-				var parts = resource.Split('.');
-				var localeName = parts[parts.Length - 2];
-				
-				_locales.Add(localeName, resource);
-			}
+            foreach (var resource in localeResourceNames)
+            {
+                var parts = resource.Split('.');
+                var localeName = parts[parts.Length - 2];
 
-			Log($"Found {localeResourceNames.Length} locales: {string.Join(", ", _locales.Keys.ToArray())}");
-		}
+                _locales.Add(localeName, resource);
+            }
 
-		private void LoadLocale(string locale)
-		{
-			if (!_locales.ContainsKey(locale))
-				throw new KeyNotFoundException($"Locale '{locale}' is not available");
+            Log($"Found {localeResourceNames.Length} locales: {string.Join(", ", _locales.Keys.ToArray())}");
+        }
 
-			var resourceName = _locales[locale];
-			var stream = _hostAssembly.GetManifestResourceStream(resourceName);
+        private void LoadLocale(string locale)
+        {
+            if (!_locales.ContainsKey(locale))
+                throw new KeyNotFoundException($"Locale '{locale}' is not available");
 
-			ParseTranslations(stream);
+            var resourceName = _locales[locale];
+            var stream = _hostAssembly.GetManifestResourceStream(resourceName);
 
-			_locale = locale;
+            ParseTranslations(stream);
 
-			// Update bindings to indexer (useful for views in MVVM frameworks)
-			NotifyPropertyChanged("Item[]");
-		}
+            _locale = locale;
 
-		private void ParseTranslations(Stream stream)
-		{
-			_translations.Clear();
+            // Update bindings to indexer (useful for views in MVVM frameworks)
+            NotifyPropertyChanged("Item[]");
+        }
 
-			using (var streamReader = new StreamReader(stream))
-			{
-			    string key = null;
-			    string value = null;
+        private void ParseTranslations(Stream stream)
+        {
+            _translations.Clear();
 
-				while (!streamReader.EndOfStream)
-				{
-					var line = streamReader.ReadLine();                
+            using (var streamReader = new StreamReader(stream))
+            {
+                string key = null;
+                string value = null;
+
+                while (!streamReader.EndOfStream)
+                {
+                    var line = streamReader.ReadLine();
                     var isEmpty = string.IsNullOrWhiteSpace(line);
                     var isComment = !isEmpty && line.Trim().StartsWith("#");
                     var isKeyValuePair = !isEmpty && !isComment && line.Contains("=");
 
                     if ((isEmpty || isComment || isKeyValuePair) && key != null && value != null)
-				    {
+                    {
                         _translations.Add(key, value);
 
                         key = null;
@@ -262,53 +264,54 @@ namespace I18NPortable
                         continue;
 
                     if (isKeyValuePair)
-				    {
-                        var kvp = line.Split(new[] { '=' }, 2);
+                    {
+                        var kvp = line.Split(new[] {'='}, 2);
 
                         key = kvp[0].Trim();
                         value = kvp[1].Trim().UnescapeLineBreaks();
                     }
-				    else if(key != null && value != null)
-				    {
-				        value = value + Environment.NewLine + line.Trim().UnescapeLineBreaks();
-				    }
-				}
+                    else if (key != null && value != null)
+                    {
+                        value = value + Environment.NewLine + line.Trim().UnescapeLineBreaks();
+                    }
+                }
 
-                if(key != null && value != null)
+                if (key != null && value != null)
                     _translations.Add(key, value);
             }
 
-			LogTranslations();
-		}
+            LogTranslations();
+        }
 
-		#endregion
+        #endregion
 
-		#region Translations
+        #region Translations
 
         /// <summary>
         /// Get a translation from a key, formatting the string with the given params, if any
         /// </summary>
-		public string Translate(string key, params object[] args)
-		{
-			if (_translations.ContainsKey(key))
-				return args.Length == 0 
+        public string Translate(string key, params object[] args)
+        {
+            if (_translations.ContainsKey(key))
+                return args.Length == 0
                     ? _translations[key]
                     : string.Format(_translations[key], args);
 
-			if(_throwWhenKeyNotFound)
-				throw new KeyNotFoundException($"[{nameof(I18N)}] key '{key}' not found in the current language '{_locale}'");
+            if (_throwWhenKeyNotFound)
+                throw new KeyNotFoundException(
+                    $"[{nameof(I18N)}] key '{key}' not found in the current language '{_locale}'");
 
-			return $"{_notFoundSymbol}{key}{_notFoundSymbol}";
-		}
+            return $"{_notFoundSymbol}{key}{_notFoundSymbol}";
+        }
 
         /// <summary>
         /// Get a translation from a key, formatting the string with the given params, if any. 
         /// It will return null when the translation is not found
         /// </summary>
-		public string TranslateOrNull(string key, params object[] args) => 
-			_translations.ContainsKey(key) 
-				? (args.Length == 0 ? _translations[key] : string.Format(_translations[key], args)) 
-				: null;
+        public string TranslateOrNull(string key, params object[] args) =>
+            _translations.ContainsKey(key)
+                ? (args.Length == 0 ? _translations[key] : string.Format(_translations[key], args))
+                : null;
 
         /// <summary>
         /// Convert Enum Type values to a Dictionary&lt;TEnum, string&gt; where the key is the Enum value and the string is the translated value.
@@ -321,7 +324,7 @@ namespace I18NPortable
             foreach (var value in Enum.GetValues(type))
             {
                 var name = Enum.GetName(type, value);
-                dic.Add((TEnum)value, Translate($"{type.Name}.{name}"));
+                dic.Add((TEnum) value, Translate($"{type.Name}.{name}"));
             }
 
             return dic;
@@ -335,9 +338,10 @@ namespace I18NPortable
             var type = typeof(TEnum);
 
             return (from object value in Enum.GetValues(type)
-                    select Enum.GetName(type, value) into name
+                    select Enum.GetName(type, value)
+                    into name
                     select Translate($"{type.Name}.{name}"))
-                    .ToList();
+                .ToList();
         }
 
         /// <summary>
@@ -345,73 +349,74 @@ namespace I18NPortable
         /// </summary>
         /// <typeparam name="TEnum"></typeparam>
         /// <returns></returns>
-	    public List<Tuple<TEnum, string>> TranslateEnumToTupleList<TEnum>()
-	    {
+        public List<Tuple<TEnum, string>> TranslateEnumToTupleList<TEnum>()
+        {
             var type = typeof(TEnum);
             var list = new List<Tuple<TEnum, string>>();
 
             foreach (var value in Enum.GetValues(type))
             {
                 var name = Enum.GetName(type, value);
-                var tuple = new Tuple<TEnum, string>((TEnum)value, Translate($"{type.Name}.{name}"));
+                var tuple = new Tuple<TEnum, string>((TEnum) value, Translate($"{type.Name}.{name}"));
                 list.Add(tuple);
             }
 
-	        return list;
-	    }
+            return list;
+        }
 
         #endregion
 
         #region Helpers
 
         public string GetDefaultLocale()
-		{
-			var currentCulture = CultureInfo.CurrentCulture;
+        {
+            var currentCulture = CultureInfo.CurrentCulture;
 
-			// only available in runtime (not from PCL) on the simulator
-			// var threeLetterIsoName = currentCulture.GetType().GetRuntimeProperty("ThreeLetterISOLanguageName").GetValue(currentCulture);
-			// var threeLetterWindowsName = currentCulture.GetType().GetRuntimeProperty("ThreeLetterWindowsLanguageName").GetValue(currentCulture);
+            // only available in runtime (not from PCL) on the simulator
+            // var threeLetterIsoName = currentCulture.GetType().GetRuntimeProperty("ThreeLetterISOLanguageName").GetValue(currentCulture);
+            // var threeLetterWindowsName = currentCulture.GetType().GetRuntimeProperty("ThreeLetterWindowsLanguageName").GetValue(currentCulture);
 
-			var valuePair = _locales.FirstOrDefault(x => x.Key.Equals(currentCulture.Name) // i.e: "es-ES", "en-US"
-				|| x.Key.Equals(currentCulture.TwoLetterISOLanguageName)); // ISO 639-1 two-letter code. i.e: "es"
-				// || x.Key.Equals(threeLetterIsoName) // ISO 639-2 three-letter code. i.e: "spa"
-				// || x.Key.Equals(threeLetterWindowsName)); // "ESP"
+            var valuePair = _locales.FirstOrDefault(x => x.Key.Equals(currentCulture.Name) // i.e: "es-ES", "en-US"
+                                                         || x.Key.Equals(currentCulture.TwoLetterISOLanguageName));
+                // ISO 639-1 two-letter code. i.e: "es"
+            // || x.Key.Equals(threeLetterIsoName) // ISO 639-2 three-letter code. i.e: "spa"
+            // || x.Key.Equals(threeLetterWindowsName)); // "ESP"
 
-			return valuePair.Key;
-		}
+            return valuePair.Key;
+        }
 
-		#endregion
+        #endregion
 
-		#region Logging
+        #region Logging
 
-		private void LogTranslations()
-		{
-			Log("========== I18NPortable translations ==========");
-			foreach (var item in _translations)
-				Log($"{item.Key} = {item.Value}");
+        private void LogTranslations()
+        {
+            Log("========== I18NPortable translations ==========");
+            foreach (var item in _translations)
+                Log($"{item.Key} = {item.Value}");
             Log("====== I18NPortable end of translations =======");
         }
-		 
-		private void Log(string trace) 
+
+        private void Log(string trace)
             => _logger?.Invoke($"[{nameof(I18N)}] {trace}");
 
         #endregion
 
         public void Unload()
-		{
+        {
             _translations = new Dictionary<string, string>();
             _locales = new Dictionary<string, string>();
 
             Log("Unloaded");
-		}
+        }
 
-	    public void Dispose()
-	    {
-	        if (PropertyChanged != null)
-	        {
+        public void Dispose()
+        {
+            if (PropertyChanged != null)
+            {
                 foreach (var @delegate in PropertyChanged.GetInvocationList())
                 {
-                    PropertyChanged -= (PropertyChangedEventHandler)@delegate;
+                    PropertyChanged -= (PropertyChangedEventHandler) @delegate;
                 }
 
                 PropertyChanged = null;
@@ -423,5 +428,5 @@ namespace I18NPortable
             _languages = null;
             _logger = null;
         }
-	}
+    }
 }

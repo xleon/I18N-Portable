@@ -28,9 +28,9 @@ namespace I18NPortable.UnitTests
     public class I18NMock : II18N
     {
         public event PropertyChangedEventHandler PropertyChanged;
+
         public void Dispose()
         {
-           
         }
 
         public string this[string key]
@@ -41,6 +41,7 @@ namespace I18NPortable.UnitTests
         public PortableLanguage Language { get; set; }
         public string Locale { get; set; }
         public List<PortableLanguage> Languages { get; }
+
         public II18N SetNotFoundSymbol(string symbol)
         {
             throw new NotImplementedException();

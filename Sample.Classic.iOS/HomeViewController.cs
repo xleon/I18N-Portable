@@ -8,8 +8,10 @@ namespace Sample.Classic.iOS
 {
     public partial class HomeViewController : UIViewController
     {
-        public HomeViewController() 
-            : base("HomeViewController", null) {}
+        public HomeViewController()
+            : base("HomeViewController", null)
+        {
+        }
 
 
         public override void ViewDidLoad()
