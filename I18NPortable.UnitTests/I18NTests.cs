@@ -307,7 +307,7 @@ namespace I18NPortable.UnitTests
 	    }
 
 	    [Test]
-	    public void I18n_CanBeDisposed()
+	    public void I18N_CanBeDisposed()
 	    {
             I18N.Current.PropertyChanged += (sender, args) => { };
             I18N.Current.Dispose();
