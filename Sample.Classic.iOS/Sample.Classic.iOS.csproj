@@ -90,7 +90,6 @@
     </Compile>
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
-    <None Include="GettingStarted.Xamarin" />
     <InterfaceDefinition Include="HomeViewController.xib" />
     <None Include="Info.plist" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -106,6 +105,10 @@
     <Content Include="Entitlements.plist" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\I18NPortable\I18NPortable.csproj">
+      <Project>{e340cbb2-3b77-45a8-8997-e4098d82edbc}</Project>
+      <Name>I18NPortable</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Sample.Classic.Core\Sample.Classic.Core.csproj">
       <Project>{40cc1d21-7f98-4543-89c1-0a5152635fbb}</Project>
       <Name>Sample.Classic.Core</Name>

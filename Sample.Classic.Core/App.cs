@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics;
+using System.Reflection;
 using I18NPortable;
 
 namespace Sample.Classic.Core
@@ -7,9 +8,13 @@ namespace Sample.Classic.Core
 	{
 		public App()
 		{
-		    I18N
+		    var currentAssembly = GetType().GetTypeInfo().Assembly;
+
+            I18N
                 .Current
-                .Init(GetType().GetTypeInfo().Assembly);
+                .SetLogger(text => Debug.WriteLine(text))
+                .SetFallbackLocale("en")
+                .Init(currentAssembly);
 		}
 	}
 }

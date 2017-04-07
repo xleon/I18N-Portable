@@ -72,25 +72,6 @@ namespace Sample.Classic.Droid
 			{
 			}
 		}
-		
-		public partial class String
-		{
-			
-			// aapt resource value: 0x7f040001
-			public const int ApplicationName = 2130968577;
-			
-			// aapt resource value: 0x7f040000
-			public const int Hello = 2130968576;
-			
-			static String()
-			{
-				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
-			}
-			
-			private String()
-			{
-			}
-		}
 	}
 }
 #pragma warning restore 1591

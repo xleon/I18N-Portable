@@ -28,6 +28,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Animals.cs" />
     <Compile Include="App.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -40,6 +41,15 @@
   <ItemGroup>
     <EmbeddedResource Include="Locales\en.txt" />
     <EmbeddedResource Include="Locales\es.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Locales\pt.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Locales\fr.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Locales\ru.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
 </Project>
