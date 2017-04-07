@@ -12,10 +12,10 @@ Multiline.Title = Multi-line text
 Multiline.Value = This text 
 spans multiple lines\nin the locale file
 
-Animals.Dog = Dog
-Animals.Cat = Cat
-Animals.Rat = Rat
-Animals.Tiger = Tiger
-Animals.Monkey = Monkey
+Animals.Dog = Dog 🐶
+Animals.Cat = Cat 🐈
+Animals.Rat = Rat 🐁
+Animals.Tiger = Tiger 🐅
+Animals.Monkey = Monkey 🐵
 
 Cancel = Cancel

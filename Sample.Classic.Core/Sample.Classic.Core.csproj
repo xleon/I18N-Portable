@@ -51,5 +51,11 @@
   <ItemGroup>
     <EmbeddedResource Include="Locales\ru.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Locales\zh.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Locales\ja.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
 </Project>
