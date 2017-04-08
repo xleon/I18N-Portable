@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using I18NPortable;
-using PropertyChanged;
 using Sample.Classic.Core.Annotations;
 
 namespace Sample.Classic.Core
