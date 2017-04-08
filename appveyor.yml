@@ -6,7 +6,11 @@ build:
   project: I18NPortable.sln
   verbosity: minimal
 after_test:
-  - packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user -target:nunit3-console -targetargs:"/noresults /noisolation /testcontainer:"".\I18NPortable.UnitTests\bin\Debug\I18NPortable.UnitTests.dll" -excludebyattribute:*.ExcludeFromCodeCoverage* -hideskipped:All -output:.\I18NPortable_coverage.xml 
+  - nuget install NUnit.Console -Version 3.6.0 -OutputDirectory testrunner
+  - nuget install OpenCover -Version 4.6.519 -OutputDirectory codecoveragetools
+
+  - codecoveragetools\OpenCover.4.6.519\tools\OpenCover.Console.exe "-register:user" "-target:"testrunner/NUnit.ConsoleRunner.3.6.0/tools/nunit3-console.exe"" -targetargs:"--noresult --inprocess --domain=Single --where:cat!=LongRunningTests ""Computator.NET.Tests\bin\%CONFIGURATION%\Computator.NET.Tests.dll"" ""I18NPortable.UnitTests\bin\%CONFIGURATION%\I18NPortable.UnitTests.dll""" "-filter:+[I18NPortable*]*" "-excludebyattribute:*.ExcludeFromCodeCoverage*" "-hideskipped:All" "-servicestarttimeout:1000m" "-output:I18NPortable_coverage.xml"
+ 
   - "SET PATH=C:\\Python34;C:\\Python34\\Scripts;%PATH%"
   - pip install codecov
   - codecov -f "I18NPortable_coverage.xml"
