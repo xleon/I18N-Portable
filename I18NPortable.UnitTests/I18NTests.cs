@@ -395,5 +395,18 @@ namespace I18NPortable.UnitTests
 
             Assert.AreEqual("es", I18N.Current.GetDefaultLocale());
         }
+
+        [Test]
+        public void NotFoundSymbol_Cannot_BeNullEmpty()
+        {
+            I18N.Current.SetNotFoundSymbol("##");
+            I18N.Current.SetNotFoundSymbol(null);
+
+            Assert.AreEqual("##missing##", "missing".Translate());
+
+            I18N.Current.SetNotFoundSymbol(string.Empty);
+
+            Assert.AreEqual("##missing##", "missing".Translate());
+        }
     }
 }
