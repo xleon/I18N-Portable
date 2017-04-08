@@ -11,7 +11,7 @@
     <AssemblyName>Sample.Classic.Uwp</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.15063.0</TargetPlatformVersion>
+    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.10586.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
@@ -128,10 +128,14 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>5.2.3</Version>
+      <Version>5.3.2</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\I18NPortable\I18NPortable.csproj">
+      <Project>{E340CBB2-3B77-45A8-8997-E4098D82EDBC}</Project>
+      <Name>I18NPortable</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Sample.Classic.Core\Sample.Classic.Core.csproj">
       <Project>{40cc1d21-7f98-4543-89c1-0a5152635fbb}</Project>
       <Name>Sample.Classic.Core</Name>
