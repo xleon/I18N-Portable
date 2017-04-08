@@ -6,7 +6,7 @@ build:
   project: I18NPortable.sln
   verbosity: minimal
 after_test:
-  - packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user -target:"nunit3-console" -targetargs:"/noresults /noisolation /testcontainer:"".\I18NPortable.UnitTests\bin\Debug\I18NPortable.UnitTests.dll" -excludebyattribute:*.ExcludeFromCodeCoverage* -hideskipped:All -output:.\I18NPortable_coverage.xml 
+  - packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user -target:"nunit3-console .\I18NPortable.UnitTests\bin\Debug\I18NPortable.UnitTests.dll --result=myresults.xml;format=AppVeyor" -targetargs:"/noresults /noisolation /testcontainer:"".\I18NPortable.UnitTests\bin\Debug\I18NPortable.UnitTests.dll" -excludebyattribute:*.ExcludeFromCodeCoverage* -hideskipped:All -output:.\I18NPortable_coverage.xml 
   - "SET PATH=C:\\Python34;C:\\Python34\\Scripts;%PATH%"
   - pip install codecov
   - codecov -f "I18NPortable_coverage.xml"
