@@ -13,6 +13,10 @@
 - Pure PCL, no platform code
 - Unit Tested with nearly 100% code coverage.
 
+![https://cloud.githubusercontent.com/assets/145087/24824462/c5a0ecce-1c0b-11e7-84d3-4f0fa815c9da.png](https://cloud.githubusercontent.com/assets/145087/24824462/c5a0ecce-1c0b-11e7-84d3-4f0fa815c9da.png)
+
+![https://cloud.githubusercontent.com/assets/145087/24824461/c5a04a94-1c0b-11e7-9a30-f14c656e5562.png](https://cloud.githubusercontent.com/assets/145087/24824461/c5a04a94-1c0b-11e7-9a30-f14c656e5562.png)
+
 
 ### Install
 
