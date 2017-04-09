@@ -45,16 +45,16 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\I18NPortable\I18NPortable.csproj">
-      <Project>{e340cbb2-3b77-45a8-8997-e4098d82edbc}</Project>
-      <Name>I18NPortable</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Locales\pt-BR.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\I18NPortable\I18NPortable.csproj">
+      <Project>{4dc53c6b-9f4b-4168-80c9-5d6c8849892e}</Project>
+      <Name>I18NPortable</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
