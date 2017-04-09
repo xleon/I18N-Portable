@@ -397,6 +397,36 @@ namespace I18NPortable.UnitTests
         }
 
         [Test]
+        public void DefaultLocale_ShouldBeNull_WhenSystemLocaleIsNotSupported()
+        {
+            I18N.Current.Dispose();
+
+            CultureInfo.DefaultThreadCurrentCulture =
+                CultureInfo.DefaultThreadCurrentUICulture =
+                    Thread.CurrentThread.CurrentCulture =
+                        Thread.CurrentThread.CurrentUICulture = new CultureInfo("pt-PT");
+
+            I18N.Current = new I18N().Init(GetType().GetTypeInfo().Assembly);
+
+            Assert.IsNull(I18N.Current.GetDefaultLocale());
+        }
+
+        [Test]
+        public void LocaleNames_CanBeCultureNames()
+        {
+            I18N.Current.Dispose();
+
+            CultureInfo.DefaultThreadCurrentCulture =
+                CultureInfo.DefaultThreadCurrentUICulture =
+                    Thread.CurrentThread.CurrentCulture =
+                        Thread.CurrentThread.CurrentUICulture = new CultureInfo("pt-BR");
+
+            I18N.Current = new I18N().Init(GetType().GetTypeInfo().Assembly);
+
+            Assert.AreEqual("oi", "hello".Translate());
+        }
+
+        [Test]
         public void NotFoundSymbol_Cannot_BeNullEmpty()
         {
             I18N.Current.SetNotFoundSymbol("##");
