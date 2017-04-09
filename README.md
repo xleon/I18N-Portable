@@ -8,7 +8,7 @@ Simple and cross platform internationalization/translations for Xamarin and .NET
 
 
 ### Why I18NPortable?
-
+---
 - Cross platform
 - Simple to use: `"key".Translate()`.
 - Simple and fluent setup.
@@ -21,14 +21,14 @@ Simple and cross platform internationalization/translations for Xamarin and .NET
 ![https://cloud.githubusercontent.com/assets/145087/24824461/c5a04a94-1c0b-11e7-9a30-f14c656e5562.png](https://cloud.githubusercontent.com/assets/145087/24824461/c5a04a94-1c0b-11e7-9a30-f14c656e5562.png)
 
 ### Install
-
+---
 Install it on your PCL and platform projects.
 From nuget package manager console: 
 
 `PM> Install-Package I18NPortable`
 
 ### Setup locales
-
+---
 - In your PCL/Core project, create a directory called "Locales".
 - Create a `{languageCode}.txt` file for each language you want to support. `languageCode` can be a two letter ISO code or a culture name like "en-US". See [full list here](https://msdn.microsoft.com/en-us/library/ee825488%28v=cs.20%29.aspx).
 - Set "Build Action" to "Embedded Resource" on the properties of each file         
@@ -60,7 +60,7 @@ From nuget package manager console:
 
 
 ### Fluent initialization
-
+---
 ```csharp
 I18N.Current
     .SetNotFoundSymbol("$") // Optional: when a key is not found, it will appear as $key$ (defaults to "$")
@@ -71,7 +71,7 @@ I18N.Current
 ```     
 
 ### Usage
-
+---
 ```csharp
 string one = "one".Translate();
 string notification = "Mailbox.Notification".Translate("Diego", 3); // same as string.Format(params). Output: Hello Diego, you´ve got 3 emails
@@ -99,7 +99,7 @@ I18N.Current.Locale = "fr";
 ```	
 
 ### Data binding
-    
+---
 `I18N` implements `INotifyPropertyChanged` and it has an indexer to translate keys. For instance, you could translate a key like:
 
     string three = I18N.Current["three"]; 
@@ -134,7 +134,7 @@ set.Bind(anyUIText).To("Strings[key]");
 ```
 
 ### Advanced usage
-
+---
 In case you use any DI or Service Locator pattern, `I18N` implements [II18N interface](https://github.com/xleon/I18N-Portable/blob/master/I18NPortable/II18n.cs).
 `II18N` can be easily mocked for unit testing purposes. 
 
