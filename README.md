@@ -31,16 +31,7 @@ From nuget package manager console:
 
 - In your PCL/Core project, create a directory called "Locales".
 - Create a `{languageCode}.txt` file for each language you want to support. `languageCode` can be a two letter ISO code or a culture name like "en-US". See [full list here](https://msdn.microsoft.com/en-us/library/ee825488%28v=cs.20%29.aspx).
-- Set "Build Action" to "Embedded Resource" on the properties of each file :
-
-    YourProjectPCL.Core
-        |-- Locales
-            |-- en-US.txt
-            |-- es.txt
-            |-- fr.txt
-            |-- zh.txt
-            |-- ru.txt
-            
+- Set "Build Action" to "Embedded Resource" on the properties of each file         
 
 **Locale content sample**
 

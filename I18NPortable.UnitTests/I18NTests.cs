@@ -26,7 +26,7 @@ namespace I18NPortable.UnitTests
         public void EmbbededLocales_ShouldBe_Discovered()
         {
             var languages = I18N.Current.Languages;
-            Assert.AreEqual(2, languages.Count);
+            Assert.AreEqual(3, languages.Count);
         }
 
         [Test]
@@ -182,7 +182,7 @@ namespace I18NPortable.UnitTests
             CultureInfo.DefaultThreadCurrentCulture =
                 CultureInfo.DefaultThreadCurrentUICulture =
                     Thread.CurrentThread.CurrentCulture =
-                        Thread.CurrentThread.CurrentUICulture = new CultureInfo("pt-BR");
+                        Thread.CurrentThread.CurrentUICulture = new CultureInfo("pt-PT");
 
             I18N.Current.SetFallbackLocale("en").Init(GetType().GetTypeInfo().Assembly);
 
@@ -195,7 +195,7 @@ namespace I18NPortable.UnitTests
             CultureInfo.DefaultThreadCurrentCulture =
                 CultureInfo.DefaultThreadCurrentUICulture =
                     Thread.CurrentThread.CurrentCulture =
-                        Thread.CurrentThread.CurrentUICulture = new CultureInfo("pt-BR");
+                        Thread.CurrentThread.CurrentUICulture = new CultureInfo("pt-PT");
 
             I18N.Current.SetFallbackLocale("fr").Init(GetType().GetTypeInfo().Assembly);
 
