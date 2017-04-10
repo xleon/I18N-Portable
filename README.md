@@ -4,7 +4,7 @@ Simple and cross platform internationalization/translations for Xamarin and .NET
 
 [![Build status](https://ci.appveyor.com/api/projects/status/ogaeiar24scm9c8e?svg=true)](https://ci.appveyor.com/project/xleon/i18n-portable)
 [![codecov.io](https://codecov.io/gh/xleon/I18N-Portable/coverage.svg?branch=master)](https://codecov.io/gh/xleon/I18N-Portable)
-[![I18NPortable](https://img.shields.io/nuget/v/I18NPortable.svg?maxAge=92000)](https://www.nuget.org/packages/I18NPortable/)
+[![I18NPortable](https://img.shields.io/nuget/v/I18NPortable.svg?maxAge=50000)](https://www.nuget.org/packages/I18NPortable/)
 
 
 ### Why I18NPortable?
