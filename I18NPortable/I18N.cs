@@ -44,8 +44,8 @@ namespace I18NPortable
 
                 LoadLocale(value.Locale);
 
-                NotifyPropertyChanged("Locale");
-                NotifyPropertyChanged("Language");
+                NotifyPropertyChanged(nameof(Locale));
+                NotifyPropertyChanged(nameof(Language));
             }
         }
 
@@ -67,8 +67,8 @@ namespace I18NPortable
 
                 LoadLocale(value);
 
-                NotifyPropertyChanged("Locale");
-                NotifyPropertyChanged("Language");
+                NotifyPropertyChanged(nameof(Locale));
+                NotifyPropertyChanged(nameof(Language));
             }
         }
 
@@ -100,7 +100,7 @@ namespace I18NPortable
         }
 
         private Dictionary<string, string> _translations;
-        private Dictionary<string, string> _locales;
+        private Dictionary<string, string> _locales; // ie: [es] = "Project.Locales.es.txt"
         private Assembly _hostAssembly;
         private bool _throwWhenKeyNotFound;
         private string _notFoundSymbol = "?";
@@ -153,7 +153,7 @@ namespace I18NPortable
         /// Call this when your app starts
         /// ie: <code>I18N.Current.Init(GetType().GetTypeInfo().Assembly);</code>
         /// </summary>
-        /// <param name="hostAssembly">The PCL assembly that hosts the locale text files</param>
+        /// <param name="hostAssembly">The assembly that hosts the locale text files</param>
         public II18N Init(Assembly hostAssembly)
         {
             Unload();
@@ -184,8 +184,8 @@ namespace I18NPortable
 
             LoadLocale(localeToLoad);
 
-            NotifyPropertyChanged("Locale");
-            NotifyPropertyChanged("Language");
+            NotifyPropertyChanged(nameof(Locale));
+            NotifyPropertyChanged(nameof(Language));
 
             return this;
         }
@@ -206,7 +206,7 @@ namespace I18NPortable
             if (localeResourceNames.Length == 0)
             {
                 throw new Exception("No locales have been found. Make sure you´ve got a folder " +
-                                    "called 'Locales' containing .txt files in the host PCL assembly");
+                                    "called 'Locales' containing .txt files in the host assembly");
             }
 
             foreach (var resource in localeResourceNames)
@@ -232,7 +232,7 @@ namespace I18NPortable
 
             _locale = locale;
 
-            // Update bindings to indexer (useful for views in MVVM frameworks)
+            // Update bindings to indexer (useful for MVVM)
             NotifyPropertyChanged("Item[]");
         }
 
@@ -402,6 +402,8 @@ namespace I18NPortable
 
         #endregion
 
+        #region Cleanup
+
         public void Unload()
         {
             _translations = new Dictionary<string, string>();
@@ -416,7 +418,7 @@ namespace I18NPortable
             {
                 foreach (var @delegate in PropertyChanged.GetInvocationList())
                 {
-                    PropertyChanged -= (PropertyChangedEventHandler) @delegate;
+                    PropertyChanged -= (PropertyChangedEventHandler)@delegate;
                 }
 
                 PropertyChanged = null;
@@ -428,5 +430,7 @@ namespace I18NPortable
             _languages = null;
             _logger = null;
         }
+
+        #endregion
     }
 }
