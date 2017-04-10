@@ -5,6 +5,8 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using I18NPortable.Parsers;
+using I18NPortable.Providers;
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable MemberCanBeMadeStatic.Global
@@ -86,9 +88,9 @@ namespace I18NPortable
 
                 var languages = _locales?.Select(x => new PortableLanguage
                     {
-                        Locale = x.Key,
-                        DisplayName = TranslateOrNull(x.Key)
-                                      ?? new CultureInfo(x.Key).NativeName.CapitalizeFirstCharacter()
+                        Locale = x,
+                        DisplayName = TranslateOrNull(x)
+                                      ?? new CultureInfo(x).NativeName.CapitalizeFirstCharacter()
                     })
                     .ToList();
 
@@ -99,14 +101,14 @@ namespace I18NPortable
             }
         }
 
-        private Dictionary<string, string> _translations;
-        private Dictionary<string, string> _locales; // ie: [es] = "Project.Locales.es.txt"
-        private Assembly _hostAssembly;
+        private readonly Dictionary<string, string> _translations = new Dictionary<string, string>();
+        private readonly IList<ILocaleProvider> _providers = new List<ILocaleProvider>();
+        private readonly IList<ILocaleParser> _parsers = new List<ILocaleParser>();
+        private IList<string> _locales;
         private bool _throwWhenKeyNotFound;
         private string _notFoundSymbol = "?";
         private string _fallbackLocale;
         private Action<string> _logger;
-
         #region Fluent API
 
         /// <summary>
@@ -158,22 +160,25 @@ namespace I18NPortable
         {
             Unload();
 
-            DiscoverLocales(hostAssembly);
+            var defaultProvider = new EmbeddedLocaleProvider(hostAssembly, Log);
+            _locales = defaultProvider.AvailableLocales.ToList();
+            _providers.Add(defaultProvider);
 
-            _hostAssembly = hostAssembly;
+            var defaultParser = new I18NLocaleParser();
+            _parsers.Add(defaultParser);
 
             var localeToLoad = GetDefaultLocale();
 
             if (string.IsNullOrEmpty(localeToLoad))
             {
-                if (!string.IsNullOrEmpty(_fallbackLocale) && _locales.ContainsKey(_fallbackLocale))
+                if (!string.IsNullOrEmpty(_fallbackLocale) && _locales.Contains(_fallbackLocale))
                 {
                     localeToLoad = _fallbackLocale;
                     Log($"Loading fallback locale: {_fallbackLocale}");
                 }
                 else
                 {
-                    localeToLoad = _locales.Keys.ToArray()[0];
+                    localeToLoad = _locales.ElementAt(0);
                     Log($"Loading first locale on the list: {localeToLoad}");
                 }
             }
@@ -194,39 +199,12 @@ namespace I18NPortable
 
         #region Load stuff
 
-        private void DiscoverLocales(Assembly hostAssembly)
-        {
-            Log("Getting available locales...");
-
-            var localeResourceNames = hostAssembly
-                .GetManifestResourceNames()
-                .Where(x => x.Contains("Locales.") && x.EndsWith(".txt"))
-                .ToArray();
-
-            if (localeResourceNames.Length == 0)
-            {
-                throw new Exception("No locales have been found. Make sure you´ve got a folder " +
-                                    "called 'Locales' containing .txt files in the host assembly");
-            }
-
-            foreach (var resource in localeResourceNames)
-            {
-                var parts = resource.Split('.');
-                var localeName = parts[parts.Length - 2];
-
-                _locales.Add(localeName, resource);
-            }
-
-            Log($"Found {localeResourceNames.Length} locales: {string.Join(", ", _locales.Keys.ToArray())}");
-        }
-
         private void LoadLocale(string locale)
         {
-            if (!_locales.ContainsKey(locale))
+            if (!_locales.Contains(locale))
                 throw new KeyNotFoundException($"Locale '{locale}' is not available");
 
-            var resourceName = _locales[locale];
-            var stream = _hostAssembly.GetManifestResourceStream(resourceName);
+            var stream = _providers.First().GetLocaleStream(locale); // TODO try get from all providers in the correct order
 
             ParseTranslations(stream);
 
@@ -240,45 +218,8 @@ namespace I18NPortable
         {
             _translations.Clear();
 
-            using (var streamReader = new StreamReader(stream))
-            {
-                string key = null;
-                string value = null;
-
-                while (!streamReader.EndOfStream)
-                {
-                    var line = streamReader.ReadLine();
-                    var isEmpty = string.IsNullOrWhiteSpace(line);
-                    var isComment = !isEmpty && line.Trim().StartsWith("#");
-                    var isKeyValuePair = !isEmpty && !isComment && line.Contains("=");
-
-                    if ((isEmpty || isComment || isKeyValuePair) && key != null && value != null)
-                    {
-                        _translations.Add(key, value);
-
-                        key = null;
-                        value = null;
-                    }
-
-                    if (isEmpty || isComment)
-                        continue;
-
-                    if (isKeyValuePair)
-                    {
-                        var kvp = line.Split(new[] {'='}, 2);
-
-                        key = kvp[0].Trim();
-                        value = kvp[1].Trim().UnescapeLineBreaks();
-                    }
-                    else if (key != null && value != null)
-                    {
-                        value = value + Environment.NewLine + line.Trim().UnescapeLineBreaks();
-                    }
-                }
-
-                if (key != null && value != null)
-                    _translations.Add(key, value);
-            }
+            var parser = _parsers.First();
+            parser.Parse(stream, _translations);
 
             LogTranslations();
         }
@@ -376,13 +317,12 @@ namespace I18NPortable
             // var threeLetterIsoName = currentCulture.GetType().GetRuntimeProperty("ThreeLetterISOLanguageName").GetValue(currentCulture);
             // var threeLetterWindowsName = currentCulture.GetType().GetRuntimeProperty("ThreeLetterWindowsLanguageName").GetValue(currentCulture);
 
-            var valuePair = _locales.FirstOrDefault(x => x.Key.Equals(currentCulture.Name) // i.e: "es-ES", "en-US"
-                                                         || x.Key.Equals(currentCulture.TwoLetterISOLanguageName));
+            return _locales.FirstOrDefault(x => x.Equals(currentCulture.Name) // i.e: "es-ES", "en-US"
+                || x.Equals(currentCulture.TwoLetterISOLanguageName));
+
                 // ISO 639-1 two-letter code. i.e: "es"
             // || x.Key.Equals(threeLetterIsoName) // ISO 639-2 three-letter code. i.e: "spa"
             // || x.Key.Equals(threeLetterWindowsName)); // "ESP"
-
-            return valuePair.Key;
         }
 
         #endregion
@@ -406,8 +346,8 @@ namespace I18NPortable
 
         public void Unload()
         {
-            _translations = new Dictionary<string, string>();
-            _locales = new Dictionary<string, string>();
+            _translations.Clear();
+            _locales?.Clear();
 
             Log("Unloaded");
         }
@@ -424,10 +364,14 @@ namespace I18NPortable
                 PropertyChanged = null;
             }
 
-            _translations = null;
-            _locales = null;
+            _translations.Clear();
+            _locales.Clear();
+            _parsers.Clear();
             _locale = null;
             _languages = null;
+            
+            Log("Disposed");
+
             _logger = null;
         }
 
