@@ -87,12 +87,12 @@ namespace I18NPortable
                     return _languages;
 
                 var languages = _locales?.Select(x => new PortableLanguage
-                    {
-                        Locale = x,
-                        DisplayName = TranslateOrNull(x)
-                                      ?? new CultureInfo(x).NativeName.CapitalizeFirstCharacter()
-                    })
-                    .ToList();
+                {
+                    Locale = x,
+                    DisplayName = TranslateOrNull(x)
+                                    ?? new CultureInfo(x).NativeName.CapitalizeFirstCharacter()
+                })
+                .ToList();
 
                 if (languages?.Count > 0)
                     _languages = languages;
