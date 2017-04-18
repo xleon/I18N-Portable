@@ -303,7 +303,6 @@ Global
 		{EC5EE73E-3503-4A05-99AD-E2E787E2C8A4}.AppStore|x64.ActiveCfg = AppStore|iPhone
 		{EC5EE73E-3503-4A05-99AD-E2E787E2C8A4}.AppStore|x86.ActiveCfg = AppStore|iPhone
 		{EC5EE73E-3503-4A05-99AD-E2E787E2C8A4}.Debug|Any CPU.ActiveCfg = Debug|iPhone
-		{EC5EE73E-3503-4A05-99AD-E2E787E2C8A4}.Debug|Any CPU.Build.0 = Debug|iPhone
 		{EC5EE73E-3503-4A05-99AD-E2E787E2C8A4}.Debug|ARM.ActiveCfg = Debug|iPhone
 		{EC5EE73E-3503-4A05-99AD-E2E787E2C8A4}.Debug|iPhone.ActiveCfg = Debug|iPhone
 		{EC5EE73E-3503-4A05-99AD-E2E787E2C8A4}.Debug|iPhone.Build.0 = Debug|iPhone
