@@ -1,5 +1,7 @@
 version: 1.0.{build}
 image: Visual Studio 2017
+environment:
+  JavaSdkDirectory: C:\Program Files (x86)\Java\jdk1.8.0
 before_build:
   - nuget restore
 build:
