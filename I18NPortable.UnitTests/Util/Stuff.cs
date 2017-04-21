@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
 
-namespace I18NPortable.UnitTests
+namespace I18NPortable.UnitTests.Util
 {
     public enum Animals
     {
@@ -44,6 +44,8 @@ namespace I18NPortable.UnitTests
         public II18N SetThrowWhenKeyNotFound(bool enabled) => throw new NotImplementedException();
 
         public II18N SetFallbackLocale(string locale) => throw new NotImplementedException();
+
+        public II18N SetResourcesFolder(string folderName) => throw new NotImplementedException();
 
         public II18N AddLocaleReader(ILocaleReader reader, string extension) => throw new NotImplementedException();
 

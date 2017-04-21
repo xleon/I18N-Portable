@@ -109,6 +109,7 @@ namespace I18NPortable
         private string _notFoundSymbol = "?";
         private string _fallbackLocale;
         private Action<string> _logger;
+        private string _resourcesFolder;
 
         #region Fluent API
 
@@ -152,6 +153,12 @@ namespace I18NPortable
             return this;
         }
 
+        public II18N SetResourcesFolder(string folderName)
+        {
+            _resourcesFolder = folderName;
+            return this;
+        }
+
         public II18N AddLocaleReader(ILocaleReader reader, string extension)
         {
             if(reader == null)
@@ -189,7 +196,7 @@ namespace I18NPortable
         {
             Unload();
 
-            var defaultProvider = new EmbeddedLocaleProvider(hostAssembly)
+            var defaultProvider = new EmbeddedResourceProvider(hostAssembly, _resourcesFolder ?? "Locales")
                 .SetLogger(Log)
                 .Init();
 

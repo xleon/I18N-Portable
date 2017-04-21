@@ -1,20 +1,13 @@
 ﻿using System;
-using System.Reflection;
+using I18NPortable.UnitTests.Util;
 using NUnit.Framework;
 
 namespace I18NPortable.UnitTests
 {
     [TestFixture]
-    public class ExtensionTests
+    public class ExtensionTests : BaseTest
     {
-        [SetUp]
-        public void Init() =>
-            I18N.Current = new I18N()
-                .SetNotFoundSymbol("?")
-                .SetThrowWhenKeyNotFound(false)
-                .Init(GetType().GetTypeInfo().Assembly);
-
-        [TearDown]
+        [Test]
         public void CanTranslate_WithStringExtensionMethod()
         {
             I18N.Current.Locale = "en";

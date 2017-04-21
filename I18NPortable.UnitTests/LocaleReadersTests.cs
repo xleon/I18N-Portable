@@ -32,7 +32,5 @@ namespace I18NPortable.UnitTests
 
             Assert.AreEqual("uno", I18N.Current.Translate("one"));
         }
-
-
     }
 }

@@ -1,1 +1,1 @@
-﻿one = uno
+﻿well = bien

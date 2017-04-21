@@ -31,12 +31,18 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EmbeddedLocaleProviderTests.cs" />
+    <Compile Include="BaseTest.cs" />
+    <Compile Include="BindingTests.cs" />
+    <Compile Include="CultureTests.cs" />
+    <Compile Include="EmbeddedResourceProviderTests.cs" />
     <Compile Include="ExtensionTests.cs" />
     <Compile Include="I18NTests.cs" />
     <Compile Include="AddLocaleReaderTests.cs" />
+    <Compile Include="LocaleLoadingTests.cs" />
     <Compile Include="LocaleReadersTests.cs" />
-    <Compile Include="Stuff.cs" />
+    <Compile Include="Util\Helpers.cs" />
+    <Compile Include="Util\Stuff.cs" />
+    <Compile Include="TranslationTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Locales\en.txt" />

@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace I18NPortable.Providers
 {
-    public class EmbeddedLocaleProvider : ILocaleProvider
+    public class EmbeddedResourceProvider : ILocaleProvider
     {
         private readonly Dictionary<string, string> _locales = new Dictionary<string, string>(); // ie: [es] = "Project.Locales.es.txt"
         private readonly Assembly _hostAssembly;
@@ -14,7 +14,7 @@ namespace I18NPortable.Providers
         private readonly IEnumerable<string> _knownFileExtensions;
         private Action<string> _logger;
 
-        public EmbeddedLocaleProvider(Assembly hostAssembly, string resourceFolder = "Locales", 
+        public EmbeddedResourceProvider(Assembly hostAssembly, string resourceFolder = "Locales", 
             IEnumerable<string> knownFileExtensions = null)
         {
             _hostAssembly = hostAssembly;
