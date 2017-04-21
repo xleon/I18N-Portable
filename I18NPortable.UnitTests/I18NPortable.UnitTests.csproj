@@ -63,10 +63,28 @@
     <EmbeddedResource Include="Locales\es-MX.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="BadLocales\es.json" />
+    <EmbeddedResource Include="DuplicatedLocales\es.json" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="BadLocales\es.txt" />
+    <EmbeddedResource Include="DuplicatedLocales\es.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="OtherLocales\es.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="OtherLocales\en.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Locales\es-CO.badextension" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="OtherLocales\fr.weird1" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="OtherLocales\pt.weird3" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="OtherLocales\ru.weird2" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
