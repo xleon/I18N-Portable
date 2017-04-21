@@ -6,8 +6,9 @@ namespace I18NPortable
 {
     public interface ILocaleProvider
     {
-        Action<string> Logger { set; }
-        IEnumerable<string> AvailableLocales { get; }
+        IEnumerable<string> GetAvailableLocales();
         Stream GetLocaleStream(string locale);
+        ILocaleProvider SetLogger(Action<string> logger);
+        ILocaleProvider Init();
     }
 }

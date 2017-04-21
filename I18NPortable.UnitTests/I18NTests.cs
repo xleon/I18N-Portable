@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 namespace I18NPortable.UnitTests
 {
-    [TestFixture()]
+    [TestFixture]
     public class I18NTests
     {
         [SetUp]
@@ -26,7 +26,7 @@ namespace I18NPortable.UnitTests
         public void EmbbededLocales_ShouldBe_Discovered()
         {
             var languages = I18N.Current.Languages;
-            Assert.AreEqual(3, languages.Count);
+            Assert.IsTrue(languages.Count > 2);
         }
 
         [Test]
@@ -38,6 +38,24 @@ namespace I18NPortable.UnitTests
 
             Assert.AreEqual("English", en?.DisplayName);
             Assert.AreEqual("Español", es?.ToString());
+        }
+
+        [Test]
+        public void LocaleFileNames_CanBe_CultureNames()
+        {
+            var mexico = I18N.Current.Languages.FirstOrDefault(x => x.Locale.Equals("es-MX"));
+
+            Assert.NotNull(mexico);
+        }
+
+        [Test]
+        public void LocalesWithWholeCultureNames_CanBeDefault()
+        {
+            SetCulture("es-MX");
+
+            I18N.Current = new I18N().Init(GetType().GetTypeInfo().Assembly);
+
+            Assert.AreEqual("es-MX", I18N.Current.GetDefaultLocale());
         }
 
         [Test]
@@ -54,8 +72,8 @@ namespace I18NPortable.UnitTests
             I18N.Current.Locale = "es";
 
             var logs = new List<string>();
-            Action<string> logger = text => logs.Add(text);
-            I18N.Current.SetLogger(logger);
+            void Logger(string text) => logs.Add(text);
+            I18N.Current.SetLogger(Logger);
             I18N.Current.Locale = "es";
 
             Assert.AreEqual(1, logs.Count);
@@ -179,10 +197,7 @@ namespace I18NPortable.UnitTests
         [Test]
         public void FallbackLocale_ShouldBeLoaded_WhenRequestedLocale_IsNotAvailable()
         {
-            CultureInfo.DefaultThreadCurrentCulture =
-                CultureInfo.DefaultThreadCurrentUICulture =
-                    Thread.CurrentThread.CurrentCulture =
-                        Thread.CurrentThread.CurrentUICulture = new CultureInfo("pt-PT");
+            SetCulture("pt-PT");
 
             I18N.Current.SetFallbackLocale("en").Init(GetType().GetTypeInfo().Assembly);
 
@@ -192,10 +207,7 @@ namespace I18NPortable.UnitTests
         [Test]
         public void FallbackLocale_ShouldBeIgnored_IfNotAvailable()
         {
-            CultureInfo.DefaultThreadCurrentCulture =
-                CultureInfo.DefaultThreadCurrentUICulture =
-                    Thread.CurrentThread.CurrentCulture =
-                        Thread.CurrentThread.CurrentUICulture = new CultureInfo("pt-PT");
+            SetCulture("pt-PT");
 
             I18N.Current.SetFallbackLocale("fr").Init(GetType().GetTypeInfo().Assembly);
 
@@ -206,9 +218,9 @@ namespace I18NPortable.UnitTests
         public void Logger_CanBeSet_AsAction()
         {
             var logs = new List<string>();
-            Action<string> logger = text => logs.Add(text);
+            void Logger(string text) => logs.Add(text);
 
-            I18N.Current.SetLogger(logger);
+            I18N.Current.SetLogger(Logger);
             I18N.Current.Locale = "en";
             I18N.Current.Locale = "es";
 
@@ -386,10 +398,7 @@ namespace I18NPortable.UnitTests
         {
             I18N.Current.Dispose();
 
-            CultureInfo.DefaultThreadCurrentCulture =
-                CultureInfo.DefaultThreadCurrentUICulture =
-                    Thread.CurrentThread.CurrentCulture =
-                        Thread.CurrentThread.CurrentUICulture = new CultureInfo("es-ES");
+            SetCulture("es-ES");
 
             I18N.Current = new I18N().Init(GetType().GetTypeInfo().Assembly);
 
@@ -401,10 +410,7 @@ namespace I18NPortable.UnitTests
         {
             I18N.Current.Dispose();
 
-            CultureInfo.DefaultThreadCurrentCulture =
-                CultureInfo.DefaultThreadCurrentUICulture =
-                    Thread.CurrentThread.CurrentCulture =
-                        Thread.CurrentThread.CurrentUICulture = new CultureInfo("pt-PT");
+            SetCulture("pt-PT");
 
             I18N.Current = new I18N().Init(GetType().GetTypeInfo().Assembly);
 
@@ -416,10 +422,7 @@ namespace I18NPortable.UnitTests
         {
             I18N.Current.Dispose();
 
-            CultureInfo.DefaultThreadCurrentCulture =
-                CultureInfo.DefaultThreadCurrentUICulture =
-                    Thread.CurrentThread.CurrentCulture =
-                        Thread.CurrentThread.CurrentUICulture = new CultureInfo("pt-BR");
+            SetCulture("pt-BR");
 
             I18N.Current = new I18N().Init(GetType().GetTypeInfo().Assembly);
 
@@ -437,6 +440,14 @@ namespace I18NPortable.UnitTests
             I18N.Current.SetNotFoundSymbol(string.Empty);
 
             Assert.AreEqual("##missing##", "missing".Translate());
+        }
+
+        private static void SetCulture(string cultureName)
+        {
+            CultureInfo.DefaultThreadCurrentCulture =
+                CultureInfo.DefaultThreadCurrentUICulture =
+                    Thread.CurrentThread.CurrentCulture =
+                        Thread.CurrentThread.CurrentUICulture = new CultureInfo(cultureName);
         }
     }
 }

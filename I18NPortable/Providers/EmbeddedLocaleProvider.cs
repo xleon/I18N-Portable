@@ -8,21 +8,19 @@ namespace I18NPortable.Providers
 {
     public class EmbeddedLocaleProvider : ILocaleProvider
     {
-        public Action<string> Logger { get; set; }
-        public IEnumerable<string> AvailableLocales => _locales.Select(x => x.Key);
-
-        private readonly Dictionary<string, string> _locales 
-            = new Dictionary<string, string>(); // ie: [es] = "Project.Locales.es.txt"
-
+        private readonly Dictionary<string, string> _locales = new Dictionary<string, string>(); // ie: [es] = "Project.Locales.es.txt"
         private readonly Assembly _hostAssembly;
+        private Action<string> _logger;
 
-        public EmbeddedLocaleProvider(Assembly hostAssembly, Action<string> logger)
+        public EmbeddedLocaleProvider(Assembly hostAssembly)
         {
-            Logger = logger;
-
             _hostAssembly = hostAssembly;
+        }
 
-            DiscoverLocales(_hostAssembly);
+        public ILocaleProvider SetLogger(Action<string> logger)
+        {
+            _logger = logger;
+            return this;
         }
 
         public Stream GetLocaleStream(string locale)
@@ -31,9 +29,18 @@ namespace I18NPortable.Providers
             return _hostAssembly.GetManifestResourceStream(resourceName);
         }
 
+        public ILocaleProvider Init()
+        {
+            DiscoverLocales(_hostAssembly);
+            return this;
+        }
+
+        public IEnumerable<string> GetAvailableLocales() 
+            => _locales.Select(x => x.Key);
+
         private void DiscoverLocales(Assembly hostAssembly)
         {
-            Logger?.Invoke("Getting available locales...");
+            _logger?.Invoke("Getting available locales...");
 
             var localeResourceNames = hostAssembly
                 .GetManifestResourceNames()
@@ -54,19 +61,7 @@ namespace I18NPortable.Providers
                 _locales.Add(localeName, resource);
             }
 
-            Logger?.Invoke($"Found {localeResourceNames.Length} locales: {string.Join(", ", _locales.Keys.ToArray())}");
-        }
-    }
-
-    public class RemoteLocaleProvider : ILocaleProvider
-    {
-        public Action<string> Logger { get; set; }
-        public IEnumerable<string> AvailableLocales { get; }
-
-        public Stream GetLocaleStream(string locale)
-        {
-            
-            throw new System.NotImplementedException();
+            _logger?.Invoke($"Found {localeResourceNames.Length} locales: {string.Join(", ", _locales.Keys.ToArray())}");
         }
     }
 }

@@ -33,6 +33,7 @@
   <ItemGroup>
     <Compile Include="ExtensionTests.cs" />
     <Compile Include="I18NTests.cs" />
+    <Compile Include="ReaderTests.cs" />
     <Compile Include="Stuff.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -55,6 +56,9 @@
       <Project>{4dc53c6b-9f4b-4168-80c9-5d6c8849892e}</Project>
       <Name>I18NPortable</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Locales\es-MX.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

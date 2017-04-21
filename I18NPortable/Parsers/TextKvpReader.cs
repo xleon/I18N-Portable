@@ -4,10 +4,12 @@ using System.IO;
 
 namespace I18NPortable.Parsers
 {
-    public class I18NLocaleParser : ILocaleParser
+    public class TextKvpReader : ILocaleReader
     {
-        public void Parse(Stream stream, Dictionary<string, string> translations)
+        public Dictionary<string, string> Read(Stream stream)
         {
+            var translations = new Dictionary<string, string>();
+
             using (var streamReader = new StreamReader(stream))
             {
                 string key = null;
@@ -47,6 +49,8 @@ namespace I18NPortable.Parsers
                 if (key != null && value != null)
                     translations.Add(key, value);
             }
+
+            return translations;
         }
     }
 }

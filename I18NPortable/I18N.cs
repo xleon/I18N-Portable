@@ -35,7 +35,7 @@ namespace I18NPortable
         /// </summary>
         public PortableLanguage Language
         {
-            get { return Languages?.FirstOrDefault(x => x.Locale.Equals(Locale)); }
+            get => Languages?.FirstOrDefault(x => x.Locale.Equals(Locale));
             set
             {
                 if (Language.Locale == value.Locale)
@@ -58,7 +58,7 @@ namespace I18NPortable
         /// </summary>
         public string Locale
         {
-            get { return _locale; }
+            get => _locale;
             set
             {
                 if (_locale == value)
@@ -101,14 +101,15 @@ namespace I18NPortable
             }
         }
 
-        private readonly Dictionary<string, string> _translations = new Dictionary<string, string>();
+        private Dictionary<string, string> _translations = new Dictionary<string, string>();
         private readonly IList<ILocaleProvider> _providers = new List<ILocaleProvider>();
-        private readonly IList<ILocaleParser> _parsers = new List<ILocaleParser>();
+        private readonly IList<Tuple<ILocaleReader, string>> _readers = new List<Tuple<ILocaleReader, string>>();
         private IList<string> _locales;
         private bool _throwWhenKeyNotFound;
         private string _notFoundSymbol = "?";
         private string _fallbackLocale;
         private Action<string> _logger;
+
         #region Fluent API
 
         /// <summary>
@@ -151,6 +152,34 @@ namespace I18NPortable
             return this;
         }
 
+        public II18N AddLocaleReader(ILocaleReader reader, string extension)
+        {
+            if(reader == null)
+                throw new ArgumentException(ErrorMessages.ReaderNull);
+
+            if(string.IsNullOrEmpty(extension))
+                throw new ArgumentException(ErrorMessages.ReaderExtensionNeeded, nameof(extension));
+
+            if(!extension.StartsWith("."))
+                throw new ArgumentException(ErrorMessages.ReaderExtensionStartWithDot, nameof(extension));
+
+            if(extension.Length < 2)
+                throw new ArgumentException(ErrorMessages.ReaderExtensionOneChar);
+
+            if(extension.Split('.').Length - 1 > 1)
+                throw new ArgumentException(ErrorMessages.ReaderExtensionJustOneDot);
+
+            if(_readers.Any(x => x.Item2.Equals(extension)))
+                throw new ArgumentException(ErrorMessages.ReaderExtensionTwice);
+
+            if(_readers.Any(x => x.Item1 == reader))
+                throw new ArgumentException(ErrorMessages.ReaderTwice);
+
+            _readers.Add(new Tuple<ILocaleReader, string>(reader, extension));
+
+            return this;
+        }
+
         /// <summary>
         /// Call this when your app starts
         /// ie: <code>I18N.Current.Init(GetType().GetTypeInfo().Assembly);</code>
@@ -160,12 +189,19 @@ namespace I18NPortable
         {
             Unload();
 
-            var defaultProvider = new EmbeddedLocaleProvider(hostAssembly, Log);
-            _locales = defaultProvider.AvailableLocales.ToList();
+            var defaultProvider = new EmbeddedLocaleProvider(hostAssembly)
+                .SetLogger(Log)
+                .Init();
+
+            _locales = defaultProvider.GetAvailableLocales().ToList();
             _providers.Add(defaultProvider);
 
-            var defaultParser = new I18NLocaleParser();
-            _parsers.Add(defaultParser);
+            var defaultParser = new TextKvpReader();
+
+            if (_readers.FirstOrDefault(x => x.Item2.ToLowerInvariant().Equals(".txt")) == null)
+            {
+                _readers.Insert(0, new Tuple<ILocaleReader, string>(defaultParser, ".txt"));
+            }
 
             var localeToLoad = GetDefaultLocale();
 
@@ -218,8 +254,8 @@ namespace I18NPortable
         {
             _translations.Clear();
 
-            var parser = _parsers.First();
-            parser.Parse(stream, _translations);
+            var reader = _readers.First().Item1;
+            _translations = reader.Read(stream) ?? new Dictionary<string, string>();
 
             LogTranslations();
         }
@@ -317,8 +353,14 @@ namespace I18NPortable
             // var threeLetterIsoName = currentCulture.GetType().GetRuntimeProperty("ThreeLetterISOLanguageName").GetValue(currentCulture);
             // var threeLetterWindowsName = currentCulture.GetType().GetRuntimeProperty("ThreeLetterWindowsLanguageName").GetValue(currentCulture);
 
-            return _locales.FirstOrDefault(x => x.Equals(currentCulture.Name) // i.e: "es-ES", "en-US"
-                || x.Equals(currentCulture.TwoLetterISOLanguageName));
+            var matchingLocale = _locales.FirstOrDefault(x => x.Equals(currentCulture.Name));
+
+            if (matchingLocale == null)
+            {
+                matchingLocale = _locales.FirstOrDefault(x => x.Equals(currentCulture.TwoLetterISOLanguageName));
+            }
+
+            return matchingLocale;
 
                 // ISO 639-1 two-letter code. i.e: "es"
             // || x.Key.Equals(threeLetterIsoName) // ISO 639-2 three-letter code. i.e: "spa"
@@ -366,7 +408,7 @@ namespace I18NPortable
 
             _translations.Clear();
             _locales.Clear();
-            _parsers.Clear();
+            _readers.Clear();
             _locale = null;
             _languages = null;
             
