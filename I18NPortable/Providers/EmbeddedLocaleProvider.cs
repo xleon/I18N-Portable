@@ -10,11 +10,16 @@ namespace I18NPortable.Providers
     {
         private readonly Dictionary<string, string> _locales = new Dictionary<string, string>(); // ie: [es] = "Project.Locales.es.txt"
         private readonly Assembly _hostAssembly;
+        private readonly string _resourceFolder;
+        private readonly IEnumerable<string> _knownFileExtensions;
         private Action<string> _logger;
 
-        public EmbeddedLocaleProvider(Assembly hostAssembly)
+        public EmbeddedLocaleProvider(Assembly hostAssembly, string resourceFolder = "Locales", 
+            IEnumerable<string> knownFileExtensions = null)
         {
             _hostAssembly = hostAssembly;
+            _resourceFolder = resourceFolder;
+            _knownFileExtensions = knownFileExtensions ?? new []{ ".txt", ".json" };
         }
 
         public ILocaleProvider SetLogger(Action<string> logger)
@@ -42,26 +47,39 @@ namespace I18NPortable.Providers
         {
             _logger?.Invoke("Getting available locales...");
 
-            var localeResourceNames = hostAssembly
+            var localeResources = hostAssembly
                 .GetManifestResourceNames()
-                .Where(x => x.Contains("Locales.") && x.EndsWith(".txt"))
-                .ToArray();
+                .Where(x => x.Contains($".{_resourceFolder}."));
 
-            if (localeResourceNames.Length == 0)
+            var supportedResources = 
+                (from name in localeResources
+                 from extension in _knownFileExtensions
+                 where name.EndsWith(extension)
+                 select name)
+                 .ToList();
+
+            if (supportedResources.Count == 0)
             {
                 throw new Exception("No locales have been found. Make sure you´ve got a folder " +
-                                    "called 'Locales' containing .txt files in the host assembly");
+                                    $"called '{_resourceFolder}' containing embedded resource files" +
+                                    $" ({string.Join(", ", _knownFileExtensions)}) " +
+                                    "in the host assembly");
             }
 
-            foreach (var resource in localeResourceNames)
+            foreach (var resource in supportedResources)
             {
                 var parts = resource.Split('.');
                 var localeName = parts[parts.Length - 2];
 
+                if (_locales.ContainsKey(localeName))
+                {
+                    throw new Exception($"The locales folder '{_resourceFolder}' contains a duplicated locale '{localeName}'");
+                }
+
                 _locales.Add(localeName, resource);
             }
 
-            _logger?.Invoke($"Found {localeResourceNames.Length} locales: {string.Join(", ", _locales.Keys.ToArray())}");
+            _logger?.Invoke($"Found {supportedResources.Count} locales: {string.Join(", ", _locales.Keys.ToArray())}");
         }
     }
 }

@@ -31,9 +31,11 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EmbeddedLocaleProviderTests.cs" />
     <Compile Include="ExtensionTests.cs" />
     <Compile Include="I18NTests.cs" />
     <Compile Include="AddLocaleReaderTests.cs" />
+    <Compile Include="LocaleReadersTests.cs" />
     <Compile Include="Stuff.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -59,6 +61,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Locales\es-MX.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="BadLocales\es.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="BadLocales\es.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

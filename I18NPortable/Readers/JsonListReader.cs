@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace I18NPortable.Parsers
+namespace I18NPortable.Readers
 {
     public class JsonListReader : ILocaleReader
     {

@@ -1,5 +1,5 @@
 ﻿using System;
-using I18NPortable.Parsers;
+using I18NPortable.Readers;
 using NUnit.Framework;
 
 namespace I18NPortable.UnitTests

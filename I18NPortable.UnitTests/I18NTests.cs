@@ -14,8 +14,6 @@ namespace I18NPortable.UnitTests
         [SetUp]
         public void Init() =>
             I18N.Current = new I18N()
-                .SetNotFoundSymbol("?")
-                .SetThrowWhenKeyNotFound(false)
                 .Init(GetType().GetTypeInfo().Assembly);
 
         [TearDown]
@@ -364,7 +362,7 @@ namespace I18NPortable.UnitTests
         }
 
         [Test]
-        public void Language_Is_Bindable()
+        public void LanguageProperty_Is_Bindable()
         {
             I18N.Current.Locale = "es";
             var language = I18N.Current.Language;
@@ -385,7 +383,7 @@ namespace I18NPortable.UnitTests
         }
 
         [Test]
-        public void Locale_Is_Bindable()
+        public void LocaleProperty_Is_Bindable()
         {
             I18N.Current.Locale = "es";
             var locale = I18N.Current.Locale;
@@ -452,6 +450,12 @@ namespace I18NPortable.UnitTests
             I18N.Current.SetNotFoundSymbol(string.Empty);
 
             Assert.AreEqual("##missing##", "missing".Translate());
+        }
+
+        [Test]
+        public void ResourceFolder_CanBe_Set()
+        {
+            throw new NotImplementedException();
         }
 
         private static void SetCulture(string cultureName)
