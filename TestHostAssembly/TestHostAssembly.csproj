@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Locales\en.txt" />
+    <EmbeddedResource Include="Locales\es.txt" />
+  </ItemGroup>
+
+</Project>

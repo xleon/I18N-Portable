@@ -54,7 +54,7 @@ namespace I18NPortable
         private string _locale;
 
         /// <summary>
-        /// The current loaded locale 2 letter string
+        /// The current loaded locale name (can be two letter ISO-code or a culture name like "es-ES")
         /// </summary>
         public string Locale
         {
@@ -195,6 +195,9 @@ namespace I18NPortable
         public II18N Init(Assembly hostAssembly)
         {
             Unload();
+
+            _readers.Clear();
+            _providers.Clear();
 
             var defaultProvider = new EmbeddedResourceProvider(hostAssembly, _resourcesFolder ?? "Locales")
                 .SetLogger(Log)

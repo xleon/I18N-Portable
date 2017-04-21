@@ -39,7 +39,7 @@
     <Compile Include="I18NTests.cs" />
     <Compile Include="AddLocaleReaderTests.cs" />
     <Compile Include="LocaleLoadingTests.cs" />
-    <Compile Include="LocaleReadersTests.cs" />
+    <Compile Include="TextKvpReadersTests.cs" />
     <Compile Include="Util\Helpers.cs" />
     <Compile Include="Util\Stuff.cs" />
     <Compile Include="TranslationTests.cs" />
@@ -63,6 +63,10 @@
     <ProjectReference Include="..\I18NPortable\I18NPortable.csproj">
       <Project>{4dc53c6b-9f4b-4168-80c9-5d6c8849892e}</Project>
       <Name>I18NPortable</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TestHostAssembly\TestHostAssembly.csproj">
+      <Project>{0133fcc2-a9ec-4dec-b43e-f0b0f136bffa}</Project>
+      <Name>TestHostAssembly</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

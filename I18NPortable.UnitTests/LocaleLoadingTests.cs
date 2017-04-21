@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using I18NPortable.UnitTests.Util;
 using NUnit.Framework;
+using TestHostAssembly;
 
 namespace I18NPortable.UnitTests
 {
@@ -118,18 +119,46 @@ namespace I18NPortable.UnitTests
         [Test]
         public void ResourceFolder_CanBe_Set()
         {
-            var current = I18N.Current;
+            var current = new I18N();
+
             current
                 .SetResourcesFolder("OtherLocales")
                 .Init(GetType().Assembly);
 
             current.Locale = "es";
-
             Assert.AreEqual("bien", current.Translate("well"));
 
             current.Locale = "en";
-
             Assert.AreEqual("well", current.Translate("well"));
+        }
+
+        [Test]
+        public void ResourceFolder_CanBe_Changed()
+        {
+            var current = I18N.Current;
+
+            current
+                .SetResourcesFolder("OtherLocales")
+                .Init(GetType().Assembly);
+
+            current.Locale = "es";
+            Assert.AreEqual("bien", current.Translate("well"));
+
+            current.Locale = "en";
+            Assert.AreEqual("well", current.Translate("well"));
+        }
+
+        [Test]
+        public void ResourcesFromOtherAssemblies_CanBe_Loaded()
+        {
+            var assembly = typeof(TestHostAssemblyDummy).Assembly;
+            var current = new I18N().Init(assembly);
+
+            current.Locale = "es";
+            Assert.AreEqual("ensamblado anfitrión", current.Translate("host"));
+
+            current.Locale = "en";
+            Assert.AreEqual("host assembly", current.Translate("host"));
         }
     }
 }

@@ -32,6 +32,7 @@ namespace I18NPortable.UnitTests
 
             I18N.Current = new I18N().Init(GetType().GetTypeInfo().Assembly);
 
+            Assert.AreEqual("pt-BR", I18N.Current.GetDefaultLocale());
             Assert.AreEqual("oi", "hello".Translate());
         }
 

@@ -83,5 +83,20 @@ namespace I18NPortable.UnitTests
                     .AddLocaleReader(reader2, ".txt");
             });
         }
+
+        [Test]
+        public void UnknownResourceExtension_Should_Throw()
+        {
+            // TODO 
+            I18N.Current
+                .SetThrowWhenKeyNotFound(true)
+                .AddLocaleReader(new TextKvpReader(), ".txt22222")
+                .Init(GetType().Assembly);
+
+            Assert.Throws<Exception>(() =>
+            {
+                var t = I18N.Current.Translate("one");
+            });
+        }
     }
 }
