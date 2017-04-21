@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace I18NPortable.UnitTests
 {
     [TestFixture]
-    public class ReaderTests
+    public class AddLocaleReaderTests
     {
         [TearDown]
         public void Finish() =>

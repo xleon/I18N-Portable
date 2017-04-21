@@ -33,7 +33,7 @@
   <ItemGroup>
     <Compile Include="ExtensionTests.cs" />
     <Compile Include="I18NTests.cs" />
-    <Compile Include="ReaderTests.cs" />
+    <Compile Include="AddLocaleReaderTests.cs" />
     <Compile Include="Stuff.cs" />
   </ItemGroup>
   <ItemGroup>

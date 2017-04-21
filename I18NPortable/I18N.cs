@@ -104,7 +104,7 @@ namespace I18NPortable
         private Dictionary<string, string> _translations = new Dictionary<string, string>();
         private readonly IList<ILocaleProvider> _providers = new List<ILocaleProvider>();
         private readonly IList<Tuple<ILocaleReader, string>> _readers = new List<Tuple<ILocaleReader, string>>();
-        private IList<string> _locales;
+        private IList<string> _locales = new List<string>();
         private bool _throwWhenKeyNotFound;
         private string _notFoundSymbol = "?";
         private string _fallbackLocale;
@@ -242,7 +242,7 @@ namespace I18NPortable
 
             var stream = _providers.First().GetLocaleStream(locale); // TODO try get from all providers in the correct order
 
-            ParseTranslations(stream);
+            ReadLocaleStream(stream);
 
             _locale = locale;
 
@@ -250,10 +250,11 @@ namespace I18NPortable
             NotifyPropertyChanged("Item[]");
         }
 
-        private void ParseTranslations(Stream stream)
+        private void ReadLocaleStream(Stream stream)
         {
             _translations.Clear();
 
+            // TODO try with all readers
             var reader = _readers.First().Item1;
             _translations = reader.Read(stream) ?? new Dictionary<string, string>();
 
