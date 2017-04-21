@@ -41,14 +41,6 @@ namespace I18NPortable.UnitTests
         }
 
         [Test]
-        public void LocaleFileNames_CanBe_CultureNames()
-        {
-            var mexico = I18N.Current.Languages.FirstOrDefault(x => x.Locale.Equals("es-MX"));
-
-            Assert.NotNull(mexico);
-        }
-
-        [Test]
         public void LocalesWithWholeCultureNames_CanBeDefault()
         {
             SetCulture("es-MX");
@@ -59,10 +51,30 @@ namespace I18NPortable.UnitTests
         }
 
         [Test]
+        public void LocaleWithWholeCultureNames_GetLoaded_AsDefault()
+        {
+            SetCulture("es-MX");
+            I18N.Current = new I18N().Init(GetType().GetTypeInfo().Assembly);
+
+            Assert.AreEqual("banana", I18N.Current.Translate("Fruit.Banana"));
+
+            SetCulture("es-ES");
+            I18N.Current = new I18N().Init(GetType().GetTypeInfo().Assembly);
+
+            Assert.AreEqual("plátano", I18N.Current.Translate("Fruit.Banana"));
+
+            SetCulture("pt-BR");
+            I18N.Current = new I18N().Init(GetType().GetTypeInfo().Assembly);
+
+            Assert.AreEqual("oi", "hello".Translate());
+        }
+
+        [Test]
         public void DiscoverLocales_ShouldThrow_If_NoLocalesAvailable()
         {
-            Assert.Throws<Exception>(() =>
-                I18N.Current.Init(I18N.Current.GetType().GetTypeInfo().Assembly));
+            var assemblyWithoutLocales = I18N.Current.GetType().GetTypeInfo().Assembly;
+
+            Assert.Throws<Exception>(() => I18N.Current.Init(assemblyWithoutLocales));
         }
 
         [Test]
@@ -360,7 +372,7 @@ namespace I18NPortable.UnitTests
             I18N.Current.PropertyChanged += (sender, args) =>
             {
                 if (args.PropertyName.Equals("Language"))
-                    language = I18N.Current.Language;
+                    language = ((II18N)sender).Language;
             };
 
             I18N.Current.Locale = "en";
@@ -381,7 +393,7 @@ namespace I18NPortable.UnitTests
             I18N.Current.PropertyChanged += (sender, args) =>
             {
                 if (args.PropertyName.Equals("Locale"))
-                    locale = I18N.Current.Locale;
+                    locale = ((II18N)sender).Locale;
             };
 
             I18N.Current.Locale = "en";
