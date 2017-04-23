@@ -9,5 +9,6 @@
         public const string ReaderExtensionJustOneDot = "Locale reader extension should contain just one dot";
         public const string ReaderExtensionTwice = "The same extension cannot be added at two different readers";
         public const string ReaderTwice = "The same reader cannot be added twice";
+        public const string NoLocalesFound = "No locales found in specified the host assembly";
     }
 }

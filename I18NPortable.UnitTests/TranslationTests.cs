@@ -70,7 +70,7 @@ namespace I18NPortable.UnitTests
         }
 
         [Test]
-        public void WillThrow_WhenKeyNotFound_AndSetupToDoSo()
+        public void SetThrowWhenKeyNotFound_WillThrow_WhenKeyNotFound()
         {
             Assert.Throws<KeyNotFoundException>(() =>
             {

@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace I18NPortable.Providers
 {
-    public class EmbeddedResourceProvider : ILocaleProvider
+    internal class EmbeddedResourceProvider : ILocaleProvider
     {
         private readonly Dictionary<string, string> _locales = new Dictionary<string, string>(); // ie: [es] = "Project.Locales.es.txt"
         private readonly Assembly _hostAssembly;
@@ -14,12 +14,11 @@ namespace I18NPortable.Providers
         private readonly IEnumerable<string> _knownFileExtensions;
         private Action<string> _logger;
 
-        public EmbeddedResourceProvider(Assembly hostAssembly, string resourceFolder = "Locales", 
-            IEnumerable<string> knownFileExtensions = null)
+        public EmbeddedResourceProvider(Assembly hostAssembly, string resourceFolder, IEnumerable<string> knownFileExtensions)
         {
             _hostAssembly = hostAssembly;
             _resourceFolder = resourceFolder;
-            _knownFileExtensions = knownFileExtensions ?? new []{ ".txt", ".json" };
+            _knownFileExtensions = knownFileExtensions;
         }
 
         public ILocaleProvider SetLogger(Action<string> logger)
@@ -37,6 +36,12 @@ namespace I18NPortable.Providers
         public ILocaleProvider Init()
         {
             DiscoverLocales(_hostAssembly);
+
+            if (_locales?.Count == 0)
+            {
+                throw new I18NException($"{ErrorMessages.NoLocalesFound}: {_hostAssembly.FullName}");
+            }
+
             return this;
         }
 
@@ -60,9 +65,9 @@ namespace I18NPortable.Providers
 
             if (supportedResources.Count == 0)
             {
-                throw new Exception("No locales have been found. Make sure you´ve got a folder " +
-                                    $"called '{_resourceFolder}' containing embedded resource files" +
-                                    $" ({string.Join(", ", _knownFileExtensions)}) " +
+                throw new I18NException("No locales have been found. Make sure you´ve got a folder " +
+                                    $"called '{_resourceFolder}' containing embedded resource files " +
+                                    $"(with extensions {string.Join(" or ", _knownFileExtensions)}) " +
                                     "in the host assembly");
             }
 
@@ -73,13 +78,19 @@ namespace I18NPortable.Providers
 
                 if (_locales.ContainsKey(localeName))
                 {
-                    throw new Exception($"The locales folder '{_resourceFolder}' contains a duplicated locale '{localeName}'");
+                    throw new I18NException($"The locales folder '{_resourceFolder}' contains a duplicated locale '{localeName}'");
                 }
 
                 _locales.Add(localeName, resource);
             }
 
             _logger?.Invoke($"Found {supportedResources.Count} locales: {string.Join(", ", _locales.Keys.ToArray())}");
+        }
+
+        public void Dispose()
+        {
+            _locales.Clear();
+            _logger = null;
         }
     }
 }

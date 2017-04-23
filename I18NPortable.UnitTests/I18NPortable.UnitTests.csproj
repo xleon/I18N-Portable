@@ -34,7 +34,6 @@
     <Compile Include="BaseTest.cs" />
     <Compile Include="BindingTests.cs" />
     <Compile Include="CultureTests.cs" />
-    <Compile Include="EmbeddedResourceProviderTests.cs" />
     <Compile Include="ExtensionTests.cs" />
     <Compile Include="I18NTests.cs" />
     <Compile Include="AddLocaleReaderTests.cs" />

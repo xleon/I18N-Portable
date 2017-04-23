@@ -1,6 +1,4 @@
-﻿using System;
-using I18NPortable.Readers;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace I18NPortable.UnitTests
 {

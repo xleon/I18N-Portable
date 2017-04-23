@@ -12,6 +12,6 @@ namespace I18NPortable.UnitTests
 
         [TearDown]
         public void Finish() =>
-            I18N.Current.Dispose();
+            I18N.Current?.Dispose();
     }
 }

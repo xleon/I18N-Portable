@@ -4,7 +4,7 @@ using System.IO;
 
 namespace I18NPortable
 {
-    public interface ILocaleProvider
+    public interface ILocaleProvider : IDisposable
     {
         IEnumerable<string> GetAvailableLocales();
         Stream GetLocaleStream(string locale);

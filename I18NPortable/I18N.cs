@@ -74,32 +74,15 @@ namespace I18NPortable
             }
         }
 
-        private List<PortableLanguage> _languages;
-
         /// <summary>
         /// A list of supported languages
         /// </summary>
-        public List<PortableLanguage> Languages
+        public List<PortableLanguage> Languages => _locales?.Select(x => new PortableLanguage
         {
-            get
-            {
-                if (_languages != null)
-                    return _languages;
-
-                var languages = _locales?.Select(x => new PortableLanguage
-                {
-                    Locale = x,
-                    DisplayName = TranslateOrNull(x)
-                                    ?? new CultureInfo(x).NativeName.CapitalizeFirstCharacter()
-                })
-                .ToList();
-
-                if (languages?.Count > 0)
-                    _languages = languages;
-
-                return _languages;
-            }
-        }
+            Locale = x,
+            DisplayName = TranslateOrNull(x) ?? new CultureInfo(x).NativeName.CapitalizeFirstCharacter()
+        })
+        .ToList();
 
         private Dictionary<string, string> _translations = new Dictionary<string, string>();
         private readonly IList<ILocaleProvider> _providers = new List<ILocaleProvider>();
@@ -162,25 +145,25 @@ namespace I18NPortable
         public II18N AddLocaleReader(ILocaleReader reader, string extension)
         {
             if(reader == null)
-                throw new ArgumentException(ErrorMessages.ReaderNull);
+                throw new I18NException(ErrorMessages.ReaderNull);
 
             if(string.IsNullOrEmpty(extension))
-                throw new ArgumentException(ErrorMessages.ReaderExtensionNeeded, nameof(extension));
+                throw new I18NException(ErrorMessages.ReaderExtensionNeeded);
 
             if(!extension.StartsWith("."))
-                throw new ArgumentException(ErrorMessages.ReaderExtensionStartWithDot, nameof(extension));
+                throw new I18NException(ErrorMessages.ReaderExtensionStartWithDot);
 
             if(extension.Length < 2)
-                throw new ArgumentException(ErrorMessages.ReaderExtensionOneChar);
+                throw new I18NException(ErrorMessages.ReaderExtensionOneChar);
 
             if(extension.Split('.').Length - 1 > 1)
-                throw new ArgumentException(ErrorMessages.ReaderExtensionJustOneDot);
+                throw new I18NException(ErrorMessages.ReaderExtensionJustOneDot);
 
             if(_readers.Any(x => x.Item2.Equals(extension)))
-                throw new ArgumentException(ErrorMessages.ReaderExtensionTwice);
+                throw new I18NException(ErrorMessages.ReaderExtensionTwice);
 
             if(_readers.Any(x => x.Item1 == reader))
-                throw new ArgumentException(ErrorMessages.ReaderTwice);
+                throw new I18NException(ErrorMessages.ReaderTwice);
 
             _readers.Add(new Tuple<ILocaleReader, string>(reader, extension));
 
@@ -194,24 +177,31 @@ namespace I18NPortable
         /// <param name="hostAssembly">The assembly that hosts the locale text files</param>
         public II18N Init(Assembly hostAssembly)
         {
-            Unload();
-
-            _readers.Clear();
-            _providers.Clear();
-
-            var defaultProvider = new EmbeddedResourceProvider(hostAssembly, _resourcesFolder ?? "Locales")
-                .SetLogger(Log)
-                .Init();
-
-            _locales = defaultProvider.GetAvailableLocales().ToList();
-            _providers.Add(defaultProvider);
-
-            var defaultParser = new TextKvpReader();
-
-            if (_readers.FirstOrDefault(x => x.Item2.ToLowerInvariant().Equals(".txt")) == null)
+            if (_readers.FirstOrDefault(x => x.Item1 is TextKvpReader && x.Item2 == ".txt") == null)
             {
-                _readers.Insert(0, new Tuple<ILocaleReader, string>(defaultParser, ".txt"));
+                _readers.Insert(0, new Tuple<ILocaleReader, string>(new TextKvpReader(), ".txt"));
             }
+
+            var knownFileExtensions = _readers.Select(x => x.Item2);
+
+            foreach (var provider in _providers)
+            {
+                provider.Dispose();
+            }
+
+            _providers.Clear(); // temporal until other providers are implemented
+
+            if (_providers.FirstOrDefault(x => x is EmbeddedResourceProvider) == null)
+            {
+                var resourcesFolder = _resourcesFolder ?? "Locales";
+                var defaultProvider = new EmbeddedResourceProvider(hostAssembly, resourcesFolder, knownFileExtensions)
+                    .SetLogger(Log)
+                    .Init();
+
+                _providers.Add(defaultProvider);
+            }
+
+            _locales = _providers.First().GetAvailableLocales().ToList();
 
             var localeToLoad = GetDefaultLocale();
 
@@ -248,7 +238,7 @@ namespace I18NPortable
         private void LoadLocale(string locale)
         {
             if (!_locales.Contains(locale))
-                throw new KeyNotFoundException($"Locale '{locale}' is not available");
+                throw new I18NException($"Locale '{locale}' is not available", new KeyNotFoundException());
 
             var stream = _providers.First().GetLocaleStream(locale); // TODO try get from all providers in the correct order
 
@@ -397,14 +387,6 @@ namespace I18NPortable
 
         #region Cleanup
 
-        public void Unload()
-        {
-            _translations.Clear();
-            _locales?.Clear();
-
-            Log("Unloaded");
-        }
-
         public void Dispose()
         {
             if (PropertyChanged != null)
@@ -417,12 +399,13 @@ namespace I18NPortable
                 PropertyChanged = null;
             }
 
-            _translations.Clear();
-            _locales.Clear();
-            _readers.Clear();
+            _translations?.Clear();
+            _locales?.Clear();
+            _readers?.Clear();
             _locale = null;
-            _languages = null;
-            
+
+            Current = null;
+
             Log("Disposed");
 
             _logger = null;

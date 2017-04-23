@@ -1,6 +1,7 @@
-﻿using System;
+﻿using System.Reflection;
 using I18NPortable.Readers;
 using NUnit.Framework;
+using TestHostAssembly;
 
 namespace I18NPortable.UnitTests
 {
@@ -10,7 +11,7 @@ namespace I18NPortable.UnitTests
         [Test]
         public void Reader_ShouldNot_BeNull()
         {
-            Assert.Throws<ArgumentException>(() =>
+            Assert.Throws<I18NException>(() =>
             {
                 I18N.Current.AddLocaleReader(null, ".txt");
             });
@@ -19,12 +20,12 @@ namespace I18NPortable.UnitTests
         [Test]
         public void ReaderExtension_ShouldNot_BeNullOrEmpty()
         {
-            Assert.Throws<ArgumentException>(() =>
+            Assert.Throws<I18NException>(() =>
             {
                 I18N.Current.AddLocaleReader(new TextKvpReader(), null);
             });
 
-            Assert.Throws<ArgumentException>(() =>
+            Assert.Throws<I18NException>(() =>
             {
                 I18N.Current.AddLocaleReader(new TextKvpReader(), string.Empty);
             });
@@ -33,7 +34,7 @@ namespace I18NPortable.UnitTests
         [Test]
         public void ReaderExtension_Should_StartWithDot()
         {
-            Assert.Throws<ArgumentException>(() =>
+            Assert.Throws<I18NException>(() =>
             {
                 I18N.Current.AddLocaleReader(new TextKvpReader(), "json");
             });
@@ -42,7 +43,7 @@ namespace I18NPortable.UnitTests
         [Test]
         public void ReaderExtension_Should_ContainAtLeastOneChar()
         {
-            Assert.Throws<ArgumentException>(() =>
+            Assert.Throws<I18NException>(() =>
             {
                 I18N.Current.AddLocaleReader(new TextKvpReader(), ".");
             });
@@ -51,7 +52,7 @@ namespace I18NPortable.UnitTests
         [Test]
         public void ReaderExtension_Should_ContainJustOneDot()
         {
-            Assert.Throws<ArgumentException>(() =>
+            Assert.Throws<I18NException>(() =>
             {
                 I18N.Current.AddLocaleReader(new TextKvpReader(), "..json");
             });
@@ -62,7 +63,7 @@ namespace I18NPortable.UnitTests
         {
             var reader = new TextKvpReader();
 
-            Assert.Throws<ArgumentException>(() =>
+            Assert.Throws<I18NException>(() =>
             {
                 I18N.Current
                     .AddLocaleReader(reader, ".txt")
@@ -76,7 +77,7 @@ namespace I18NPortable.UnitTests
             var reader = new TextKvpReader();
             var reader2 = new JsonKvpReader();
 
-            Assert.Throws<ArgumentException>(() =>
+            Assert.Throws<I18NException>(() =>
             {
                 I18N.Current
                     .AddLocaleReader(reader, ".txt")
@@ -85,18 +86,14 @@ namespace I18NPortable.UnitTests
         }
 
         [Test]
-        public void UnknownResourceExtension_Should_Throw()
+        public void UnknownResourceExtension_Should_BeIgnored()
         {
-            // TODO 
-            I18N.Current
+            var current = new I18N()
                 .SetThrowWhenKeyNotFound(true)
                 .AddLocaleReader(new TextKvpReader(), ".txt22222")
-                .Init(GetType().Assembly);
+                .Init(new TestHostAssemblyDummy().GetType().Assembly);
 
-            Assert.Throws<Exception>(() =>
-            {
-                var t = I18N.Current.Translate("one");
-            });
+            Assert.AreEqual(2, current.Languages.Count);
         }
     }
 }

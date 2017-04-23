@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
+using I18NPortable.Readers;
 using I18NPortable.UnitTests.Util;
 using NUnit.Framework;
 using TestHostAssembly;
@@ -19,11 +18,11 @@ namespace I18NPortable.UnitTests
         }
 
         [Test]
-        public void DiscoverLocales_ShouldThrow_If_NoLocalesAvailable()
+        public void Init_ShouldThrow_If_NoLocalesAvailable()
         {
-            var assemblyWithoutLocales = I18N.Current.GetType().GetTypeInfo().Assembly;
+            var assemblyWithoutLocales = I18N.Current.GetType().Assembly;
 
-            Assert.Throws<Exception>(() => I18N.Current.Init(assemblyWithoutLocales));
+            Assert.Throws<I18NException>(() => I18N.Current.Init(assemblyWithoutLocales));
         }
 
         [Test]
@@ -81,15 +80,15 @@ namespace I18NPortable.UnitTests
         [Test]
         public void LoadingNonExistentLocale_ShouldThrow()
         {
-            Assert.Throws<KeyNotFoundException>(() => I18N.Current.Locale = "fr");
+            Assert.Throws<I18NException>(() => I18N.Current.Locale = "fr");
         }
 
         [Test]
-        public void FallbackLocale_ShouldBeLoaded_WhenRequestedLocale_IsNotAvailable()
+        public void FallbackLocale_ShouldBeLoaded_When_RequestedLocaleIsNotAvailable()
         {
             Helpers.SetCulture("pt-PT");
 
-            I18N.Current.SetFallbackLocale("en").Init(GetType().GetTypeInfo().Assembly);
+            I18N.Current.SetFallbackLocale("en").Init(GetType().Assembly);
 
             Assert.AreEqual("en", I18N.Current.Locale);
         }
@@ -99,7 +98,7 @@ namespace I18NPortable.UnitTests
         {
             Helpers.SetCulture("pt-PT");
 
-            I18N.Current.SetFallbackLocale("fr").Init(GetType().GetTypeInfo().Assembly);
+            I18N.Current.SetFallbackLocale("fr").Init(GetType().Assembly);
 
             Assert.AreEqual("en", I18N.Current.Locale);
         }
@@ -111,7 +110,7 @@ namespace I18NPortable.UnitTests
 
             Helpers.SetCulture("pt-PT");
 
-            I18N.Current = new I18N().Init(GetType().GetTypeInfo().Assembly);
+            I18N.Current = new I18N().Init(GetType().Assembly);
 
             Assert.IsNull(I18N.Current.GetDefaultLocale());
         }
@@ -159,6 +158,57 @@ namespace I18NPortable.UnitTests
 
             current.Locale = "en";
             Assert.AreEqual("host assembly", current.Translate("host"));
+        }
+
+        [Test]
+        public void AnyFileExtension_CanBe_Loaded()
+        {
+            var current = new I18N()
+                .AddLocaleReader(new TextKvpReader(), ".weird1")
+                .AddLocaleReader(new TextKvpReader(), ".weird2")
+                .AddLocaleReader(new TextKvpReader(), ".weird3")
+                .SetResourcesFolder("OtherLocales")
+                .Init(GetType().Assembly);
+
+            var locales = current.Languages.Select(x => x.Locale).ToList();
+
+            Assert.AreEqual(5, locales.Count);
+            Assert.Contains("fr", locales);
+            Assert.Contains("ru", locales);
+            Assert.Contains("pt", locales);
+        }
+
+        [Test]
+        public void Locales_CannotBe_Duplicated()
+        {
+            var current = new I18N()
+                .SetResourcesFolder("DuplicatedLocales")
+                .AddLocaleReader(new JsonKvpReader(), ".json");
+
+            Assert.Throws<I18NException>(() => current.Init(GetType().Assembly));
+        }
+
+        [Test]
+        public void OnlyKnownFileExtensions_ShouldBe_Read()
+        {
+            I18N.Current
+                .SetResourcesFolder("OtherLocales")
+                .Init(GetType().Assembly);
+
+            var locales = I18N.Current.Languages.Select(x => x.Locale).ToList();
+
+            Assert.AreEqual(2, locales.Count);
+            Assert.Contains("en", locales);
+            Assert.Contains("es", locales);
+
+            I18N.Current
+                .AddLocaleReader(new TextKvpReader(), ".weird1")
+                .Init(GetType().Assembly);
+
+            locales = I18N.Current.Languages.Select(x => x.Locale).ToList();
+
+            Assert.AreEqual(3, locales.Count);
+            Assert.Contains("fr", locales);
         }
     }
 }

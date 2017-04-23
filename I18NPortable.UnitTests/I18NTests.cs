@@ -30,14 +30,12 @@ namespace I18NPortable.UnitTests
         }
 
         [Test]
-        public void I18N_CanBeDisposed()
+        public void I18N_CanBe_Disposed()
         {
             I18N.Current.PropertyChanged += (sender, args) => { };
             I18N.Current.Dispose();
 
-            Assert.IsNull(I18N.Current.Language);
-            Assert.IsNull(I18N.Current.Languages);
-            Assert.IsNull(I18N.Current.Locale);
+            Assert.IsNull(I18N.Current);
         }
     }
 }

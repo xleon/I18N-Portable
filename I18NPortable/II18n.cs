@@ -28,7 +28,5 @@ namespace I18NPortable
         Dictionary<TEnum, string> TranslateEnumToDictionary<TEnum>();
         List<string> TranslateEnumToList<TEnum>();
         List<Tuple<TEnum, string>> TranslateEnumToTupleList<TEnum>();
-
-        void Unload();
     }
 }

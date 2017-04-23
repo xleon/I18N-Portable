@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Reflection;
 using I18NPortable.UnitTests.Util;
 using NUnit.Framework;
 
@@ -24,13 +23,13 @@ namespace I18NPortable.UnitTests
         {
             Helpers.SetCulture("es-MX");
 
-            I18N.Current = new I18N().Init(GetType().GetTypeInfo().Assembly);
+            I18N.Current = new I18N().Init(GetType().Assembly);
 
             Assert.AreEqual("es-MX", I18N.Current.GetDefaultLocale());
 
             Helpers.SetCulture("pt-BR");
 
-            I18N.Current = new I18N().Init(GetType().GetTypeInfo().Assembly);
+            I18N.Current = new I18N().Init(GetType().Assembly);
 
             Assert.AreEqual("pt-BR", I18N.Current.GetDefaultLocale());
             Assert.AreEqual("oi", "hello".Translate());
@@ -40,17 +39,17 @@ namespace I18NPortable.UnitTests
         public void LocaleWithWholeCultureNames_GetLoaded_AsDefault()
         {
             Helpers.SetCulture("es-MX");
-            I18N.Current = new I18N().Init(GetType().GetTypeInfo().Assembly);
+            I18N.Current = new I18N().Init(GetType().Assembly);
 
             Assert.AreEqual("banana", I18N.Current.Translate("Fruit.Banana"));
 
             Helpers.SetCulture("es-ES");
-            I18N.Current = new I18N().Init(GetType().GetTypeInfo().Assembly);
+            I18N.Current = new I18N().Init(GetType().Assembly);
 
             Assert.AreEqual("plátano", I18N.Current.Translate("Fruit.Banana"));
 
             Helpers.SetCulture("pt-BR");
-            I18N.Current = new I18N().Init(GetType().GetTypeInfo().Assembly);
+            I18N.Current = new I18N().Init(GetType().Assembly);
 
             Assert.AreEqual("oi", "hello".Translate());
         }
