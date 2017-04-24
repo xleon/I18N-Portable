@@ -56,6 +56,7 @@ From nuget package manager console:
         Line Two
         Line Three
 
+[Custom file formats are supported](https://github.com/xleon/I18N-Portable#custom-formats)
 
 ### Fluent initialization
 
