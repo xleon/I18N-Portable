@@ -6,29 +6,27 @@ Simple and cross platform internationalization/translations for Xamarin and .NET
 [![codecov.io](https://codecov.io/gh/xleon/I18N-Portable/coverage.svg?branch=master)](https://codecov.io/gh/xleon/I18N-Portable)
 [![I18NPortable](https://img.shields.io/nuget/v/I18NPortable.svg?maxAge=50000)](https://www.nuget.org/packages/I18NPortable/)
 
-
-### Why I18NPortable?
----
 - Cross platform
 - Simple to use: `"key".Translate()`.
-- Simple and fluent setup.
-- Readable locale files (.txt with key/value pairs) rather than json or xml.
-- Very tiny: about 10kb.
+- Simple and fluent initialization setup.
+- Readable locale files (.txt with key/value pairs).
+- Support for custom file formats (json, xml, etc)
+- Light weight
 - No dependencies.
 - Well tested
 
 ![https://cloud.githubusercontent.com/assets/145087/24824462/c5a0ecce-1c0b-11e7-84d3-4f0fa815c9da.png](https://cloud.githubusercontent.com/assets/145087/24824462/c5a0ecce-1c0b-11e7-84d3-4f0fa815c9da.png)
-![https://cloud.githubusercontent.com/assets/145087/24824461/c5a04a94-1c0b-11e7-9a30-f14c656e5562.png](https://cloud.githubusercontent.com/assets/145087/24824461/c5a04a94-1c0b-11e7-9a30-f14c656e5562.png)
+
 
 ### Install
----
+
 Install it on your PCL and platform projects.
 From nuget package manager console: 
 
 `PM> Install-Package I18NPortable`
 
 ### Setup locales
----
+
 - In your PCL/Core project, create a directory called "Locales".
 - Create a `{languageCode}.txt` file for each language you want to support. `languageCode` can be a two letter ISO code or a culture name like "en-US". See [full list here](https://msdn.microsoft.com/en-us/library/ee825488%28v=cs.20%29.aspx).
 - Set "Build Action" to "Embedded Resource" on the properties of each file         
@@ -60,18 +58,19 @@ From nuget package manager console:
 
 
 ### Fluent initialization
----
+
 ```csharp
 I18N.Current
     .SetNotFoundSymbol("$") // Optional: when a key is not found, it will appear as $key$ (defaults to "$")
     .SetFallbackLocale("en") // Optional but recommended: locale to load in case the system locale is not supported
     .SetThrowWhenKeyNotFound(true) // Optional: Throw an exception when keys are not found (recommended only for debugging)
     .SetLogger(text => Debug.WriteLine(text)) // action to output traces
+    .SetResourcesFolder("OtherLocales") // Optional: The directory containing the resource files (defaults to "Locales")
     .Init(GetType().GetTypeInfo().Assembly); // assembly where locales live
-```     
+```
 
 ### Usage
----
+
 ```csharp
 string one = "one".Translate();
 string notification = "Mailbox.Notification".Translate("Diego", 3); // same as string.Format(params). Output: Hello Diego, you´ve got 3 emails
@@ -99,7 +98,7 @@ I18N.Current.Locale = "fr";
 ```	
 
 ### Data binding
----
+
 `I18N` implements `INotifyPropertyChanged` and it has an indexer to translate keys. For instance, you could translate a key like:
 
     string three = I18N.Current["three"]; 
@@ -133,15 +132,44 @@ var set = this.CreateBindingSet<YourView, YourViewModel>();
 set.Bind(anyUIText).To("Strings[key]");
 ```
 
-### Advanced usage
----
-In case you use any DI or Service Locator pattern, `I18N` implements [II18N interface](https://github.com/xleon/I18N-Portable/blob/master/I18NPortable/II18n.cs).
-`II18N` can be easily mocked for unit testing purposes. 
+### Custom formats
+
+It´s very easy to create custom readers/parsers for any file format you wish. 
+For instance:
+
+Given this __en.json__ file
+```json
+{
+  "one": "uno",
+  "two": "dos",
+  "three": "tres"
+}
+```
+
+And a custom reader:
 
 ```csharp
-public class I18NMock : II18N { ... }
+public class JsonKvpReader : ILocaleReader
+{
+    public Dictionary<string, string> Read(Stream stream)
+    {
+        using (var streamReader = new StreamReader(stream))
+        {
+            var json = streamReader.ReadToEnd();
 
-var mock = new I18NMock();
-var translation = mock.Translate("key");
+            return JsonConvert
+                .DeserializeObject<Dictionary<string, string>>(json)
+                .ToDictionary(x => x.Key.Trim(), x => x.Value.Trim().UnescapeLineBreaks());
+        }
+    }
+}
+```
+
+You can plug the reader into I18N before initialization:
+
+```csharp
+I18N.Current
+    .AddLocaleReader(new JsonKvpReader(), ".json") // ILocaleReader, file extension
+    .Init(GetType().Assembly);
 ```
     
