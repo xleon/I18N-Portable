@@ -56,7 +56,7 @@ From nuget package manager console:
         Line Two
         Line Three
 
-[Custom file formats are supported](https://github.com/xleon/I18N-Portable#custom-formats)
+[Other file formats (inclusing custom) supported](https://github.com/xleon/I18N-Portable#custom-formats)
 
 ### Fluent initialization
 
@@ -133,10 +133,31 @@ var set = this.CreateBindingSet<YourView, YourViewModel>();
 set.Bind(anyUIText).To("Strings[key]");
 ```
 
-### Custom formats
 
-It´s very easy to create custom readers/parsers for any file format you wish. 
-For instance:
+
+### Supported formats
+
+The library ships with a single format reader/parser that is [TextKvpReader](https://github.com/xleon/I18N-Portable/blob/master/I18NPortable/Readers/TextKvpReader.cs). Any other reader will be isolated in a different nuget/plugin to keep the library as simple as possible.
+
+| Reader        | Format        | Source  |
+| ------------- |:-------------:| :-----:|
+| [TextKvpReader](https://github.com/xleon/I18N-Portable/blob/master/I18NPortable/Readers/TextKvpReader.cs)    | [See sample](https://github.com/xleon/I18N-Portable/blob/master/I18NPortable.UnitTests/Locales/es.txt) | I18NPortable |
+| [JsonKvpReader](https://github.com/xleon/I18N-Portable/blob/master/I18NPortable.JsonReader/JsonKvpReader.cs)    | [See sample](https://github.com/xleon/I18N-Portable/blob/master/I18NPortable.UnitTests/JsonKvpLocales/es.json) | I18NPortable.JsonReader [![I18NPortable.JsonReader](https://img.shields.io/nuget/v/I18NPortable.JsonReader.svg?maxAge=50000)](https://www.nuget.org/packages/I18NPortable/) |
+| [JsonListReader](https://github.com/xleon/I18N-Portable/blob/master/I18NPortable.JsonReader/JsonListReader.cs)   | [See sample](https://github.com/xleon/I18N-Portable/blob/master/I18NPortable.UnitTests/JsonListLocales/es.json) | I18NPortable.JsonReader [![I18NPortable.JsonReader](https://img.shields.io/nuget/v/I18NPortable.JsonReader.svg?maxAge=50000)](https://www.nuget.org/packages/I18NPortable/) |
+
+To use any non-default format, it needs to be added on initialization:
+
+```csharp
+I18N.Current
+    .AddLocaleReader(new JsonKvpReader(), ".json") // ILocaleReader, file extension
+    // add more readers here if you need to
+    .Init(GetType().Assembly);
+```
+
+### Creating a custom reader for another file format:
+
+It´s very easy to create custom readers/parsers for any file format you wish.
+For instance, lets take a loot at the above mentioned `JsonKvpReader`:
 
 Given this __en.json__ file
 ```json
@@ -147,7 +168,14 @@ Given this __en.json__ file
 }
 ```
 
-And a custom reader:
+Creating a custom reader is as simple as implementing `ILocaleReader`:
+
+```csharp
+public interface ILocaleReader
+{
+    Dictionary<string, string> Read(Stream stream);
+}
+```
 
 ```csharp
 public class JsonKvpReader : ILocaleReader
@@ -166,11 +194,7 @@ public class JsonKvpReader : ILocaleReader
 }
 ```
 
-You can plug the reader into I18N before initialization:
+###Contributing new readers
+If you implemented a new reader for another file format and you want to contribute, feel free to make a pull request. Any new reader will live in their own project in the solution and will produce a different nuget as a plugin to I18NPortable.
 
-```csharp
-I18N.Current
-    .AddLocaleReader(new JsonKvpReader(), ".json") // ILocaleReader, file extension
-    .Init(GetType().Assembly);
-```
     

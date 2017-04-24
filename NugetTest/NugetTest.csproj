@@ -35,7 +35,7 @@
       <HintPath>..\packages\I18NPortable.0.6.0\lib\netstandard1.1\I18NPortable.dll</HintPath>
     </Reference>
     <Reference Include="I18NPortable.JsonReader, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\I18NPortable.JsonReader.1.0.0-beta\lib\netstandard1.1\I18NPortable.JsonReader.dll</HintPath>
+      <HintPath>..\packages\I18NPortable.JsonReader.1.0.0\lib\netstandard1.1\I18NPortable.JsonReader.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Win32.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Win32.Primitives.4.3.0\lib\net46\Microsoft.Win32.Primitives.dll</HintPath>
@@ -116,6 +116,9 @@
     <EmbeddedResource Include="JsonListLocales\en.json" />
     <EmbeddedResource Include="JsonListLocales\es.json" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
