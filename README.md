@@ -167,7 +167,7 @@ public class JsonKvpReader : ILocaleReader
 
 You can plug the reader into I18N before initialization:
 
-```
+```csharp
 I18N.Current
     .AddLocaleReader(new JsonKvpReader(), ".json") // ILocaleReader, file extension
     .Init(GetType().Assembly);
