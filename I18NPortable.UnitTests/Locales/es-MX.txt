@@ -18,4 +18,4 @@ Animals.Snake = Serpiente\nBuena
 
 Fruit.Orange = gran naranja
 Fruit.Apple = manzana grande
-Fruit.Banana = plátano
+Fruit.Banana = banana

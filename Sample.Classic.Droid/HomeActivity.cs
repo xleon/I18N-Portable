@@ -60,7 +60,7 @@ namespace Sample.Classic.Droid
                 Android.Resource.Layout.SelectDialogSingleChoice, 
                 languages);
 
-            var builder = new AlertDialog
+            new AlertDialog
                 .Builder(this)
                 .SetNegativeButton("Cancel".Translate(), (o, args) => {})
                 .SetAdapter(adapter, (o, args) =>

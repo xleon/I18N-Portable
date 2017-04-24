@@ -16,6 +16,8 @@ namespace I18NPortable
         II18N SetLogger(Action<string> output);
         II18N SetThrowWhenKeyNotFound(bool enabled);
         II18N SetFallbackLocale(string locale);
+        II18N SetResourcesFolder(string folderName);
+        II18N AddLocaleReader(ILocaleReader reader, string extension);
         II18N Init(Assembly hostAssembly);
 
         string GetDefaultLocale();
@@ -26,7 +28,5 @@ namespace I18NPortable
         Dictionary<TEnum, string> TranslateEnumToDictionary<TEnum>();
         List<string> TranslateEnumToList<TEnum>();
         List<Tuple<TEnum, string>> TranslateEnumToTupleList<TEnum>();
-
-        void Unload();
     }
 }
