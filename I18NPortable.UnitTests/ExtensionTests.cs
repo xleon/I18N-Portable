@@ -1,44 +1,14 @@
 ﻿using System;
-using System.Reflection;
+using I18NPortable.UnitTests.Util;
 using NUnit.Framework;
 
 namespace I18NPortable.UnitTests
 {
     [TestFixture]
-    public class ExtensionTests
+    public class ExtensionTests : BaseTest
     {
-        [SetUp]
-        public void Init() =>
-            I18N.Current = new I18N()
-                .SetNotFoundSymbol("?")
-                .SetThrowWhenKeyNotFound(false)
-                .Init(GetType().GetTypeInfo().Assembly);
-
-        [TearDown]
-        public void CanTranslate_WithStringExtensionMethod()
-        {
-            I18N.Current.Locale = "en";
-            Assert.AreEqual("one", "one".Translate());
-
-            I18N.Current.Locale = "es";
-            Assert.AreEqual("uno", "one".Translate());
-        }
-
         [Test]
-        public void TranslateOrNullExtension_ShouldReturn_Null_WhenKeyIsNotFound()
-        {
-            Assert.IsNull("nonExistentKey".TranslateOrNull());
-        }
-
-        [Test]
-        public void TranslateOrNullExtension_ShouldTranslateKeys()
-        {
-            I18N.Current.Locale = "es";
-            Assert.AreEqual("uno", "one".TranslateOrNull());
-        }
-
-        [Test]
-        public void UnescapeLineBreaks_ShouldWork()
+        public void LineBreaks_ShouldBe_Unescaped()
         {
             const string sample = "Hello\\r\\nfrom\\nthe other side";
             var unescaped = sample.UnescapeLineBreaks();
@@ -48,7 +18,7 @@ namespace I18NPortable.UnitTests
         }
 
         [Test]
-        public void CapitalizeFirstLetter_ShouldWork()
+        public void FirstLetter_ShouldBe_Capitalized()
         {
             Assert.AreEqual("English", "english".CapitalizeFirstCharacter());
             Assert.AreEqual("E", "e".CapitalizeFirstCharacter());

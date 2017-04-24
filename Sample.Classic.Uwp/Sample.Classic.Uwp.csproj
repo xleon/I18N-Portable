@@ -133,7 +133,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\I18NPortable\I18NPortable.csproj">
-      <Project>{E340CBB2-3B77-45A8-8997-E4098D82EDBC}</Project>
+      <Project>{4dc53c6b-9f4b-4168-80c9-5d6c8849892e}</Project>
       <Name>I18NPortable</Name>
     </ProjectReference>
     <ProjectReference Include="..\Sample.Classic.Core\Sample.Classic.Core.csproj">
