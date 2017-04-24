@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using I18NPortable.Readers;
 using I18NPortable.UnitTests.Util;
 using NUnit.Framework;
 
@@ -8,126 +9,117 @@ namespace I18NPortable.UnitTests
     [TestFixture]
     public class TranslationTests : BaseTest
     {
-        [Test]
-        public void Keys_ShouldBe_Translated()
-        {
-            I18N.Current.Locale = "en";
-            Assert.AreEqual("one", I18N.Current.Translate("one"));
-            Assert.AreEqual("two", I18N.Current.Translate("two"));
-            Assert.AreEqual("three", I18N.Current.Translate("three"));
+        [TestCase("en", "one", "one")]
+        [TestCase("en", "two", "two")]
+        [TestCase("en", "three", "three")]
+        [TestCase("en", "Animals", "List of animals")]
+        [TestCase("en", "Animals.Dog", "Dog")]
+        [TestCase("en", "Animals.Cat", "Cat")]
+        [TestCase("en", "Animals.Rat", "Rat")]
+        [TestCase("en", "Fruit.Orange", "great orange")]
+        [TestCase("en", "Fruit.Apple", "big apple")]
 
-            I18N.Current.Locale = "es";
-            Assert.AreEqual("uno", I18N.Current.Translate("one"));
-            Assert.AreEqual("dos", I18N.Current.Translate("two"));
-            Assert.AreEqual("tres", I18N.Current.Translate("three"));
+        [TestCase("es", "one", "uno")]
+        [TestCase("es", "two", "dos")]
+        [TestCase("es", "three", "tres")]
+        [TestCase("es", "Animals", "Lista de animales")]
+        [TestCase("es", "Animals.Dog", "Perro")]
+        [TestCase("es", "Animals.Cat", "Gato")]
+        [TestCase("es", "Animals.Rat", "Rata")]
+        [TestCase("es", "Fruit.Orange", "gran naranja")]
+        [TestCase("es", "Fruit.Apple", "manzana grande")]
+        public void Keys_ShouldBe_Translated(string locale, string key, string translation)
+        {
+            I18N.Current.Locale = locale;
+
+            Assert.AreEqual(translation, I18N.Current.Translate(key));
+            Assert.AreEqual(translation, I18N.Current[key]);
+            Assert.AreEqual(translation, key.Translate());
+            Assert.AreEqual(translation, key.TranslateOrNull());
+
+            I18N.Current
+                .SetResourcesFolder("JsonKvpLocales")
+                .AddLocaleReader(new JsonKvpReader(), ".json")
+                .Init(GetType().Assembly);
+
+            Assert.AreEqual(translation, I18N.Current.Translate(key));
+            Assert.AreEqual(translation, I18N.Current[key]);
+            Assert.AreEqual(translation, key.Translate());
+            Assert.AreEqual(translation, key.TranslateOrNull());
+
+            //I18N.Current
+            //    .SetResourcesFolder("JsonListLocales")
+            //    .AddLocaleReader(new JsonKvpReader(), ".json")
+            //    .Init(GetType().Assembly);
+
+            //Assert.AreEqual(translation, I18N.Current.Translate(key));
+            //Assert.AreEqual(translation, I18N.Current[key]);
+            //Assert.AreEqual(translation, key.Translate());
+            //Assert.AreEqual(translation, key.TranslateOrNull());
         }
 
-        [Test]
-        public void Indexer_Should_TranslateKey()
+        [TestCase("en", "Mailbox.Notification", "Hello Marta, you´ve got 56 emails")]
+        [TestCase("es", "Mailbox.Notification", "Hola Marta, tienes 56 emails")]
+        public void Translate_Should_FormatString(string locale, string key, string translation)
         {
-            I18N.Current.Locale = "en";
-            Assert.AreEqual("one", I18N.Current["one"]);
+            I18N.Current.Locale = locale;
 
-            I18N.Current.Locale = "es";
-            Assert.AreEqual("uno", I18N.Current["one"]);
+            Assert.AreEqual(translation, I18N.Current.Translate(key, "Marta", 56));
+            Assert.AreEqual(translation, key.Translate("Marta", 56));
+
+            I18N.Current
+                .SetResourcesFolder("JsonKvpLocales")
+                .AddLocaleReader(new JsonKvpReader(), ".json")
+                .Init(GetType().Assembly);
+
+            Assert.AreEqual(translation, I18N.Current.Translate(key, "Marta", 56));
+            Assert.AreEqual(translation, key.Translate("Marta", 56));
         }
 
-        [Test]
-        public void Translate_Should_FormatString()
+        [TestCase("en", "Line One", "Line Two", "Line Three")]
+        [TestCase("es", "Línea Uno", "Línea dos", "Línea Tres")]
+        public void Translation_ShouldConsider_LineBreakCharacters(string locale, string line1, string line2, string line3)
         {
-            I18N.Current.Locale = "en";
-            Assert.AreEqual("Hello Marta, you´ve got 56 emails",
-                I18N.Current.Translate("Mailbox.Notification", "Marta", 56));
+            I18N.Current.Locale = locale;
 
-            I18N.Current.Locale = "es";
-            Assert.AreEqual("Hola David, tienes 47 emails",
-                I18N.Current.Translate("Mailbox.Notification", "David", 47));
-        }
+            const string key = "TextWithLineBreakCharacters";
+            var textWithLineBreaks = I18N.Current.Translate(key);
+            var textWithLineBreaksOrNull = I18N.Current.TranslateOrNull(key);
+            var expected = $"{line1}{Environment.NewLine}{line2}{Environment.NewLine}{line3}";
 
-        [Test]
-        public void NotFoundSymbol_CanBe_Changed()
-        {
-            I18N.Current.SetNotFoundSymbol("$$");
-            var nonExistent = I18N.Current.Translate("nonExistentKey");
+            Assert.AreEqual(expected, textWithLineBreaks);
+            Assert.AreEqual(expected, textWithLineBreaksOrNull);
 
-            Assert.AreEqual("$$nonExistentKey$$", nonExistent);
-        }
+            I18N.Current
+                .SetResourcesFolder("JsonKvpLocales")
+                .AddLocaleReader(new JsonKvpReader(), ".json")
+                .Init(GetType().Assembly);
 
-        [Test]
-        public void TranslateOrNull_ShouldReturn_Null_WhenKeyIsNotFound()
-        {
-            Assert.IsNull(I18N.Current.TranslateOrNull("nonExistentKey"));
-            Assert.IsNull(I18N.Current.TranslateOrNull("nonExistentKey", "one", "two"));
-        }
-
-        [Test]
-        public void TranslateOrNull_Should_Translate()
-        {
-            I18N.Current.Locale = "es";
-            Assert.AreEqual("uno", I18N.Current.TranslateOrNull("one"));
-            Assert.AreEqual("Hola Diego, tienes 3 emails",
-                I18N.Current.TranslateOrNull("Mailbox.Notification", "Diego", "3"));
-        }
-
-        [Test]
-        public void SetThrowWhenKeyNotFound_WillThrow_WhenKeyNotFound()
-        {
-            Assert.Throws<KeyNotFoundException>(() =>
-            {
-                I18N.Current.SetThrowWhenKeyNotFound(true);
-                I18N.Current.Translate("fake");
-            });
-        }
-
-        [Test]
-        public void NotFoundSymbol_ShouNot_BeNullOrEmpty()
-        {
-            I18N.Current.SetNotFoundSymbol("##");
-            I18N.Current.SetNotFoundSymbol(null);
-
-            Assert.AreEqual("##missing##", "missing".Translate());
-
-            I18N.Current.SetNotFoundSymbol(string.Empty);
-
-            Assert.AreEqual("##missing##", "missing".Translate());
-        }
-
-        [Test]
-        public void Translation_ShouldConsider_LineBreakCharacters()
-        {
-            I18N.Current.Locale = "en";
-
-            var textWithLineBreaks = I18N.Current.Translate("TextWithLineBreakCharacters");
-            var textWithLineBreaksOrNull = I18N.Current.Translate("TextWithLineBreakCharacters");
-
-            var expected = $"Line One{Environment.NewLine}Line Two{Environment.NewLine}Line Three";
+            textWithLineBreaks = I18N.Current.Translate(key);
+            textWithLineBreaksOrNull = I18N.Current.TranslateOrNull(key);
+            expected = $"{line1}{Environment.NewLine}{line2}{Environment.NewLine}{line3}";
 
             Assert.AreEqual(expected, textWithLineBreaks);
             Assert.AreEqual(expected, textWithLineBreaksOrNull);
         }
 
-        [Test]
-        public void EnumTranslation_ShouldConsider_LineBreakCharacters()
+        [TestCase("en", "Good", "Snake")]
+        [TestCase("es", "Serpiente", "Buena")]
+        public void EnumTranslation_ShouldConsider_LineBreakCharacters(string locale, string line1, string line2)
         {
-            I18N.Current.Locale = "en";
-
+            I18N.Current.Locale = locale;
             var animals = I18N.Current.TranslateEnumToDictionary<Animals>();
 
-            Assert.AreEqual($"Good{Environment.NewLine}Snake", animals[Animals.Snake]);
+            Assert.AreEqual($"{line1}{Environment.NewLine}{line2}", animals[Animals.Snake]);
         }
 
-        [Test]
-        public void TranslationValue_Supports_Multiline()
+        [TestCase("en", "Line One", "Line Two", "Line Three")]
+        [TestCase("es", "Línea Uno", "Línea Dos", "Línea Tres")]
+        public void Multiline_IsSupported_OnLocales(string locale, string line1, string line2, string line3)
         {
-            I18N.Current.Locale = "en";
+            I18N.Current.Locale = locale;
             var multilineValue = I18N.Current.Translate("Multiline");
-            var expected = $"Line One{Environment.NewLine}Line Two{Environment.NewLine}Line Three";
-
-            Assert.AreEqual(expected, multilineValue);
-
-            I18N.Current.Locale = "es";
-            multilineValue = I18N.Current.Translate("Multiline");
-            expected = $"Línea Uno{Environment.NewLine}Línea Dos{Environment.NewLine}Línea Tres";
+            var expected = $"{line1}{Environment.NewLine}{line2}{Environment.NewLine}{line3}";
 
             Assert.AreEqual(expected, multilineValue);
         }
@@ -173,6 +165,45 @@ namespace I18NPortable.UnitTests
             Assert.AreEqual(animalsTupleList[0].Item1, Animals.Dog);
             Assert.AreEqual("Rat", animalsTupleList[2].Item2);
             Assert.AreEqual(animalsTupleList[2].Item1, Animals.Rat);
+        }
+
+        [Test]
+        public void NotFoundSymbol_CanBe_Changed()
+        {
+            I18N.Current.SetNotFoundSymbol("$$");
+            var nonExistent = I18N.Current.Translate("nonExistentKey");
+
+            Assert.AreEqual("$$nonExistentKey$$", nonExistent);
+        }
+
+        [Test]
+        public void TranslateOrNull_ShouldReturn_Null_WhenKeyIsNotFound()
+        {
+            Assert.IsNull(I18N.Current.TranslateOrNull("nonExistentKey"));
+            Assert.IsNull(I18N.Current.TranslateOrNull("nonExistentKey", "one", "two"));
+            Assert.IsNull("nonExistentKey".TranslateOrNull());
+        }
+
+        [Test]
+        public void SetThrowWhenKeyNotFound_WillThrow_WhenKeyNotFound()
+        {
+            I18N.Current.SetThrowWhenKeyNotFound(true);
+
+            Assert.Throws<KeyNotFoundException>(() => I18N.Current.Translate("fake"));
+            Assert.Throws<KeyNotFoundException>(() => "fake".Translate());
+        }
+
+        [Test]
+        public void NotFoundSymbol_ShoulNever_BeNullOrEmpty()
+        {
+            I18N.Current.SetNotFoundSymbol("##");
+            I18N.Current.SetNotFoundSymbol(null);
+
+            Assert.AreEqual("##missing##", "missing".Translate());
+
+            I18N.Current.SetNotFoundSymbol(string.Empty);
+
+            Assert.AreEqual("##missing##", "missing".Translate());
         }
     }
 }

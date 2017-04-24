@@ -7,51 +7,37 @@ namespace I18NPortable.UnitTests
     [TestFixture]
     public class CultureTests : BaseTest
     {
-        [Test]
-        public void Languages_ShouldHave_CorrectDisplayName()
+        [TestCase("es", "Español")]
+        [TestCase("en", "English")]
+        [TestCase("pt-BR", "Português (Brasil)")]
+        [TestCase("es-MX", "Español (México)")]
+        public void Languages_ShouldHave_CorrectDisplayName(string locale, string displayName)
         {
             var languages = I18N.Current.Languages;
-            var es = languages.FirstOrDefault(x => x.Locale.Equals("es"));
-            var en = languages.FirstOrDefault(x => x.Locale.Equals("en"));
+            var language = languages.FirstOrDefault(x => x.Locale.Equals(locale));
 
-            Assert.AreEqual("English", en?.DisplayName);
-            Assert.AreEqual("Español", es?.ToString());
+            Assert.AreEqual(displayName, language?.DisplayName);
         }
 
-        [Test]
-        public void LocalesWithWholeCultureNames_CanBeDefault()
+        [TestCase("es-MX")]
+        [TestCase("pt-BR")]
+        public void LocalesWithWholeCultureNames_CanBeDefault(string cultureName)
         {
-            Helpers.SetCulture("es-MX");
-
+            Helpers.SetCulture(cultureName);
             I18N.Current = new I18N().Init(GetType().Assembly);
 
-            Assert.AreEqual("es-MX", I18N.Current.GetDefaultLocale());
-
-            Helpers.SetCulture("pt-BR");
-
-            I18N.Current = new I18N().Init(GetType().Assembly);
-
-            Assert.AreEqual("pt-BR", I18N.Current.GetDefaultLocale());
-            Assert.AreEqual("oi", "hello".Translate());
+            Assert.AreEqual(cultureName, I18N.Current.GetDefaultLocale());
         }
 
-        [Test]
-        public void LocaleWithWholeCultureNames_GetLoaded_AsDefault()
+        [TestCase("es-MX", "Fruit.Banana", "banana")]
+        [TestCase("es-ES", "Fruit.Banana", "plátano")]
+        [TestCase("pt-BR", "hello", "oi")]
+        public void LocaleWithWholeCultureNames_GetLoaded_AsDefault(string cultureName, string key, string translation)
         {
-            Helpers.SetCulture("es-MX");
+            Helpers.SetCulture(cultureName);
             I18N.Current = new I18N().Init(GetType().Assembly);
 
-            Assert.AreEqual("banana", I18N.Current.Translate("Fruit.Banana"));
-
-            Helpers.SetCulture("es-ES");
-            I18N.Current = new I18N().Init(GetType().Assembly);
-
-            Assert.AreEqual("plátano", I18N.Current.Translate("Fruit.Banana"));
-
-            Helpers.SetCulture("pt-BR");
-            I18N.Current = new I18N().Init(GetType().Assembly);
-
-            Assert.AreEqual("oi", "hello".Translate());
+            Assert.AreEqual(translation, I18N.Current.Translate(key));
         }
     }
 }

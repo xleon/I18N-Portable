@@ -50,6 +50,8 @@
     <EmbeddedResource Include="Locales\es.txt" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="JsonKvpLocales\es.json" />
+    <EmbeddedResource Include="JsonListLocales\es.json" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -95,5 +97,6 @@
   <ItemGroup>
     <EmbeddedResource Include="OtherLocales\ru.weird2" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

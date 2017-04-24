@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 
 namespace I18NPortable.Readers
@@ -8,7 +7,14 @@ namespace I18NPortable.Readers
     {
         public Dictionary<string, string> Read(Stream stream)
         {
-            throw new NotImplementedException();
+            var translations = new Dictionary<string, string>();
+
+            using (var streamReader = new StreamReader(stream))
+            {
+                var json = streamReader.ReadToEnd();
+            }
+
+            return translations;
         }
     }
 }

@@ -240,7 +240,8 @@ namespace I18NPortable
             if (!_locales.Contains(locale))
                 throw new I18NException($"Locale '{locale}' is not available", new KeyNotFoundException());
 
-            var stream = _providers.First().GetLocaleStream(locale); // TODO try get from all providers in the correct order
+            // TODO try get from all providers in the correct order
+            var stream = _providers.First().GetLocaleStream(locale); 
 
             ReadLocaleStream(stream);
 
@@ -254,7 +255,7 @@ namespace I18NPortable
         {
             _translations.Clear();
 
-            // TODO try with all readers
+            // TODO find the reader by the file extension
             var reader = _readers.First().Item1;
             _translations = reader.Read(stream) ?? new Dictionary<string, string>();
 

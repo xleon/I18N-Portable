@@ -26,7 +26,7 @@ namespace I18NPortable.UnitTests
         }
 
         [Test]
-        public void TryingToReload_CurrentLoadedLanguage_WillDoNothing()
+        public void TryingToLoad_CurrentLanguage_WillDoNothing()
         {
             I18N.Current.Locale = "en";
             I18N.Current.Locale = "es";

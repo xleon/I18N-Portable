@@ -8,29 +8,6 @@ namespace I18NPortable.UnitTests
     public class ExtensionTests : BaseTest
     {
         [Test]
-        public void CanTranslate_WithStringExtensionMethod()
-        {
-            I18N.Current.Locale = "en";
-            Assert.AreEqual("one", "one".Translate());
-
-            I18N.Current.Locale = "es";
-            Assert.AreEqual("uno", "one".Translate());
-        }
-
-        [Test]
-        public void TranslateOrNullExtension_ShouldReturn_Null_WhenKeyIsNotFound()
-        {
-            Assert.IsNull("nonExistentKey".TranslateOrNull());
-        }
-
-        [Test]
-        public void TranslateOrNullExtension_ShouldTranslateKeys()
-        {
-            I18N.Current.Locale = "es";
-            Assert.AreEqual("uno", "one".TranslateOrNull());
-        }
-
-        [Test]
         public void UnescapeLineBreaks_ShouldWork()
         {
             const string sample = "Hello\\r\\nfrom\\nthe other side";
