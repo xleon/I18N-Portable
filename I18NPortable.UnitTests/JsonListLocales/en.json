@@ -1,54 +1,54 @@
 ﻿[
   {
     "key": "one",
-    "value": "uno"
+    "value": "one"
   },
   {
     "key": "two",
-    "value": "dos"
+    "value": "two"
   },
   {
     "key": "three",
-    "value": "tres"
+    "value": "three"
   },
   {
     "key": "Mailbox.Notification",
-    "value": "Hola {0}, tienes {1} emails"
+    "value": "Hello {0}, you´ve got {1} emails"
   },
   {
     "key": "TextWithLineBreakCharacters",
-    "value": "Línea Uno\nLínea dos\r\nLínea Tres"
+    "value": "Line One\nLine Two\nLine Three"
   },
   {
     "key": "Animals",
-    "value": "Lista de animales"
+    "value": "List of animals"
   },
   {
     "key": "Animals.Dog",
-    "value": "Perro"
+    "value": "Dog"
   },
   {
     "key": "Animals.Cat",
-    "value": "Gato"
+    "value": "Cat"
   },
   {
     "key": "Animals.Rat",
-    "value": "Rata"
+    "value": "Rat"
   },
   {
     "key": "Animals.Snake",
-    "value": "Serpiente\nBuena"
+    "value": "Good\nSnake"
   },
   {
     "key": "Fruit.Orange",
-    "value": "gran naranja"
+    "value": "great orange"
   },
   {
     "key": "Fruit.Apple",
-    "value": "manzana grande"
+    "value": "big apple"
   },
   {
     "key": "Fruit.Banana",
-    "value": "plátano"
+    "value": "nice banana"
   }
 ]

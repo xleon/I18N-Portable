@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+﻿using I18NPortable.JsonReader;
 using I18NPortable.Readers;
 using NUnit.Framework;
 using TestHostAssembly;

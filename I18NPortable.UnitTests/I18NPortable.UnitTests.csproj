@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -7,7 +7,8 @@
     <OutputType>Library</OutputType>
     <RootNamespace>I18NPortable.UnitTests</RootNamespace>
     <AssemblyName>I18NPortable.UnitTests</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -55,6 +56,7 @@
     <EmbeddedResource Include="JsonKvpLocales\es.json" />
     <EmbeddedResource Include="JsonListLocales\es.json" />
     <EmbeddedResource Include="JsonKvpLocales\en.json" />
+    <EmbeddedResource Include="JsonListLocales\en.json" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -64,6 +66,10 @@
     <EmbeddedResource Include="Locales\pt-BR.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\I18NPortable.JsonReader\I18NPortable.JsonReader.csproj">
+      <Project>{fe719a18-689b-4239-9bd2-58c45719b6cb}</Project>
+      <Name>I18NPortable.JsonReader</Name>
+    </ProjectReference>
     <ProjectReference Include="..\I18NPortable\I18NPortable.csproj">
       <Project>{4dc53c6b-9f4b-4168-80c9-5d6c8849892e}</Project>
       <Name>I18NPortable</Name>

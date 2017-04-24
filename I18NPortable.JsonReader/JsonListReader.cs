@@ -3,9 +3,18 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 
-namespace I18NPortable.Readers
+namespace I18NPortable.JsonReader
 {
-    public class JsonKvpReader : ILocaleReader
+    public class JsonKvp
+    {
+        [JsonProperty("key")]
+        public string Key { get; set; }
+
+        [JsonProperty("value")]
+        public string Value { get; set; }
+    }
+
+    public class JsonListReader : ILocaleReader
     {
         public Dictionary<string, string> Read(Stream stream)
         {
@@ -14,7 +23,7 @@ namespace I18NPortable.Readers
                 var json = streamReader.ReadToEnd();
 
                 return JsonConvert
-                    .DeserializeObject<Dictionary<string, string>>(json)
+                    .DeserializeObject<List<JsonKvp>>(json)
                     .ToDictionary(x => x.Key.Trim(), x => x.Value.Trim().UnescapeLineBreaks());
             }
         }

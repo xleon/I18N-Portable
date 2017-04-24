@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using I18NPortable.JsonReader;
 using I18NPortable.Readers;
 using I18NPortable.UnitTests.Util;
 using NUnit.Framework;
