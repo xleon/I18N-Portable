@@ -45,8 +45,11 @@ namespace I18NPortable.Providers
             return this;
         }
 
-        public IEnumerable<string> GetAvailableLocales() 
-            => _locales.Select(x => x.Key);
+        public IEnumerable<Tuple<string, string>> GetAvailableLocales() => _locales.Select(x =>
+        {
+            var extension = x.Value.Substring(x.Value.LastIndexOf('.'));
+            return new Tuple<string, string>(x.Key, extension);
+        });
 
         private void DiscoverLocales(Assembly hostAssembly)
         {

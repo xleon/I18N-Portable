@@ -91,7 +91,7 @@ namespace I18NPortable.UnitTests
             var current = new I18N()
                 .SetThrowWhenKeyNotFound(true)
                 .AddLocaleReader(new TextKvpReader(), ".txt22222")
-                .Init(new TestHostAssemblyDummy().GetType().Assembly);
+                .Init(typeof(TestHostAssemblyDummy).Assembly);
 
             Assert.AreEqual(2, current.Languages.Count);
         }

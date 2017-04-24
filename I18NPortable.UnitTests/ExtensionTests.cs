@@ -8,7 +8,7 @@ namespace I18NPortable.UnitTests
     public class ExtensionTests : BaseTest
     {
         [Test]
-        public void UnescapeLineBreaks_ShouldWork()
+        public void LineBreaks_ShouldBe_Unescaped()
         {
             const string sample = "Hello\\r\\nfrom\\nthe other side";
             var unescaped = sample.UnescapeLineBreaks();
@@ -18,7 +18,7 @@ namespace I18NPortable.UnitTests
         }
 
         [Test]
-        public void CapitalizeFirstLetter_ShouldWork()
+        public void FirstLetter_ShouldBe_Capitalized()
         {
             Assert.AreEqual("English", "english".CapitalizeFirstCharacter());
             Assert.AreEqual("E", "e".CapitalizeFirstCharacter());

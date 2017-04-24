@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using Newtonsoft.Json;
 
 namespace I18NPortable.Readers
 {
@@ -7,14 +10,16 @@ namespace I18NPortable.Readers
     {
         public Dictionary<string, string> Read(Stream stream)
         {
-            var translations = new Dictionary<string, string>();
-
             using (var streamReader = new StreamReader(stream))
             {
                 var json = streamReader.ReadToEnd();
-            }
 
-            return translations;
+                return JsonConvert
+                    .DeserializeObject<Dictionary<string, string>>(json)
+                    .ToDictionary(x => x.Key.Trim(), x => x.Value.Trim()
+                        .Replace("\r\n", "\n")
+                        .Replace("\n", Environment.NewLine));
+            }
         }
     }
 }

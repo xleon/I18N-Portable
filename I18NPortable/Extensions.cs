@@ -31,7 +31,7 @@ namespace I18NPortable
 
         public static string UnescapeLineBreaks(this string str)
             => str
-                .Replace("\\r\\n", Environment.NewLine)
+                .Replace("\\r\\n", "\\n")
                 .Replace("\\n", Environment.NewLine);
 
         /// <summary>

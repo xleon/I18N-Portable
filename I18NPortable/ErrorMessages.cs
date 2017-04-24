@@ -10,5 +10,6 @@
         public const string ReaderExtensionTwice = "The same extension cannot be added at two different readers";
         public const string ReaderTwice = "The same reader cannot be added twice";
         public const string NoLocalesFound = "No locales found in specified the host assembly";
+        public const string ReaderException = "A reader failed to read the file stream";
     }
 }

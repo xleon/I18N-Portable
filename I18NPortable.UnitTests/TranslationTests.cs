@@ -42,6 +42,8 @@ namespace I18NPortable.UnitTests
                 .AddLocaleReader(new JsonKvpReader(), ".json")
                 .Init(GetType().Assembly);
 
+            I18N.Current.Locale = locale;
+
             Assert.AreEqual(translation, I18N.Current.Translate(key));
             Assert.AreEqual(translation, I18N.Current[key]);
             Assert.AreEqual(translation, key.Translate());
@@ -72,6 +74,8 @@ namespace I18NPortable.UnitTests
                 .AddLocaleReader(new JsonKvpReader(), ".json")
                 .Init(GetType().Assembly);
 
+            I18N.Current.Locale = locale;
+
             Assert.AreEqual(translation, I18N.Current.Translate(key, "Marta", 56));
             Assert.AreEqual(translation, key.Translate("Marta", 56));
         }
@@ -94,6 +98,8 @@ namespace I18NPortable.UnitTests
                 .SetResourcesFolder("JsonKvpLocales")
                 .AddLocaleReader(new JsonKvpReader(), ".json")
                 .Init(GetType().Assembly);
+
+            I18N.Current.Locale = locale;
 
             textWithLineBreaks = I18N.Current.Translate(key);
             textWithLineBreaksOrNull = I18N.Current.TranslateOrNull(key);

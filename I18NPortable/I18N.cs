@@ -88,6 +88,7 @@ namespace I18NPortable
         private readonly IList<ILocaleProvider> _providers = new List<ILocaleProvider>();
         private readonly IList<Tuple<ILocaleReader, string>> _readers = new List<Tuple<ILocaleReader, string>>();
         private IList<string> _locales = new List<string>();
+        private Dictionary<string, string> _localeFileExtensionMap;
         private bool _throwWhenKeyNotFound;
         private string _notFoundSymbol = "?";
         private string _fallbackLocale;
@@ -201,7 +202,9 @@ namespace I18NPortable
                 _providers.Add(defaultProvider);
             }
 
-            _locales = _providers.First().GetAvailableLocales().ToList();
+            var localeTuples = _providers.First().GetAvailableLocales().ToList();
+            _locales = localeTuples.Select(x => x.Item1).ToList();
+            _localeFileExtensionMap = localeTuples.ToDictionary(x => x.Item1, x => x.Item2);
 
             var localeToLoad = GetDefaultLocale();
 
@@ -241,9 +244,24 @@ namespace I18NPortable
                 throw new I18NException($"Locale '{locale}' is not available", new KeyNotFoundException());
 
             // TODO try get from all providers in the correct order
-            var stream = _providers.First().GetLocaleStream(locale); 
+            var stream = _providers.First().GetLocaleStream(locale);
 
-            ReadLocaleStream(stream);
+            _translations.Clear();
+
+            var extension = _localeFileExtensionMap[locale];
+            var reader = _readers.First(x => x.Item2.Equals(extension)).Item1;
+
+            try
+            {
+                _translations = reader.Read(stream) ?? new Dictionary<string, string>();
+            }
+            catch (Exception e)
+            {
+                var message = $"{ErrorMessages.ReaderException}.\nReader: {reader.GetType().Name}.\nLocale: {locale}{extension}";
+                throw new I18NException(message, e);
+            }
+            
+            LogTranslations();
 
             _locale = locale;
 
@@ -251,16 +269,6 @@ namespace I18NPortable
             NotifyPropertyChanged("Item[]");
         }
 
-        private void ReadLocaleStream(Stream stream)
-        {
-            _translations.Clear();
-
-            // TODO find the reader by the file extension
-            var reader = _readers.First().Item1;
-            _translations = reader.Read(stream) ?? new Dictionary<string, string>();
-
-            LogTranslations();
-        }
 
         #endregion
 
@@ -403,6 +411,7 @@ namespace I18NPortable
             _translations?.Clear();
             _locales?.Clear();
             _readers?.Clear();
+            _localeFileExtensionMap?.Clear();
             _locale = null;
 
             Current = null;
