@@ -195,6 +195,7 @@ public class JsonKvpReader : ILocaleReader
 ```
 
 ###Contributing new readers
+
 If you implemented a new reader for another file format and you want to contribute, feel free to make a pull request. Any new reader will live in their own project in the solution and will produce a different nuget as a plugin to I18NPortable.
 
     
