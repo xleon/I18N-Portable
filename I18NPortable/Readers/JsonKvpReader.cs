@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
@@ -16,9 +15,7 @@ namespace I18NPortable.Readers
 
                 return JsonConvert
                     .DeserializeObject<Dictionary<string, string>>(json)
-                    .ToDictionary(x => x.Key.Trim(), x => x.Value.Trim()
-                        .Replace("\r\n", "\n")
-                        .Replace("\n", Environment.NewLine));
+                    .ToDictionary(x => x.Key.Trim(), x => x.Value.Trim().UnescapeLineBreaks());
             }
         }
     }
