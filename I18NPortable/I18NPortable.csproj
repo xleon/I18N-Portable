@@ -10,7 +10,7 @@
     <Description>Simple cross platform internationalization/translations for Xamarin and Windows apps</Description>
     <Copyright>Copyright 2017</Copyright>
     <PackageTags>I18N, Internationalization, Translations, Xamarin, Xamarin.Forms, Mvvm, Xamarin.iOS, Xamarin.Android, iOS, Android, UWP, Windows Universal</PackageTags>
-    <PackageReleaseNotes>Relase notes at https://github.com/xleon/I18N-Portable/releases</PackageReleaseNotes>
+    <PackageReleaseNotes>Release notes at https://github.com/xleon/I18N-Portable/releases</PackageReleaseNotes>
     <PackageIconUrl>https://dl.dropboxusercontent.com/u/10633236/logo.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/xleon/I18N-Portable</PackageProjectUrl>
     <RepositoryUrl>https://github.com/xleon/I18N-Portable</RepositoryUrl>
