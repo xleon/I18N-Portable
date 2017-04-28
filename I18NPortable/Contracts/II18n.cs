@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
 
-namespace I18NPortable
+namespace I18NPortable.Contracts
 {
     public interface II18N : INotifyPropertyChanged, IDisposable
     {

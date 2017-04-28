@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using I18NPortable.Contracts;
 using Newtonsoft.Json;
 
 namespace I18NPortable.JsonReader

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using I18NPortable.Contracts;
 
 namespace I18NPortable.Providers
 {

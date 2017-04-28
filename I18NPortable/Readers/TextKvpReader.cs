@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using I18NPortable.Contracts;
 
 namespace I18NPortable.Readers
 {

@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using I18NPortable.Contracts;
+using NUnit.Framework;
 
 namespace I18NPortable.UnitTests
 {

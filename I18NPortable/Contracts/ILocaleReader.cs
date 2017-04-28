@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace I18NPortable
+namespace I18NPortable.Contracts
 {
     public interface ILocaleReader
     {

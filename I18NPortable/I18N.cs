@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using I18NPortable.Contracts;
 using I18NPortable.Providers;
 using I18NPortable.Readers;
 
@@ -231,6 +232,12 @@ namespace I18NPortable
             NotifyPropertyChanged(nameof(Language));
 
             return this;
+        }
+
+        public II18N Init(object caller)
+        {
+            var assembly = caller.GetType().GetTypeInfo().Assembly;
+            return Init(assembly);
         }
 
         #endregion

@@ -35,6 +35,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Annotations.cs" />
     <Compile Include="BaseTest.cs" />
     <Compile Include="BindingTests.cs" />
     <Compile Include="CultureTests.cs" />

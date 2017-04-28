@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
+using System.Runtime.CompilerServices;
+using I18NPortable.Contracts;
+using I18NPortable.UnitTests.Annotations;
 
 namespace I18NPortable.UnitTests.Util
 {
@@ -35,6 +38,7 @@ namespace I18NPortable.UnitTests.Util
 
         public PortableLanguage Language { get; set; }
         public string Locale { get; set; }
+        // ReSharper disable once UnassignedGetOnlyAutoProperty
         public List<PortableLanguage> Languages { get; }
 
         public II18N SetNotFoundSymbol(string symbol) => throw new NotImplementedException();
@@ -64,5 +68,11 @@ namespace I18NPortable.UnitTests.Util
         public List<Tuple<TEnum, string>> TranslateEnumToTupleList<TEnum>() => throw new NotImplementedException();
 
         public void Unload() => throw new NotImplementedException();
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }
