@@ -7,7 +7,7 @@ namespace I18NPortable.Readers
 {
     public class TextKvpReader : ILocaleReader
     {
-        public Dictionary<string, string> Read(Stream stream)
+        public Dictionary<string, string> Read(Stream stream, string locale = null)
         {
             var translations = new Dictionary<string, string>();
 

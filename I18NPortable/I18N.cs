@@ -259,7 +259,7 @@ namespace I18NPortable
 
             try
             {
-                _translations = reader.Read(stream) ?? new Dictionary<string, string>();
+                _translations = reader.Read(stream, locale) ?? new Dictionary<string, string>();
             }
             catch (Exception e)
             {

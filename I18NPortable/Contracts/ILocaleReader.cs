@@ -5,6 +5,6 @@ namespace I18NPortable.Contracts
 {
     public interface ILocaleReader
     {
-        Dictionary<string, string> Read(Stream stream);
+        Dictionary<string, string> Read(Stream stream, string locale = null);
     }
 }

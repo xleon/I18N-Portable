@@ -17,7 +17,7 @@ namespace I18NPortable.JsonReader
 
     public class JsonListReader : ILocaleReader
     {
-        public Dictionary<string, string> Read(Stream stream)
+        public Dictionary<string, string> Read(Stream stream, string locale = null)
         {
             using (var streamReader = new StreamReader(stream))
             {
