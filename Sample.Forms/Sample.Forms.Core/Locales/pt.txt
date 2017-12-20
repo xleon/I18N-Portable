@@ -1,0 +1,22 @@
+﻿LoadedLanguageTitle = idioma carregado
+AvailableLanguages = Idiomas disponíveis
+ChangeLanguage = Alterar idioma
+
+SingleEnumTitle = valor Single Enum
+EnumValuesTitle = Enum values
+
+GreetingTitle = Saudação
+GreetingValue = Olá {0}, como você está?
+
+MultilineTitle = texto em várias linhas
+MultilineValue = Este texto
+abrange várias linhas \n no arquivo de localidade
+
+Animals.Dog = Dog 🐶
+Animals.Cat = Cat 🐈
+Animals.Rat = Rat 🐁
+Animals.Tiger = Tiger 🐅
+Animals.Monkey = Monkey 🐵
+
+Cancel = Cancelar
+ChooseLanguage = Escolha idioma
