@@ -1,0 +1,22 @@
+﻿LoadedLanguageTitle = Loaded language
+AvailableLanguages = Available languages
+ChangeLanguage = Change language
+
+SingleEnumTitle = Single Enum value
+EnumValuesTitle = Enum values
+
+GreetingTitle = Greeting
+GreetingValue = Hello {0}, how are you doing?
+
+MultilineTitle = Multi-line text
+MultilineValue = This text 
+spans multiple lines\nin the locale file
+
+Animals.Dog = Dog 🐶
+Animals.Cat = Cat 🐈
+Animals.Rat = Rat 🐁
+Animals.Tiger = Tiger 🐅
+Animals.Monkey = Monkey 🐵
+
+Cancel = Cancel
+ChooseLanguage = Choose Language

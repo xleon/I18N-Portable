@@ -1,0 +1,22 @@
+﻿LoadedLanguageTitle = Загруженный язык
+AvailableLanguage = Доступные языки
+ChangeLanguage = Изменить язык
+
+SingleEnumTitle = Единое значение Enum
+EnumValuesTitle = значения Enum
+
+GreetingTitleTitle = Приветствие
+GreetingValue = Привет {0}, как вы поживаете?
+
+MultilineTitle = многострочный текст
+MultilineValue = Этот текст
+охватывает несколько строк \nn в локальном файле
+
+Animals.Dog =  Собака 🐶
+Animals.Cat = Cat 🐈
+Animals.Rat = Крыса 🐁
+Animals.Tiger = Тигр 🐅
+Animals.Monkey = Обезьяна 🐵
+
+Cancel = Отменить
+ChooseLanguage = Выбрать язык

@@ -1,0 +1,15 @@
+﻿{
+  "one": "one",
+  "two": "two",
+  "three": "three",
+  "Mailbox.Notification": "Hello {0}, you´ve got {1} emails",
+  "TextWithLineBreakCharacters": "Line One\nLine Two\nLine Three",
+  "Animals": "List of animals",
+  "Animals.Dog": "Dog",
+  "Animals.Cat": "Cat",
+  "Animals.Rat": "Rat",
+  "Animals.Snake": "Good\nSnake",
+  "Fruit.Orange": "great orange",
+  "Fruit.Apple": "big apple",
+  "Fruit.Banana": "nice banana"
+}

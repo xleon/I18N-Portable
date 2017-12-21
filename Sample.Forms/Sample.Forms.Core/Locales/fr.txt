@@ -1,0 +1,22 @@
+﻿LoadedLanguageTitle = Langue chargée
+AvailableLanguages = Langues disponibles
+ChangeLanguage = Changer la langue
+
+SingleEnumTitle = Valeur Enum unique
+EnumValuesTitle = Valeurs enum
+
+GreetingTitle = Salutation
+GreetingValue = Bonjour {0}, comment allez-vous?
+
+MultilineTitle = Texte multiligne
+MultilineValue = Ce texte
+couvre plusieurs lignes \nin le fichier de paramètres régionaux
+
+Animals.Dog = Chien 🐶
+Animals.Cat = Chat 🐈
+Animals.Rat = Rat 🐁
+Animals.Tiger = Tigre 🐅
+Animals.Monkey = Singe 🐵
+
+Cancel = Annuler
+ChooseLanguage = Choisir la langue
