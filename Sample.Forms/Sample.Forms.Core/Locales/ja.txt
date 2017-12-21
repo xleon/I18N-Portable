@@ -1,0 +1,22 @@
+﻿LoadedLanguageTitle =読み込まれた言語
+AvailableLanguages =利用可能な言語
+ChangeLanguage =言語を変更する
+
+SingleEnumTitle =単一の列挙型の値
+EnumValuesTitle = Enum値
+
+GreetingTitle =グリーティング
+GreetingValue =こんにちは{0}、元気？
+
+MultilineTitle =複数行のテキスト
+MultilineValue =このテキスト
+複数の行にまたがる\nロケールファイル
+
+Animals.Dog = Dog
+Animals.Cat = Cat
+Animals.Rat =ラット
+Animals.Tiger=タイガー
+Animals.Monkey = Monkey
+
+Cancel=キャンセル
+ChooseLanguage =言語の選択

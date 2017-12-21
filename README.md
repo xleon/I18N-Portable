@@ -110,7 +110,7 @@ by creating a proxy object in your ViewModel:
 ```csharp
 public abstract class BaseViewModel
 {
-    public I18N Strings => I18N.Current;
+    public II18N Strings => I18N.Current;
 }
 ```
 
