@@ -24,9 +24,10 @@ namespace I18NPortable
 
         string Translate(string key, params object[] args);
         string TranslateOrNull(string key, params object[] args);
+        II18NSection GetSection(string section);
 
-        Dictionary<TEnum, string> TranslateEnumToDictionary<TEnum>();
-        List<string> TranslateEnumToList<TEnum>();
-        List<Tuple<TEnum, string>> TranslateEnumToTupleList<TEnum>();
+        Dictionary<TEnum, string> TranslateEnumToDictionary<TEnum>(string section = null);
+        List<string> TranslateEnumToList<TEnum>(string section = null);
+        List<Tuple<TEnum, string>> TranslateEnumToTupleList<TEnum>(string section = null);
     }
 }

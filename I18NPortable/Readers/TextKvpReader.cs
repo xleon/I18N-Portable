@@ -14,6 +14,7 @@ namespace I18NPortable.Readers
             {
                 string key = null;
                 string value = null;
+                string section = null;
 
                 while (!streamReader.EndOfStream)
                 {
@@ -22,10 +23,24 @@ namespace I18NPortable.Readers
                     var isComment = !isEmpty && line.Trim().StartsWith("#");
                     var isKeyValuePair = !isEmpty && !isComment && line.Contains("=");
 
-                    if ((isEmpty || isComment || isKeyValuePair) && key != null && value != null)
+                    // --> end any prefix
+                    if (!isEmpty && line.Trim().EndsWith("}"))
                     {
-                        translations.Add(key, value);
+                        if (key != null && value != null)
+                        {
+                            translations.Add(TryBindSectionToKey(section, key), value);
+                        }
 
+                        section = null;
+                        key = null;
+                        value = null;
+                        continue;
+                    }
+
+                    if ((isEmpty || isComment || isKeyValuePair) && key != null && value != null)
+                    {                   
+                        translations.Add(TryBindSectionToKey(section, key), value);
+                        
                         key = null;
                         value = null;
                     }
@@ -39,6 +54,13 @@ namespace I18NPortable.Readers
 
                         key = kvp[0].Trim();
                         value = kvp[1].Trim().UnescapeLineBreaks();
+                        // --> start any prefix
+                        if (value.StartsWith("{"))
+                        {
+                            section = key;
+                            key = null;
+                            value = null;
+                        }
                     }
                     else if (key != null && value != null)
                     {
@@ -47,10 +69,16 @@ namespace I18NPortable.Readers
                 }
 
                 if (key != null && value != null)
-                    translations.Add(key, value);
+                    translations.Add(TryBindSectionToKey(section, key), value);
             }
 
             return translations;
+        }
+
+        private static string TryBindSectionToKey(string prefix, string key)
+        {
+            // try to add any prefix
+            return string.IsNullOrEmpty(prefix) ? key : $"{prefix}.{key}";
         }
     }
 }

@@ -299,18 +299,29 @@ namespace I18NPortable
                 ? (args.Length == 0 ? _translations[key] : string.Format(_translations[key], args))
                 : null;
 
+        public II18NSection GetSection(string section)
+        {
+            if (string.IsNullOrEmpty(section))
+            {
+                throw new ArgumentNullException(nameof(section));
+            }
+            
+            return new I18NSection(this, section);
+        }
+
         /// <summary>
         /// Convert Enum Type values to a Dictionary&lt;TEnum, string&gt; where the key is the Enum value and the string is the translated value.
         /// </summary>
-        public Dictionary<TEnum, string> TranslateEnumToDictionary<TEnum>()
+        public Dictionary<TEnum, string> TranslateEnumToDictionary<TEnum>(string section)
         {
             var type = typeof(TEnum);
             var dic = new Dictionary<TEnum, string>();
+            var prefix = string.IsNullOrEmpty(section) ? type.Name : $"{section}.{type.Name}";
 
             foreach (var value in Enum.GetValues(type))
             {
                 var name = Enum.GetName(type, value);
-                dic.Add((TEnum) value, Translate($"{type.Name}.{name}"));
+                dic.Add((TEnum) value, Translate($"{prefix}.{name}"));
             }
 
             return dic;
@@ -319,14 +330,15 @@ namespace I18NPortable
         /// <summary>
         /// Convert Enum Type values to a List of translated strings
         /// </summary>
-        public List<string> TranslateEnumToList<TEnum>()
+        public List<string> TranslateEnumToList<TEnum>(string section = null)
         {
             var type = typeof(TEnum);
+            var prefix = string.IsNullOrEmpty(section) ? type.Name : $"{section}.{type.Name}";
 
             return (from object value in Enum.GetValues(type)
                     select Enum.GetName(type, value)
                     into name
-                    select Translate($"{type.Name}.{name}"))
+                    select Translate($"{prefix}.{name}"))
                 .ToList();
         }
 
@@ -335,15 +347,16 @@ namespace I18NPortable
         /// </summary>
         /// <typeparam name="TEnum"></typeparam>
         /// <returns></returns>
-        public List<Tuple<TEnum, string>> TranslateEnumToTupleList<TEnum>()
+        public List<Tuple<TEnum, string>> TranslateEnumToTupleList<TEnum>(string section)
         {
             var type = typeof(TEnum);
             var list = new List<Tuple<TEnum, string>>();
-
+            var prefix = string.IsNullOrEmpty(section) ? type.Name : $"{section}.{type.Name}";
+            
             foreach (var value in Enum.GetValues(type))
             {
                 var name = Enum.GetName(type, value);
-                var tuple = new Tuple<TEnum, string>((TEnum) value, Translate($"{type.Name}.{name}"));
+                var tuple = new Tuple<TEnum, string>((TEnum) value, Translate($"{prefix}.{name}"));
                 list.Add(tuple);
             }
 

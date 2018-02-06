@@ -56,12 +56,14 @@ namespace I18NPortable.UnitTests.Util
         public string Translate(string key, params object[] args) => "mocked translation";
 
         public string TranslateOrNull(string key, params object[] args) => throw new NotImplementedException();
+        
+        public II18NSection GetSection(string section) => throw new NotImplementedException();
 
-        public Dictionary<TEnum, string> TranslateEnumToDictionary<TEnum>() => throw new NotImplementedException();
+        public Dictionary<TEnum, string> TranslateEnumToDictionary<TEnum>(string section) => throw new NotImplementedException();
 
-        public List<string> TranslateEnumToList<TEnum>() => throw new NotImplementedException();
+        public List<string> TranslateEnumToList<TEnum>(string section) => throw new NotImplementedException();
 
-        public List<Tuple<TEnum, string>> TranslateEnumToTupleList<TEnum>() => throw new NotImplementedException();
+        public List<Tuple<TEnum, string>> TranslateEnumToTupleList<TEnum>(string section) => throw new NotImplementedException();
 
         public void Unload() => throw new NotImplementedException();
     }

@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>netstandard1.1</TargetFramework>
     <Version>0.6.0</Version>
     <Authors>Diego Ponce de Leon</Authors>
-    <Company></Company>
+    <Company>
+    </Company>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://github.com/xleon/I18N-Portable/blob/master/LICENSE</PackageLicenseUrl>
     <Description>Simple cross platform internationalization/translations for Xamarin and Windows apps</Description>
@@ -17,5 +17,4 @@
     <RepositoryType>git</RepositoryType>
     <NeutralLanguage>en</NeutralLanguage>
   </PropertyGroup>
-
 </Project>

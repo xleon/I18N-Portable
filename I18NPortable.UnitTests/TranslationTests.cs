@@ -237,5 +237,58 @@ namespace I18NPortable.UnitTests
 
             Assert.AreEqual("##missing##", "missing".Translate());
         }
+        
+        [Test]
+        public void Namespace_CanBeTranslated()
+        {
+            // Arrange
+            I18N.Current.Locale = "en";
+            
+            // Act
+            var testViewModelTitle = I18N.Current.Translate("TestViewModel.Title");
+            var testViewModelDescription = I18N.Current.Translate("TestViewModel.Description");
+            var testViewModelAnimals = I18N.Current.TranslateEnumToTupleList<Animals>("TestViewModel");
+            
+            // Assert
+            Assert.AreEqual(testViewModelTitle, "TestViewModel Title");
+            Assert.True(testViewModelDescription.Contains("\n"));
+            
+            Assert.AreEqual(testViewModelAnimals[0].Item2, "TestViewModel Dog");
+            Assert.AreEqual(testViewModelAnimals[1].Item2, "TestViewModel Cat");
+        }
+        
+        [Test]
+        public void GetSection_CanBeTranslated()
+        {
+            // Arrange
+            I18N.Current.Locale = "en";
+            
+            // Act
+            var section = I18N.Current.GetSection("TestViewModel");
+            
+            var testViewModelTitle = section.Translate("Title");
+            var testViewModelDescription = section.Translate("Description");
+            var testViewModelAnimals = section.TranslateEnumToTupleList<Animals>();
+            
+            // Assert
+            Assert.AreEqual(section.Name, "TestViewModel");
+            Assert.AreEqual(testViewModelTitle, "TestViewModel Title");
+            Assert.True(testViewModelDescription.Contains("\n"));
+            
+            Assert.AreEqual(testViewModelAnimals[0].Item2, "TestViewModel Dog");
+            Assert.AreEqual(testViewModelAnimals[1].Item2, "TestViewModel Cat");
+        }
+        
+        [Test]
+        public void GetSection_SetThrowWhenKeyNotFound_WillThrow_WhenKeyNotFound()
+        {
+            // Arrange
+            I18N.Current.Locale = "en";
+            I18N.Current.SetThrowWhenKeyNotFound(true);
+            var section = I18N.Current.GetSection("TestViewModel");
+            
+            // Act & Assert
+            Assert.Throws<KeyNotFoundException>(() => section.Translate("fake"));
+        }
     }
 }

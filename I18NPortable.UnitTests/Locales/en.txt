@@ -19,3 +19,19 @@ Animals.Snake = Good\nSnake
 Fruit.Orange = great orange
 Fruit.Apple = big apple
 Fruit.Banana = nice banana
+
+# namespace
+TestViewModel = {
+    Title = TestViewModel Title
+    # Multiline
+    Description = TestViewModel Description
+        TestViewModel Description
+        TestViewModel Description
+        
+    SubmitTitle = Submit
+    
+    # Enums
+    Animals = List of animals
+    Animals.Dog = TestViewModel Dog
+    Animals.Cat = TestViewModel Cat
+}

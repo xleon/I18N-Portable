@@ -49,6 +49,23 @@ From nuget package manager console:
      
     # Support for string.Format()
     stars.count = Tienes {0} estrellas
+
+    # Section are supported
+    TestViewModel = {
+        Title = TestViewModel Title
+        # Multiline
+        Description = TestViewModel Description
+            TestViewModel Description
+            TestViewModel Description
+
+        SubmitTitle = Submit
+        
+        # Enums
+        Animals = List of animals
+        Animals.Dog = TestViewModel Dog
+        Animals.Cat = TestViewModel Cat
+    }
+
      
     TextWithLineBreakCharacters = Line One\nLine Two\r\nLine Three
      
@@ -88,6 +105,9 @@ string dog = animals[0].Item2; // Perro
 Dictionary<Animals, string> animals = I18N.Current.TranslateEnumToDictionary<Animals>();
 string dog = animals[Animals.Dog]; // Perro
 
+var section = I18N.Current.GetSection("TestViewModel");
+var testViewModelTitle = section.Translate("Title"); // TestViewModel Title
+
 // List of supported languages (present in the "Locales" folder) in case you need to show a picker list
 List<PortableLanguage> languages = I18N.Current.Languages; // Each `PortableLanguage` has 2 strings: Locale and DisplayName
 
@@ -111,6 +131,8 @@ by creating a proxy object in your ViewModel:
 public abstract class BaseViewModel
 {
     public II18N Strings => I18N.Current;
+    // or
+    public II18NSection Strings => I18N.Current.GetSection(nameof(BaseViewModel));
 }
 ```
 
