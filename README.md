@@ -2,7 +2,10 @@
 # I18N-Portable
 Simple and cross platform internationalization/translations for Xamarin and .NET
 
-![NuGet](https://img.shields.io/nuget/v/i18nportable.svg?style=for-the-badge) ![NuGet](https://img.shields.io/nuget/dt/i18nportable.svg?style=for-the-badge) ![AppVeyor](https://img.shields.io/appveyor/ci/xleon/i18n-portable.svg?style=for-the-badge) ![Codecov](https://img.shields.io/codecov/c/github/xleon/I18N-Portable.svg?style=for-the-badge)
+[![NuGet](https://img.shields.io/nuget/v/i18nportable.svg?style=for-the-badge)](https://www.nuget.org/packages/I18NPortable/) 
+[![NuGet](https://img.shields.io/nuget/dt/i18nportable.svg?style=for-the-badge)](https://www.nuget.org/packages/I18NPortable/) 
+[![AppVeyor](https://img.shields.io/appveyor/ci/xleon/i18n-portable.svg?style=for-the-badge)](https://ci.appveyor.com/project/xleon/i18n-portable) 
+[![Codecov](https://img.shields.io/codecov/c/github/xleon/I18N-Portable.svg?style=for-the-badge)](https://codecov.io/gh/xleon/I18N-Portable)
 
 - Cross platform
 - Simple to use: `"key".Translate()`.
