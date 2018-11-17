@@ -24,7 +24,7 @@ bld/
 
 # Visual Studio 2015 cache/options directory
 .vs/
-
+.vscode/
 .idea/
 
 # MSTest test Results
@@ -212,3 +212,5 @@ FakesAssemblies/
 GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
+
+*.cache
