@@ -16,7 +16,7 @@ namespace I18NPortable
     public class I18N : II18N
     {
         public static II18N Current { get; set; } = new I18N();
-
+        
         // PropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
 
