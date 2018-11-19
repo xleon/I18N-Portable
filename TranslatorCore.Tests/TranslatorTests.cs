@@ -10,8 +10,13 @@ namespace TranslatorCore.Tests
     public class TranslatorTests
     {
         [TearDown]
-        public void Finish() =>
+        public void Finish()
+        {
             Translator.Current?.Dispose();
+            Helpers.SetCulture("en");
+        }
+
+        #region Misc
 
         [Test]
         public void Translator_logs_to_an_action()
@@ -32,9 +37,13 @@ namespace TranslatorCore.Tests
 
             Assert.AreNotEqual(translator, Translator.Current);
         }
-        
+
+        #endregion
+
+        #region Translation overrides
+
         [Test]
-        public void Overrides_can_be_used_without_setup()
+        public void Translation_overrides_work_without_setup()
         {
             Translator.Current.SetOverrides(new Dictionary<string, string>
             {
@@ -56,27 +65,51 @@ namespace TranslatorCore.Tests
             Assert.AreEqual("value3", Translator.Current.TranslateFrom("key3", "res"));
         }
 
+        #endregion
+
+        #region Exceptions
+
+        [Test]
+        public void Accessing_culture_code_without_setup_or_supported_locales_should_throw()
+        {
+            Assert.Throws<TranslatorException>(() =>  { var code = Translator.Current.CultureCode; });
+
+            Translator.Current.Setup(s => s);
+            
+            Assert.Throws<TranslatorException>(() => {  var code = Translator.Current.CultureCode; });
+        }
+
+        [Test]
+        public void Translating_with_bad_setup_should_throw()
+        {
+            Assert.Throws<TranslatorException>(() => Translator.Current.Translate("key"));
+            Assert.Throws<TranslatorException>(() => Translator.Current
+                .Setup(s => s).Translate("key"));
+        }
+
+        #endregion
+        
         #region Binding
 
         [Test]
-        public void Locale_property_is_bindable()
+        public void CultureCode_property_is_bindable()
         {
-            Translator.Current.Locale = "es";
-            var locale = Translator.Current.Locale;
+            string locale = null;
 
             Translator.Current.PropertyChanged += (sender, args) =>
             {
-                if (args.PropertyName.Equals("Locale"))
-                    locale = ((ITranslator)sender).Locale;
+                if (args.PropertyName.Equals(nameof(Translator.CultureCode)))
+                    locale = ((ITranslator)sender).CultureCode;
             };
-
-            Translator.Current.Locale = "en";
-
-            Assert.AreEqual("en", locale);
-
-            Translator.Current.Locale = "es";
-
+            
+            Helpers.SetCulture("es");
+            var l = Translator.Current.Setup(s => s.SetSupportedLocales("es", "en")).CultureCode;
+            
             Assert.AreEqual("es", locale);
+            Assert.AreEqual("es", l);
+
+            Translator.Current.CultureCode = "en";
+            Assert.AreEqual("en", locale);
         }
 
         [Test]
@@ -108,22 +141,30 @@ namespace TranslatorCore.Tests
 
         #endregion
 
-        #region Locales
+        #region Culture
 
         [Test]
-        public void Culture_2_letter_isocode_is_used_when_it_matches_supported_locale()
+        public void Culture_2letter_isocode_is_used_when_culture_name_not_supported()
         {
-            Helpers.SetCulture("en-GB");
-            Translator.Current.Setup(s => s.SetSupportedLocales("es", "en"));
-            Assert.AreEqual("en", Translator.Current.Locale);
+            Helpers.SetCulture("en-GB"); // culture name
+            Translator.Current.Setup(s => s.SetSupportedLocales("es", "en")); // only 2-letter iso codes
+            Assert.AreEqual("en", Translator.Current.CultureCode);
         }
 
         [Test]
-        public void When_no_locale_matches_then_first_in_the_list_is_taken()
+        public void Culture_name_has_preference_over_iso_codes()
+        {
+            Helpers.SetCulture("es-MX");
+            Translator.Current.Setup(s => s.SetSupportedLocales("es", "es-ES", "es-MX"));
+            Assert.AreEqual("es-MX", Translator.Current.CultureCode);
+        }
+
+        [Test]
+        public void When_current_culture_not_supported_then_first_supported_culture_is_taken()
         {
             Helpers.SetCulture("pt");
             Translator.Current.Setup(s => s.SetSupportedLocales("es", "en"));
-            Assert.AreEqual("es", Translator.Current.Locale);
+            Assert.AreEqual("es", Translator.Current.CultureCode);
         }
 
         #endregion

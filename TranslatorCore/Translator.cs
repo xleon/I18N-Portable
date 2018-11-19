@@ -33,10 +33,10 @@ namespace TranslatorCore
         /// </summary>
         string this[string key] { get; set; }
         
-        string Locale { get; set; }
+        string CultureCode { get; set; }
         
         ITranslator Setup(TranslatorSetup setup);
-        ITranslator Setup(Func<TranslatorSetup, TranslatorSetup> setup);
+        ITranslator Setup(Func<TranslatorSetup, TranslatorSetup> setupModifierFunc);
     }
 
     public interface ILocaleLoader
@@ -44,7 +44,7 @@ namespace TranslatorCore
         Dictionary<string, string> Load(string locale, string resource = null);
     }
     
-    internal class TranslatorException : Exception
+    public class TranslatorException : Exception
     {
         public TranslatorException(string message, Exception innerException = null) : base(message, innerException)
         {
@@ -73,7 +73,7 @@ namespace TranslatorCore
         public Action<string> Logger { get; private set; }
         public string[] SupportedLocales { get; private set; }
         public List<ILocaleLoader> Loaders { get; } = new List<ILocaleLoader>();
-        public bool AlwaysReleaseNonDefaultResources { get; private set; } = true;
+        public bool AutoReleaseResources { get; private set; } = true;
 
         /// <summary>
         /// Add an `ILocaleLoader` implementation.
@@ -137,9 +137,9 @@ namespace TranslatorCore
         /// <summary>
         /// Release memory allocation of a loaded resource when a new one (non default resource) is loaded
         /// </summary>
-        public TranslatorSetup SetAlwaysReleaseNonDefaultResources(bool release)
+        public TranslatorSetup SetAutoReleaseResources(bool release)
         {
-            AlwaysReleaseNonDefaultResources = release;
+            AutoReleaseResources = release;
             return this;
         }
     }
@@ -218,10 +218,10 @@ namespace TranslatorCore
 
         public string TranslateFrom(string key, string resource, params object[] args)
         {
-            if (_overrides.ContainsKey(key))
+            if (_overrides != null && _overrides.ContainsKey(key))
                 return _overrides[key];
             
-            if (_setup == null)
+            if (_setup?.SupportedLocales?.Length < 1)
                 throw new TranslatorException(
                     $"Setup missing. Please call {nameof(Setup)}() method before translating any string");
 
@@ -252,7 +252,7 @@ namespace TranslatorCore
 
         private ITranslator LoadResource(string resource)
         {
-            if(_setup.Loaders.Count == 0)
+            if(_setup?.Loaders == null || _setup.Loaders.Count == 0)
                 throw new TranslatorException(
                     $"Could not load resource. Please add a loader on {nameof(TranslatorSetup)}");
 
@@ -260,16 +260,16 @@ namespace TranslatorCore
             {
                 try
                 {
-                    var translations = loader.Load(Locale, resource);
+                    var translations = loader.Load(CultureCode, resource);
                     _resources[resource] = translations 
                         ?? throw new TranslatorException($"Loader {loader.GetType().Name} returned null when " +
-                                                         $"loading resource '{resource}' with locale '{Locale}'");
+                                                         $"loading resource '{resource}' with locale '{CultureCode}'");
                     break;
                 }
                 catch (Exception ex)
                 {
                     var message = $"Loader {loader.GetType().Name} failed to load " +
-                                  $"resource '{resource}' with locale '{Locale}'";
+                                  $"resource '{resource}' with locale '{CultureCode}'";
                     
                     Log(message);
 
@@ -312,7 +312,7 @@ namespace TranslatorCore
             _overrides = null;
             
             _resources?.Clear();
-            _locale = null;
+            _cultureCode = null;
 
             Log("Disposed");
             _setup = null;
@@ -327,49 +327,52 @@ namespace TranslatorCore
         
         public ITranslator Setup(TranslatorSetup setup)
         {
-//            if(setup?.SupportedLocales == null || setup.SupportedLocales.Length == 0 || setup.Loaders?.Count == 0)
-//                throw new TranslatorException(
-//                    $"Incorrect setup: missing {nameof(TranslatorSetup.SupportedLocales)} or {nameof(TranslatorSetup.Loaders)}");
-            
             _setup = setup;
             Log($"{nameof(TranslatorSetup)} assigned");
             return this;
         }
 
-        public ITranslator Setup(Func<TranslatorSetup, TranslatorSetup> setup) 
-            => Setup(setup(new TranslatorSetup()));
+        public ITranslator Setup(Func<TranslatorSetup, TranslatorSetup> setupModifierFunc) 
+            => Setup(setupModifierFunc(_setup ?? new TranslatorSetup()));
 
         #endregion
 
         #region Locale
 
-        private string _locale;
-        public string Locale
+        private string _cultureCode;
+        public string CultureCode
         {
             get
             {
-                if (_locale != null)
-                    return _locale;
+                if (_cultureCode != null)
+                    return _cultureCode;
+                
+                if(_setup?.SupportedLocales == null)
+                    throw new TranslatorException(
+                        $"{nameof(TranslatorSetup)} with {nameof(TranslatorSetup.SupportedLocales)} " +
+                        $"must be set before accesing {nameof(CultureCode)}");
                 
                 var currentCulture = CultureInfo.CurrentCulture;
-                var locale = _setup.SupportedLocales.FirstOrDefault(x => x.Equals(currentCulture.Name)) 
+                var code = _setup.SupportedLocales.FirstOrDefault(x => x.Equals(currentCulture.Name)) 
                     ?? _setup.SupportedLocales.FirstOrDefault(x => x.Equals(currentCulture.TwoLetterISOLanguageName));
 
-                if (locale == null)
+                if (code == null)
                 {
-                    locale = _setup.SupportedLocales.Contains(_setup.FallbackLocale)
+                    code = _setup.SupportedLocales.Contains(_setup.FallbackLocale)
                         ? _setup.FallbackLocale
                         : _setup.SupportedLocales.First();
                 }
 
-                _locale = locale;
-                return _locale;
+                _cultureCode = code;
+                
+                NotifyPropertyChanged(nameof(CultureCode));
+                return _cultureCode;
             }
             set
             {
-                if (_locale == value)
+                if (_cultureCode == value)
                 {
-                    Log($"{value} is the current locale. No actions will be taken");
+                    Log($"{value} is the current {nameof(CultureCode)}. No actions will be taken");
                     return;
                 }
                 
@@ -386,7 +389,7 @@ namespace TranslatorCore
             if (_setup.Logger == null)
                 return;
             
-            Log($"========== {nameof(Translator)} translations for locale {Locale} ==========");
+            Log($"========== {nameof(Translator)} translations for locale {CultureCode} ==========");
             foreach (var item in _resources)
             {
                 Log($"[{item.Key}]");
@@ -394,7 +397,7 @@ namespace TranslatorCore
                 foreach(var kvp in item.Value)
                     Log($"{kvp.Key} = {kvp.Value}");
             }
-            Log($"========== End of translations  for locale {Locale} ==========");
+            Log($"========== End of translations  for locale {CultureCode} ==========");
         }
 
         private void Log(string trace)
