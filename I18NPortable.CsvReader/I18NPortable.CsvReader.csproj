@@ -3,6 +3,17 @@
   <PropertyGroup>
     <TargetFramework>netstandard1.1</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Jakub Dorda</Authors>
+    <Company>Jakub Dorda</Company>
+    <Description>I18NPortable plugin to support csv file formats</Description>
+    <Copyright>Copyright 2018</Copyright>
+    <PackageLicenseUrl>https://github.com/xleon/I18N-Portable/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/xleon/I18N-Portable</PackageProjectUrl>
+    <PackageIconUrl>https://dl.dropboxusercontent.com/u/10633236/logo.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/xleon/I18N-Portable</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>I18N, Internationalization, Translations, Xamarin, Xamarin.Forms, Mvvm, Xamarin.iOS, Xamarin.Android, iOS, Android, UWP, Windows Universal</PackageTags>
+    <PackageReleaseNotes>Relase notes at https://github.com/xleon/I18N-Portable/releases</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
