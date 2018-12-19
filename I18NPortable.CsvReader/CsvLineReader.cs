@@ -4,7 +4,7 @@ using System.IO;
 
 namespace I18NPortable.CsvReader
 {
-    public class CsvReader : ILocaleReader
+    public class CsvLineReader : ILocaleReader
     {
         public Dictionary<string, string> Read(Stream stream)
         {
@@ -15,9 +15,18 @@ namespace I18NPortable.CsvReader
 
                 while ((line = streamReader.ReadLine()) != null)
                 {
+                    line = line.Replace("\\n", "\n");
+                    line = line.Replace("\\r", "\r");
+
+                    if (line.IndexOf("\n", StringComparison.Ordinal) != -1 && 
+                        line.IndexOf("\r\n", StringComparison.Ordinal) == -1)
+                    {
+                        line = line.Replace("\n", "\r\n");
+                    }
+
                     var semicolonIndex = line.IndexOf(";", StringComparison.Ordinal);
                     var keyStr = line.Substring(0, semicolonIndex);
-                    var valueStr = line.Substring(semicolonIndex + 1, line.Length - 1);
+                    var valueStr = line.Substring(semicolonIndex + 1, line.Length - semicolonIndex - 1);
                     langDictionary.Add(keyStr, valueStr);
                 }
 

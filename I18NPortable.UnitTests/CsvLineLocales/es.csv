@@ -1,0 +1,13 @@
+﻿one;uno
+two;dos
+three;tres
+Mailbox.Notification;Hola {0}, tienes {1} emails
+TextWithLineBreakCharacters;Línea Uno\r\nLínea dos\r\nLínea Tres
+Animals;Lista de animales
+Animals.Dog;Perro
+Animals.Cat;Gato
+Animals.Rat;Rata
+Animals.Snake;Serpiente\nBuena
+Fruit.Orange;gran naranja
+Fruit.Apple;manzana grande
+Fruit.Banana;plátano
