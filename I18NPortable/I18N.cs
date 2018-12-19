@@ -86,6 +86,7 @@ namespace I18NPortable
         private Dictionary<string, string> _translations = new Dictionary<string, string>();
         private readonly IList<ILocaleProvider> _providers = new List<ILocaleProvider>();
         private readonly IList<Tuple<ILocaleReader, string>> _readers = new List<Tuple<ILocaleReader, string>>();
+        private readonly IList<Tuple<IMultiLanguageLocaleReader, string>> _multiLangReaders = new List<Tuple<IMultiLanguageLocaleReader, string>>();
         private IList<string> _locales = new List<string>();
         private Dictionary<string, string> _localeFileExtensionMap;
         private bool _throwWhenKeyNotFound;
@@ -93,6 +94,9 @@ namespace I18NPortable
         private string _fallbackLocale;
         private Action<string> _logger;
         private string _resourcesFolder;
+        private bool _multiLangMode;
+        private string _multiLangLocaleManifestFileName;
+        private string _multiLangResourcesFileName;
 
         #region Fluent API
 
@@ -171,19 +175,54 @@ namespace I18NPortable
         }
 
         /// <summary>
+        /// Switches II18N into multiLang mode - multiple languages in single file, locales manifest in separate file
+        /// </summary>
+        /// <returns></returns>
+        public II18N MultiLanguageResourcesMode(string localeManifestFileName, string resourcesFileName)
+        {
+            _multiLangMode = true;
+            _multiLangLocaleManifestFileName = localeManifestFileName;
+            _multiLangResourcesFileName = resourcesFileName;
+            Log($"MultiLanguage mode set");
+
+            return this;
+        }
+
+        public II18N AddMultiLanguageLocaleReader(IMultiLanguageLocaleReader multiLangReader, string extension)
+        {
+            if (multiLangReader == null)
+                throw new I18NException(ErrorMessages.ReaderNull);
+
+            if (string.IsNullOrEmpty(extension))
+                throw new I18NException(ErrorMessages.ReaderExtensionNeeded);
+
+            if (!extension.StartsWith("."))
+                throw new I18NException(ErrorMessages.ReaderExtensionStartWithDot);
+
+            if (extension.Length < 2)
+                throw new I18NException(ErrorMessages.ReaderExtensionOneChar);
+
+            if (extension.Split('.').Length - 1 > 1)
+                throw new I18NException(ErrorMessages.ReaderExtensionJustOneDot);
+
+            if (_multiLangReaders.Any(x => x.Item2.Equals(extension)))
+                throw new I18NException(ErrorMessages.ReaderExtensionTwice);
+
+            if (_multiLangReaders.Any(x => x.Item1 == multiLangReader))
+                throw new I18NException(ErrorMessages.ReaderTwice);
+
+            _multiLangReaders.Add(new Tuple<IMultiLanguageLocaleReader, string>(multiLangReader, extension));
+
+            return this;
+        }
+
+        /// <summary>
         /// Call this when your app starts
         /// ie: <code>I18N.Current.Init(GetType().GetTypeInfo().Assembly);</code>
         /// </summary>
         /// <param name="hostAssembly">The assembly that hosts the locale text files</param>
         public II18N Init(Assembly hostAssembly)
         {
-            if (_readers.FirstOrDefault(x => x.Item1 is TextKvpReader && x.Item2 == ".txt") == null)
-            {
-                _readers.Insert(0, new Tuple<ILocaleReader, string>(new TextKvpReader(), ".txt"));
-            }
-
-            var knownFileExtensions = _readers.Select(x => x.Item2);
-
             foreach (var provider in _providers)
             {
                 provider.Dispose();
@@ -191,14 +230,45 @@ namespace I18NPortable
 
             _providers.Clear(); // temporal until other providers are implemented
 
-            if (_providers.FirstOrDefault(x => x is EmbeddedResourceProvider) == null)
+            if (!_multiLangMode)
             {
-                var resourcesFolder = _resourcesFolder ?? "Locales";
-                var defaultProvider = new EmbeddedResourceProvider(hostAssembly, resourcesFolder, knownFileExtensions)
-                    .SetLogger(Log)
-                    .Init();
+                if (_readers.FirstOrDefault(x => x.Item1 is TextKvpReader && x.Item2 == ".txt") == null)
+                {
+                    _readers.Insert(0, new Tuple<ILocaleReader, string>(new TextKvpReader(), ".txt"));
+                }
 
-                _providers.Add(defaultProvider);
+                var knownFileExtensions = _readers.Select(x => x.Item2);
+                
+                if (_providers.FirstOrDefault(x => x is EmbeddedResourceProvider) == null)
+                {
+                    var resourcesFolder = _resourcesFolder ?? "Locales";
+                    var defaultProvider =
+                        new EmbeddedResourceProvider(hostAssembly, resourcesFolder, knownFileExtensions)
+                            .SetLogger(Log)
+                            .Init();
+
+                    _providers.Add(defaultProvider);
+                }
+            }
+            else
+            {
+                if (!_multiLangReaders.Any())
+                    throw new I18NException("MultiLanguage mode set, but no multiLanguage readers were added");
+
+                var knownFileExtensions = _multiLangReaders.Select(x => x.Item2);
+
+                if (_providers.FirstOrDefault(x => x is MultiLanguageEmbeddedResourceProvider) == null)
+                {
+                    var resourcesFolder = _resourcesFolder ?? "Locales";
+                    var languageManifestFile = _multiLangLocaleManifestFileName ?? "LangManifest.txt";
+                    var defaultProvider =
+                        new MultiLanguageEmbeddedResourceProvider(
+                                hostAssembly, resourcesFolder, languageManifestFile, knownFileExtensions)
+                            .SetLogger(Log)
+                            .Init();
+
+                    _providers.Add(defaultProvider);
+                }
             }
 
             var localeTuples = _providers.First().GetAvailableLocales().ToList();
