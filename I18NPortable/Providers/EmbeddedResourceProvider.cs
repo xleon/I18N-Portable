@@ -8,60 +8,60 @@ namespace I18NPortable.Providers
 {
     internal class EmbeddedResourceProvider : ILocaleProvider
     {
-        protected readonly Dictionary<string, string> Locales = new Dictionary<string, string>(); // ie: [es] = "Project.Locales.es.txt"
-        protected readonly Assembly HostAssembly;
-        protected readonly string ResourceFolder;
-        protected readonly IEnumerable<string> KnownFileExtensions;
-        protected Action<string> Logger;
+        private readonly Dictionary<string, string> _locales = new Dictionary<string, string>(); // ie: [es] = "Project.Locales.es.txt"
+        private readonly Assembly _hostAssembly;
+        private readonly string _resourceFolder;
+        private readonly IEnumerable<string> _knownFileExtensions;
+        private Action<string> _logger;
 
         public EmbeddedResourceProvider(Assembly hostAssembly, string resourceFolder, IEnumerable<string> knownFileExtensions)
         {
-            HostAssembly = hostAssembly;
-            ResourceFolder = resourceFolder;
-            KnownFileExtensions = knownFileExtensions;
+            _hostAssembly = hostAssembly;
+            _resourceFolder = resourceFolder;
+            _knownFileExtensions = knownFileExtensions;
         }
 
         public ILocaleProvider SetLogger(Action<string> logger)
         {
-            Logger = logger;
+            _logger = logger;
             return this;
         }
 
         public Stream GetLocaleStream(string locale)
         {
-            var resourceName = Locales[locale];
-            return HostAssembly.GetManifestResourceStream(resourceName);
+            var resourceName = _locales[locale];
+            return _hostAssembly.GetManifestResourceStream(resourceName);
         }
 
         public ILocaleProvider Init()
         {
-            DiscoverLocales(HostAssembly);
+            DiscoverLocales(_hostAssembly);
 
-            if (Locales?.Count == 0)
+            if (_locales?.Count == 0)
             {
-                throw new I18NException($"{ErrorMessages.NoLocalesFound}: {HostAssembly.FullName}");
+                throw new I18NException($"{ErrorMessages.NoLocalesFound}: {_hostAssembly.FullName}");
             }
 
             return this;
         }
 
-        public IEnumerable<Tuple<string, string>> GetAvailableLocales() => Locales.Select(x =>
+        public IEnumerable<Tuple<string, string>> GetAvailableLocales() => _locales.Select(x =>
         {
             var extension = x.Value.Substring(x.Value.LastIndexOf('.'));
             return new Tuple<string, string>(x.Key, extension);
         });
 
-        protected void DiscoverLocales(Assembly hostAssembly)
+        private void DiscoverLocales(Assembly hostAssembly)
         {
-            Logger?.Invoke("Getting available locales...");
+            _logger?.Invoke("Getting available locales...");
 
             var localeResources = hostAssembly
                 .GetManifestResourceNames()
-                .Where(x => x.Contains($".{ResourceFolder}."));
+                .Where(x => x.Contains($".{_resourceFolder}."));
 
             var supportedResources = 
                 (from name in localeResources
-                 from extension in KnownFileExtensions
+                 from extension in _knownFileExtensions
                  where name.EndsWith(extension)
                  select name)
                  .ToList();
@@ -69,8 +69,8 @@ namespace I18NPortable.Providers
             if (supportedResources.Count == 0)
             {
                 throw new I18NException("No locales have been found. Make sure you´ve got a folder " +
-                                    $"called '{ResourceFolder}' containing embedded resource files " +
-                                    $"(with extensions {string.Join(" or ", KnownFileExtensions)}) " +
+                                    $"called '{_resourceFolder}' containing embedded resource files " +
+                                    $"(with extensions {string.Join(" or ", _knownFileExtensions)}) " +
                                     "in the host assembly");
             }
 
@@ -79,21 +79,21 @@ namespace I18NPortable.Providers
                 var parts = resource.Split('.');
                 var localeName = parts[parts.Length - 2];
 
-                if (Locales.ContainsKey(localeName))
+                if (_locales.ContainsKey(localeName))
                 {
-                    throw new I18NException($"The locales folder '{ResourceFolder}' contains a duplicated locale '{localeName}'");
+                    throw new I18NException($"The locales folder '{_resourceFolder}' contains a duplicated locale '{localeName}'");
                 }
 
-                Locales.Add(localeName, resource);
+                _locales.Add(localeName, resource);
             }
 
-            Logger?.Invoke($"Found {supportedResources.Count} locales: {string.Join(", ", Locales.Keys.ToArray())}");
+            _logger?.Invoke($"Found {supportedResources.Count} locales: {string.Join(", ", _locales.Keys.ToArray())}");
         }
 
         public void Dispose()
         {
-            Locales.Clear();
-            Logger = null;
+            _locales.Clear();
+            _logger = null;
         }
     }
 }

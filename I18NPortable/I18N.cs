@@ -270,7 +270,7 @@ namespace I18NPortable
             else
             {
                 if (!_singleFileReaders.Any())
-                    throw new I18NException("MultiLanguage mode set, but no SingleFileLocaleReaders were added");
+                    throw new I18NException("MultiLanguage mode set, but no SingleFileLocaleReaders were added"); //Todo impl SingleFileTextKvpReader
 
                 var knownFileExtensions = _singleFileReaders.Select(x => x.Item2);
 
@@ -279,7 +279,7 @@ namespace I18NPortable
                     var resourcesFolder = _resourcesFolder ?? "Locales";
                     var defaultProvider =
                         new SingleFileEmbeddedResourceProvider(
-                                hostAssembly, resourcesFolder, _singleFileLocaleManifestFileName, knownFileExtensions)
+                                hostAssembly, resourcesFolder, _singleFileLocaleManifestFileName, _singleFileResourcesFileName)
                             .SetLogger(Log)
                             .Init();
 
