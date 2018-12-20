@@ -3,7 +3,7 @@ using System.IO;
 
 namespace I18NPortable
 {
-    public interface IMultiLanguageLocaleReader
+    public interface ISingleFileLocaleReader
     {
         Dictionary<string, string> Read(Stream stream, string locale);
     }

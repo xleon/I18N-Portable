@@ -86,7 +86,7 @@ namespace I18NPortable
         private Dictionary<string, string> _translations = new Dictionary<string, string>();
         private readonly IList<ILocaleProvider> _providers = new List<ILocaleProvider>();
         private readonly IList<Tuple<ILocaleReader, string>> _readers = new List<Tuple<ILocaleReader, string>>();
-        private readonly IList<Tuple<IMultiLanguageLocaleReader, string>> _multiLangReaders = new List<Tuple<IMultiLanguageLocaleReader, string>>();
+        private readonly IList<Tuple<ISingleFileLocaleReader, string>> _singleFileReaders = new List<Tuple<ISingleFileLocaleReader, string>>();
         private IList<string> _locales = new List<string>();
         private Dictionary<string, string> _localeFileExtensionMap;
         private bool _throwWhenKeyNotFound;
@@ -94,9 +94,9 @@ namespace I18NPortable
         private string _fallbackLocale;
         private Action<string> _logger;
         private string _resourcesFolder;
-        private bool _multiLangMode;
-        private string _multiLangLocaleManifestFileName;
-        private string _multiLangResourcesFileName;
+        private bool _singleFileMode;
+        private string _singleFileLocaleManifestFileName;
+        private string _singleFileResourcesFileName;
 
         #region Fluent API
 
@@ -175,22 +175,39 @@ namespace I18NPortable
         }
 
         /// <summary>
-        /// Switches II18N into multiLang mode - multiple languages in single file, locales manifest in separate file
+        /// Switches II18N into single file mode - multiple languages in single file, locale manifest in separate file
+        /// - use default manifest and resources file names
         /// </summary>
         /// <returns></returns>
-        public II18N MultiLanguageResourcesMode(string localeManifestFileName, string resourcesFileName)
+        public II18N SingleFileResourcesMode()
         {
-            _multiLangMode = true;
-            _multiLangLocaleManifestFileName = localeManifestFileName;
-            _multiLangResourcesFileName = resourcesFileName;
-            Log($"MultiLanguage mode set");
+            _singleFileMode = true;
+            _singleFileLocaleManifestFileName = "localeManifest.txt";
+            _singleFileResourcesFileName = "resources";
+            Log($"Single file mode set on");
 
             return this;
         }
 
-        public II18N AddMultiLanguageLocaleReader(IMultiLanguageLocaleReader multiLangReader, string extension)
+        /// <summary>
+        /// Switches II18N into single file mode - multiple languages in single file, locale manifest in separate file
+        /// </summary>
+        /// <param name="localeManifestFileName">Custom locale manifest file name</param>
+        /// <param name="resourcesFileName">Custom resources file name</param>
+        /// <returns></returns>
+        public II18N SingleFileResourcesMode(string localeManifestFileName, string resourcesFileName)
         {
-            if (multiLangReader == null)
+            _singleFileMode = true;
+            _singleFileLocaleManifestFileName = localeManifestFileName;
+            _singleFileResourcesFileName = resourcesFileName;
+            Log($"Single file mode set on");
+
+            return this;
+        }
+
+        public II18N AddSingleFileLocaleReader(ISingleFileLocaleReader singleFileReader, string extension)
+        {
+            if (singleFileReader == null)
                 throw new I18NException(ErrorMessages.ReaderNull);
 
             if (string.IsNullOrEmpty(extension))
@@ -205,13 +222,13 @@ namespace I18NPortable
             if (extension.Split('.').Length - 1 > 1)
                 throw new I18NException(ErrorMessages.ReaderExtensionJustOneDot);
 
-            if (_multiLangReaders.Any(x => x.Item2.Equals(extension)))
+            if (_singleFileReaders.Any(x => x.Item2.Equals(extension)))
                 throw new I18NException(ErrorMessages.ReaderExtensionTwice);
 
-            if (_multiLangReaders.Any(x => x.Item1 == multiLangReader))
+            if (_singleFileReaders.Any(x => x.Item1 == singleFileReader))
                 throw new I18NException(ErrorMessages.ReaderTwice);
 
-            _multiLangReaders.Add(new Tuple<IMultiLanguageLocaleReader, string>(multiLangReader, extension));
+            _singleFileReaders.Add(new Tuple<ISingleFileLocaleReader, string>(singleFileReader, extension));
 
             return this;
         }
@@ -230,7 +247,7 @@ namespace I18NPortable
 
             _providers.Clear(); // temporal until other providers are implemented
 
-            if (!_multiLangMode)
+            if (!_singleFileMode)
             {
                 if (_readers.FirstOrDefault(x => x.Item1 is TextKvpReader && x.Item2 == ".txt") == null)
                 {
@@ -252,18 +269,17 @@ namespace I18NPortable
             }
             else
             {
-                if (!_multiLangReaders.Any())
-                    throw new I18NException("MultiLanguage mode set, but no multiLanguage readers were added");
+                if (!_singleFileReaders.Any())
+                    throw new I18NException("MultiLanguage mode set, but no SingleFileLocaleReaders were added");
 
-                var knownFileExtensions = _multiLangReaders.Select(x => x.Item2);
+                var knownFileExtensions = _singleFileReaders.Select(x => x.Item2);
 
-                if (_providers.FirstOrDefault(x => x is MultiLanguageEmbeddedResourceProvider) == null)
+                if (_providers.FirstOrDefault(x => x is SingleFileEmbeddedResourceProvider) == null)
                 {
                     var resourcesFolder = _resourcesFolder ?? "Locales";
-                    var languageManifestFile = _multiLangLocaleManifestFileName ?? "LangManifest.txt";
                     var defaultProvider =
-                        new MultiLanguageEmbeddedResourceProvider(
-                                hostAssembly, resourcesFolder, languageManifestFile, knownFileExtensions)
+                        new SingleFileEmbeddedResourceProvider(
+                                hostAssembly, resourcesFolder, _singleFileLocaleManifestFileName, knownFileExtensions)
                             .SetLogger(Log)
                             .Init();
 

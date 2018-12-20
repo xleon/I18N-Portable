@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Reflection;
 
 namespace I18NPortable.Providers
 {
-    internal class MultiLanguageEmbeddedResourceProvider : EmbeddedResourceProvider
+    internal class SingleFileEmbeddedResourceProvider : EmbeddedResourceProvider
     {
         private string _languageManifestFile;
 
-        public MultiLanguageEmbeddedResourceProvider(
+        public SingleFileEmbeddedResourceProvider(
             Assembly hostAssembly, string resourceFolder, string languageManifestFile, IEnumerable<string> knownFileExtensions) 
             : base(hostAssembly, resourceFolder, knownFileExtensions)
         {

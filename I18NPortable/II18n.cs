@@ -18,8 +18,9 @@ namespace I18NPortable
         II18N SetFallbackLocale(string locale);
         II18N SetResourcesFolder(string folderName);
         II18N AddLocaleReader(ILocaleReader reader, string extension);
-        II18N MultiLanguageResourcesMode(string localeManifestFileName, string resourcesFileName);
-        II18N AddMultiLanguageLocaleReader(IMultiLanguageLocaleReader multiLangReader, string extension);
+        II18N SingleFileResourcesMode();
+        II18N SingleFileResourcesMode(string localeManifestFileName, string resourcesFileName);
+        II18N AddSingleFileLocaleReader(ISingleFileLocaleReader singleFileReader, string extension);
         II18N Init(Assembly hostAssembly);
 
         string GetDefaultLocale();
