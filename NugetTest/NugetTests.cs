@@ -1,5 +1,5 @@
-﻿using I18NPortable; //imported from project not from NuGet repository Todo re-import after release
-using I18NPortable.CsvReader; //imported from project not from NuGet repository Todo re-import after release
+﻿using I18NPortable; //Todo re-import after release - imported from project not from NuGet repository 
+using I18NPortable.CsvReader; //Todo re-import after release - imported from project not from NuGet repository
 using I18NPortable.JsonReader; 
 using NUnit.Framework;
 

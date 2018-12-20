@@ -59,6 +59,7 @@
     <EmbeddedResource Include="JsonListLocales\en.json" />
     <EmbeddedResource Include="CsvLineLocales\en.csv" />
     <EmbeddedResource Include="CsvLineLocales\es.csv" />
+    <EmbeddedResource Include="CsvColSingleFileLocales\resources.csv" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -114,6 +115,9 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="CsvColSingleFileLocales\localeManifest.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
