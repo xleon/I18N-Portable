@@ -256,11 +256,11 @@ namespace I18NPortable
 
                 var knownFileExtensions = _readers.Select(x => x.Item2);
                 
-                if (_providers.FirstOrDefault(x => x is EmbeddedResourceProvider) == null)
+                if (_providers.FirstOrDefault(x => x is MultiFileEmbeddedResourceProvider) == null)
                 {
                     var resourcesFolder = _resourcesFolder ?? "Locales";
                     var defaultProvider =
-                        new EmbeddedResourceProvider(hostAssembly, resourcesFolder, knownFileExtensions)
+                        new MultiFileEmbeddedResourceProvider(hostAssembly, resourcesFolder, knownFileExtensions)
                             .SetLogger(Log)
                             .Init();
 
