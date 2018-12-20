@@ -272,8 +272,6 @@ namespace I18NPortable
                 if (!_singleFileReaders.Any())
                     throw new I18NException("MultiLanguage mode set, but no SingleFileLocaleReaders were added"); //Todo impl SingleFileTextKvpReader
 
-                var knownFileExtensions = _singleFileReaders.Select(x => x.Item2);
-
                 if (_providers.FirstOrDefault(x => x is SingleFileEmbeddedResourceProvider) == null)
                 {
                     var resourcesFolder = _resourcesFolder ?? "Locales";
@@ -334,18 +332,34 @@ namespace I18NPortable
             _translations.Clear();
 
             var extension = _localeFileExtensionMap[locale];
-            var reader = _readers.First(x => x.Item2.Equals(extension)).Item1;
 
-            try
+            if (!_singleFileMode)
             {
-                _translations = reader.Read(stream) ?? new Dictionary<string, string>();
+                var reader = _readers.First(x => x.Item2.Equals(extension)).Item1;
+                try
+                {
+                    _translations = reader.Read(stream) ?? new Dictionary<string, string>();
+                }
+                catch (Exception e)
+                {
+                    var message = $"{ErrorMessages.ReaderException}.\nReader: {reader.GetType().Name}.\nLocale: {locale}{extension}";
+                    throw new I18NException(message, e);
+                }
             }
-            catch (Exception e)
+            else
             {
-                var message = $"{ErrorMessages.ReaderException}.\nReader: {reader.GetType().Name}.\nLocale: {locale}{extension}";
-                throw new I18NException(message, e);
+                var reader = _singleFileReaders.First(x => x.Item2.Equals(extension)).Item1;
+                try
+                {
+                    _translations = reader.Read(stream, locale) ?? new Dictionary<string, string>();
+                }
+                catch (Exception e)
+                {
+                    var message = $"{ErrorMessages.ReaderException}.\nReader: {reader.GetType().Name}.\nLocale: {locale}{extension}";
+                    throw new I18NException(message, e);
+                }
             }
-            
+
             LogTranslations();
 
             _locale = locale;
