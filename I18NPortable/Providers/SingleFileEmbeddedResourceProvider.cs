@@ -50,7 +50,7 @@ namespace I18NPortable.Providers
                     continue;
                 }
 
-                if (file.EndsWith(_resourcesFile))
+                if (Path.GetFileNameWithoutExtension(file).EndsWith(Path.GetFileNameWithoutExtension(_resourcesFile)))
                 {
                     resourcesFilePath = file;
                 }

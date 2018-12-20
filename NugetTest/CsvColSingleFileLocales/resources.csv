@@ -1,0 +1,14 @@
+﻿key;en;es
+one;one;uno
+two;two;dos
+three;three;tres
+Mailbox.Notification;Hello {0}, you´ve got {1} emails;Hola {0}, tienes {1} emails
+TextWithLineBreakCharacters;Line One\nLine Two\nLine Three;Línea Uno\r\nLínea dos\r\nLínea Tres
+Animals;List of animals;Lista de animales
+Animals.Dog;Dog;Perro
+Animals.Cat;Cat;Gato
+Animals.Rat;Rat;Rata
+Animals.Snake;Good\nSnake;Serpiente\nBuena
+Fruit.Orange;great orange;gran naranja
+Fruit.Apple;big apple;manzana grande
+Fruit.Banana;nice banana;plátano
