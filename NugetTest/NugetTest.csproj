@@ -110,15 +110,27 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <EmbeddedResource Include="JsonKvpLocales\en.json" />
     <EmbeddedResource Include="JsonKvpLocales\es.json" />
     <EmbeddedResource Include="JsonListLocales\en.json" />
     <EmbeddedResource Include="JsonListLocales\es.json" />
-    <None Include="packages.config" />
+    <EmbeddedResource Include="CsvLineLocales\en.csv" />
+    <EmbeddedResource Include="CsvLineLocales\es.csv" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\I18NPortable.CsvReader\I18NPortable.CsvReader.csproj">
+      <Project>{b7ee8045-18a3-469f-ae1f-68837052d280}</Project>
+      <Name>I18NPortable.CsvReader</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
