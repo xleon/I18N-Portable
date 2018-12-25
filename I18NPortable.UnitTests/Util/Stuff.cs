@@ -53,7 +53,7 @@ namespace I18NPortable.UnitTests.Util
        
         public II18N SingleFileResourcesMode(string localeManifestFileName, string resourcesFileName) => throw new NotImplementedException();
  
-        public II18N AddSingleFileLocaleReader(ISingleFileLocaleReader singleFileReader, string extension) => throw new NotImplementedException();
+        public II18N SetSingleFileLocaleReader(ISingleFileLocaleReader singleFileReader, string extension) => throw new NotImplementedException();
 
         public II18N Init(Assembly hostAssembly) => throw new NotImplementedException();
 

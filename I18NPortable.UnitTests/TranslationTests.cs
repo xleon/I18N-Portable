@@ -78,7 +78,7 @@ namespace I18NPortable.UnitTests
             I18N.Current = new I18N()
                 .SetResourcesFolder("CsvColSingleFileLocales")
                 .SingleFileResourcesMode()
-                .AddSingleFileLocaleReader(new CsvColSingleFileReader(), ".csv")
+                .SetSingleFileLocaleReader(new CsvColSingleFileReader(), ".csv")
                 .Init(GetType().Assembly);
 
             I18N.Current.Locale = locale;
@@ -91,7 +91,7 @@ namespace I18NPortable.UnitTests
             I18N.Current = new I18N()
                 .SetResourcesFolder("JsonKvpSingleFileLocales")
                 .SingleFileResourcesMode()
-                .AddSingleFileLocaleReader(new JsonKvpSingleFileReader(), ".json")
+                .SetSingleFileLocaleReader(new JsonKvpSingleFileReader(), ".json")
                 .Init(GetType().Assembly);
 
             I18N.Current.Locale = locale;
@@ -104,7 +104,7 @@ namespace I18NPortable.UnitTests
             I18N.Current = new I18N()
                 .SetResourcesFolder("JsonListSingleFileLocales")
                 .SingleFileResourcesMode()
-                .AddSingleFileLocaleReader(new JsonListSingleFileReader(), ".json")
+                .SetSingleFileLocaleReader(new JsonListSingleFileReader(), ".json")
                 .Init(GetType().Assembly);
 
             I18N.Current.Locale = locale;
@@ -117,7 +117,7 @@ namespace I18NPortable.UnitTests
             I18N.Current = new I18N()
                 .SetResourcesFolder("SingleFileLocales")
                 .SingleFileResourcesMode()
-                .AddSingleFileLocaleReader(new TextKvpSingleFileReader(), ".txt")
+                .SetSingleFileLocaleReader(new TextKvpSingleFileReader(), ".txt")
                 .Init(GetType().Assembly);
 
             I18N.Current.Locale = locale;
@@ -170,7 +170,7 @@ namespace I18NPortable.UnitTests
             I18N.Current = new I18N()
                 .SetResourcesFolder("CsvColSingleFileLocales")
                 .SingleFileResourcesMode()
-                .AddSingleFileLocaleReader(new CsvColSingleFileReader(), ".csv")
+                .SetSingleFileLocaleReader(new CsvColSingleFileReader(), ".csv")
                 .Init(GetType().Assembly);
 
             I18N.Current.Locale = locale;
@@ -181,7 +181,7 @@ namespace I18NPortable.UnitTests
             I18N.Current = new I18N()
                 .SetResourcesFolder("JsonKvpSingleFileLocales")
                 .SingleFileResourcesMode()
-                .AddSingleFileLocaleReader(new JsonKvpSingleFileReader(), ".json")
+                .SetSingleFileLocaleReader(new JsonKvpSingleFileReader(), ".json")
                 .Init(GetType().Assembly);
 
             I18N.Current.Locale = locale;
@@ -192,7 +192,7 @@ namespace I18NPortable.UnitTests
             I18N.Current = new I18N()
                 .SetResourcesFolder("JsonListSingleFileLocales")
                 .SingleFileResourcesMode()
-                .AddSingleFileLocaleReader(new JsonListSingleFileReader(), ".json")
+                .SetSingleFileLocaleReader(new JsonListSingleFileReader(), ".json")
                 .Init(GetType().Assembly);
 
             I18N.Current.Locale = locale;
@@ -203,7 +203,7 @@ namespace I18NPortable.UnitTests
             I18N.Current = new I18N()
                 .SetResourcesFolder("SingleFileLocales")
                 .SingleFileResourcesMode()
-                .AddSingleFileLocaleReader(new TextKvpSingleFileReader(), ".txt")
+                .SetSingleFileLocaleReader(new TextKvpSingleFileReader(), ".txt")
                 .Init(GetType().Assembly);
 
             I18N.Current.Locale = locale;
@@ -271,7 +271,7 @@ namespace I18NPortable.UnitTests
             I18N.Current = new I18N()
                 .SetResourcesFolder("CsvColSingleFileLocales")
                 .SingleFileResourcesMode()
-                .AddSingleFileLocaleReader(new CsvColSingleFileReader(), ".csv")
+                .SetSingleFileLocaleReader(new CsvColSingleFileReader(), ".csv")
                 .Init(GetType().Assembly);
 
             I18N.Current.Locale = locale;
@@ -286,7 +286,7 @@ namespace I18NPortable.UnitTests
             I18N.Current = new I18N()
                 .SetResourcesFolder("JsonKvpSingleFileLocales")
                 .SingleFileResourcesMode()
-                .AddSingleFileLocaleReader(new JsonKvpSingleFileReader(), ".json")
+                .SetSingleFileLocaleReader(new JsonKvpSingleFileReader(), ".json")
                 .Init(GetType().Assembly);
 
             I18N.Current.Locale = locale;
@@ -301,7 +301,7 @@ namespace I18NPortable.UnitTests
             I18N.Current = new I18N()
                 .SetResourcesFolder("JsonListSingleFileLocales")
                 .SingleFileResourcesMode()
-                .AddSingleFileLocaleReader(new JsonListSingleFileReader(), ".json")
+                .SetSingleFileLocaleReader(new JsonListSingleFileReader(), ".json")
                 .Init(GetType().Assembly);
 
             I18N.Current.Locale = locale;
@@ -316,7 +316,7 @@ namespace I18NPortable.UnitTests
             I18N.Current = new I18N()
                 .SetResourcesFolder("SingleFileLocales")
                 .SingleFileResourcesMode()
-                .AddSingleFileLocaleReader(new TextKvpSingleFileReader(), ".txt")
+                .SetSingleFileLocaleReader(new TextKvpSingleFileReader(), ".txt")
                 .Init(GetType().Assembly);
 
             I18N.Current.Locale = locale;

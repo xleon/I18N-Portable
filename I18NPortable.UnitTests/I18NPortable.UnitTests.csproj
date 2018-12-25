@@ -35,6 +35,8 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SetSingleFileLocaleReaderTests.cs" />
+    <Compile Include="BaseSingleFileTest.cs" />
     <Compile Include="BaseTest.cs" />
     <Compile Include="BindingTests.cs" />
     <Compile Include="CultureTests.cs" />
@@ -42,6 +44,7 @@
     <Compile Include="I18NTests.cs" />
     <Compile Include="AddLocaleReaderTests.cs" />
     <Compile Include="LocaleLoadingTests.cs" />
+    <Compile Include="SingleFileModeTests.cs" />
     <Compile Include="Util\Helpers.cs" />
     <Compile Include="Util\Stuff.cs" />
     <Compile Include="TranslationTests.cs" />
@@ -132,6 +135,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="SingleFileLocales\localeManifest.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SingleFileLocales\customManifest.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SingleFileLocales\customResources.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -86,7 +86,7 @@ namespace I18NPortable
         private Dictionary<string, string> _translations = new Dictionary<string, string>();
         private readonly IList<ILocaleProvider> _providers = new List<ILocaleProvider>();
         private readonly IList<Tuple<ILocaleReader, string>> _readers = new List<Tuple<ILocaleReader, string>>();
-        private readonly IList<Tuple<ISingleFileLocaleReader, string>> _singleFileReaders = new List<Tuple<ISingleFileLocaleReader, string>>();
+        private Tuple<ISingleFileLocaleReader, string> _singleFileReader;
         private IList<string> _locales = new List<string>();
         private Dictionary<string, string> _localeFileExtensionMap;
         private bool _throwWhenKeyNotFound;
@@ -205,7 +205,7 @@ namespace I18NPortable
             return this;
         }
 
-        public II18N AddSingleFileLocaleReader(ISingleFileLocaleReader singleFileReader, string extension)
+        public II18N SetSingleFileLocaleReader(ISingleFileLocaleReader singleFileReader, string extension)
         {
             if (singleFileReader == null)
                 throw new I18NException(ErrorMessages.ReaderNull);
@@ -222,13 +222,7 @@ namespace I18NPortable
             if (extension.Split('.').Length - 1 > 1)
                 throw new I18NException(ErrorMessages.ReaderExtensionJustOneDot);
 
-            if (_singleFileReaders.Any(x => x.Item2.Equals(extension)))
-                throw new I18NException(ErrorMessages.ReaderExtensionTwice);
-
-            if (_singleFileReaders.Any(x => x.Item1 == singleFileReader))
-                throw new I18NException(ErrorMessages.ReaderTwice);
-
-            _singleFileReaders.Add(new Tuple<ISingleFileLocaleReader, string>(singleFileReader, extension));
+            _singleFileReader = new Tuple<ISingleFileLocaleReader, string>(singleFileReader, extension);
 
             return this;
         }
@@ -269,8 +263,10 @@ namespace I18NPortable
             }
             else
             {
-                if (!_singleFileReaders.Any())
-                    throw new I18NException("MultiLanguage mode set, but no SingleFileLocaleReaders were added"); //Todo impl SingleFileTextKvpReader
+                if (_singleFileReader == null)
+                {
+                    _singleFileReader = new Tuple<ISingleFileLocaleReader, string>(new TextKvpSingleFileReader(), ".txt");
+                }
 
                 if (_providers.FirstOrDefault(x => x is SingleFileEmbeddedResourceProvider) == null)
                 {
@@ -348,7 +344,7 @@ namespace I18NPortable
             }
             else
             {
-                var reader = _singleFileReaders.First(x => x.Item2.Equals(extension)).Item1;
+                var reader = _singleFileReader.Item1;
                 try
                 {
                     _translations = reader.Read(stream, locale) ?? new Dictionary<string, string>();

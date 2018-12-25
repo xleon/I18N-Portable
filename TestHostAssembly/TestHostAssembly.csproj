@@ -5,8 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="SingleFileLocales\localeManifest.txt" />
+    <None Remove="SingleFileLocales\resources.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Include="Locales\en.txt" />
     <EmbeddedResource Include="Locales\es.txt" />
+    <EmbeddedResource Include="SingleFileLocales\localeManifest.txt" />
+    <EmbeddedResource Include="SingleFileLocales\resources.txt" />
   </ItemGroup>
 
 </Project>

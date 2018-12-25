@@ -20,7 +20,7 @@ namespace I18NPortable
         II18N AddLocaleReader(ILocaleReader reader, string extension);
         II18N SingleFileResourcesMode();
         II18N SingleFileResourcesMode(string localeManifestFileName, string resourcesFileName);
-        II18N AddSingleFileLocaleReader(ISingleFileLocaleReader singleFileReader, string extension);
+        II18N SetSingleFileLocaleReader(ISingleFileLocaleReader singleFileReader, string extension);
         II18N Init(Assembly hostAssembly);
 
         string GetDefaultLocale();
