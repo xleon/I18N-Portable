@@ -127,5 +127,11 @@
   <ItemGroup>
     <EmbeddedResource Include="JsonListSingleFileLocales\localeManifest.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SingleFileLocales\resources.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SingleFileLocales\localeManifest.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
