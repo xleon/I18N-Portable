@@ -1,6 +1,6 @@
 ﻿using I18NPortable; //Todo re-import after release - imported from project not from NuGet repository 
 using I18NPortable.CsvReader; //Todo re-import after release - imported from project not from NuGet repository
-using I18NPortable.JsonReader; 
+using I18NPortable.JsonReader; //Todo re-import after release - imported from project not from NuGet repository
 using NUnit.Framework;
 
 namespace NugetTest
@@ -54,6 +54,20 @@ namespace NugetTest
                 .SetResourcesFolder("CsvColSingleFileLocales")
                 .SingleFileResourcesMode()
                 .AddSingleFileLocaleReader(new CsvColSingleFileReader(), ".csv")
+                .Init(GetType().Assembly);
+
+            I18N.Current.Locale = "es";
+
+            Assert.AreEqual("uno", "one".Translate());
+        }
+
+        [Test]
+        public void JsonKvpSingleFileReader_ShouldRead_CsvLocales()
+        {
+            I18N.Current = new I18N()
+                .SetResourcesFolder("JsonKvpSingleFileLocales")
+                .SingleFileResourcesMode()
+                .AddSingleFileLocaleReader(new JsonKvpSingleFileReader(), ".json")
                 .Init(GetType().Assembly);
 
             I18N.Current.Locale = "es";

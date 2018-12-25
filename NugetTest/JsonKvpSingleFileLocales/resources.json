@@ -1,0 +1,32 @@
+﻿{
+	"en": {
+		"one": "one",
+		"two": "two",
+		"three": "three",
+		"Mailbox.Notification": "Hello {0}, you´ve got {1} emails",
+		"TextWithLineBreakCharacters": "Line One\nLine Two\nLine Three",
+		"Animals": "List of animals",
+		"Animals.Dog": "Dog",
+		"Animals.Cat": "Cat",
+		"Animals.Rat": "Rat",
+		"Animals.Snake": "Good\nSnake",
+		"Fruit.Orange": "great orange",
+		"Fruit.Apple": "big apple",
+		"Fruit.Banana": "nice banana"
+	},
+	"es": {
+		"one": "uno",
+		"two": "dos",
+		"three": "tres",
+		"Mailbox.Notification": "Hola {0}, tienes {1} emails",
+		"TextWithLineBreakCharacters": "Línea Uno\r\nLínea dos\r\nLínea Tres",
+		"Animals": "Lista de animales",
+		"Animals.Dog": "Perro",
+		"Animals.Cat": "Gato",
+		"Animals.Rat": "Rata",
+		"Animals.Snake": "Serpiente\nBuena",
+		"Fruit.Orange": "gran naranja",
+		"Fruit.Apple": "manzana grande",
+		"Fruit.Banana": "plátano"
+	}
+}
