@@ -74,5 +74,19 @@ namespace NugetTest
 
             Assert.AreEqual("uno", "one".Translate());
         }
+
+        [Test]
+        public void JsonListSingleFileReader_ShouldRead_CsvLocales()
+        {
+            I18N.Current = new I18N()
+                .SetResourcesFolder("JsonListSingleFileLocales")
+                .SingleFileResourcesMode()
+                .AddSingleFileLocaleReader(new JsonListSingleFileReader(), ".json")
+                .Init(GetType().Assembly);
+
+            I18N.Current.Locale = "es";
+
+            Assert.AreEqual("uno", "one".Translate());
+        }
     }
 }

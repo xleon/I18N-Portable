@@ -115,6 +115,7 @@
     <EmbeddedResource Include="CsvLineLocales\es.csv" />
     <EmbeddedResource Include="CsvColSingleFileLocales\resources.csv" />
     <EmbeddedResource Include="JsonKvpSingleFileLocales\resources.json" />
+    <EmbeddedResource Include="JsonListSingleFileLocales\resources.json" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
@@ -141,6 +142,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="JsonKvpSingleFileLocales\localeManifest.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="JsonListSingleFileLocales\localeManifest.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

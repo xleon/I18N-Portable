@@ -99,6 +99,19 @@ namespace I18NPortable.UnitTests
             Assert.AreEqual(translation, I18N.Current[key]);
             Assert.AreEqual(translation, key.Translate());
             Assert.AreEqual(translation, key.TranslateOrNull());
+
+            I18N.Current = new I18N()
+                .SetResourcesFolder("JsonListSingleFileLocales")
+                .SingleFileResourcesMode()
+                .AddSingleFileLocaleReader(new JsonListSingleFileReader(), ".json")
+                .Init(GetType().Assembly);
+
+            I18N.Current.Locale = locale;
+
+            Assert.AreEqual(translation, I18N.Current.Translate(key));
+            Assert.AreEqual(translation, I18N.Current[key]);
+            Assert.AreEqual(translation, key.Translate());
+            Assert.AreEqual(translation, key.TranslateOrNull());
         }
 
         [TestCase("en", "Mailbox.Notification", "Hello Marta, you´ve got 56 emails")]
@@ -155,6 +168,17 @@ namespace I18NPortable.UnitTests
                 .SetResourcesFolder("JsonKvpSingleFileLocales")
                 .SingleFileResourcesMode()
                 .AddSingleFileLocaleReader(new JsonKvpSingleFileReader(), ".json")
+                .Init(GetType().Assembly);
+
+            I18N.Current.Locale = locale;
+
+            Assert.AreEqual(translation, I18N.Current.Translate(key, "Marta", 56));
+            Assert.AreEqual(translation, key.Translate("Marta", 56));
+
+            I18N.Current = new I18N()
+                .SetResourcesFolder("JsonListSingleFileLocales")
+                .SingleFileResourcesMode()
+                .AddSingleFileLocaleReader(new JsonListSingleFileReader(), ".json")
                 .Init(GetType().Assembly);
 
             I18N.Current.Locale = locale;
@@ -238,6 +262,21 @@ namespace I18NPortable.UnitTests
                 .SetResourcesFolder("JsonKvpSingleFileLocales")
                 .SingleFileResourcesMode()
                 .AddSingleFileLocaleReader(new JsonKvpSingleFileReader(), ".json")
+                .Init(GetType().Assembly);
+
+            I18N.Current.Locale = locale;
+
+            textWithLineBreaks = I18N.Current.Translate(key);
+            textWithLineBreaksOrNull = I18N.Current.TranslateOrNull(key);
+            expected = $"{line1}{Environment.NewLine}{line2}{Environment.NewLine}{line3}";
+
+            Assert.AreEqual(expected, textWithLineBreaks);
+            Assert.AreEqual(expected, textWithLineBreaksOrNull);
+
+            I18N.Current = new I18N()
+                .SetResourcesFolder("JsonListSingleFileLocales")
+                .SingleFileResourcesMode()
+                .AddSingleFileLocaleReader(new JsonListSingleFileReader(), ".json")
                 .Init(GetType().Assembly);
 
             I18N.Current.Locale = locale;

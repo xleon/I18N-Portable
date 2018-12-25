@@ -1,0 +1,110 @@
+﻿{
+	"en": [
+		{
+			"key": "one",
+			"value": "one"
+		},
+		{
+			"key": "two",
+			"value": "two"
+		},
+		{
+			"key": "three",
+			"value": "three"
+		},
+		{
+			"key": "Mailbox.Notification",
+			"value": "Hello {0}, you´ve got {1} emails"
+		},
+		{
+			"key": "TextWithLineBreakCharacters",
+			"value": "Line One\nLine Two\nLine Three"
+		},
+		{
+			"key": "Animals",
+			"value": "List of animals"
+		},
+		{
+			"key": "Animals.Dog",
+			"value": "Dog"
+		},
+		{
+			"key": "Animals.Cat",
+			"value": "Cat"
+		},
+		{
+			"key": "Animals.Rat",
+			"value": "Rat"
+		},
+		{
+			"key": "Animals.Snake",
+			"value": "Good\nSnake"
+		},
+		{
+			"key": "Fruit.Orange",
+			"value": "great orange"
+		},
+		{
+			"key": "Fruit.Apple",
+			"value": "big apple"
+		},
+		{
+			"key": "Fruit.Banana",
+			"value": "nice banana"
+		}
+	],
+	"es": [
+		{
+			"key": "one",
+			"value": "uno"
+		},
+		{
+			"key": "two",
+			"value": "dos"
+		},
+		{
+			"key": "three",
+			"value": "tres"
+		},
+		{
+			"key": "Mailbox.Notification",
+			"value": "Hola {0}, tienes {1} emails"
+		},
+		{
+			"key": "TextWithLineBreakCharacters",
+			"value": "Línea Uno\nLínea dos\r\nLínea Tres"
+		},
+		{
+			"key": "Animals",
+			"value": "Lista de animales"
+		},
+		{
+			"key": "Animals.Dog",
+			"value": "Perro"
+		},
+		{
+			"key": "Animals.Cat",
+			"value": "Gato"
+		},
+		{
+			"key": "Animals.Rat",
+			"value": "Rata"
+		},
+		{
+			"key": "Animals.Snake",
+			"value": "Serpiente\nBuena"
+		},
+		{
+			"key": "Fruit.Orange",
+			"value": "gran naranja"
+		},
+		{
+			"key": "Fruit.Apple",
+			"value": "manzana grande"
+		},
+		{
+			"key": "Fruit.Banana",
+			"value": "plátano"
+		}
+	]
+}
