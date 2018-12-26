@@ -59,6 +59,33 @@ From nuget package manager console:
 
 [Other file formats (including custom) supported](https://github.com/xleon/I18N-Portable#custom-formats)
 
+### Single file mode
+
+If you want to keep locales in single file:
+
+- In your PCL/Core project, create a directory called "Locales".
+- Create `localeManifest.txt` each line should have `languageCode` for each language you want to support.
+- Create `resources.txt` with sections for each locale declared in `{localeManifest}.txt`
+- Set "Build Action" to "Embedded Resource" on the properties of each file
+- During initialization call `SingleFileResourcesMode()` or `SingleFileResourcesMode(string localeManifestFileName, string resourcesFileName)` if you want to override default file names.
+
+**localeManifest.txt sample**
+
+	en
+	es
+
+**resources.txt sample**
+
+	[en]
+	one = uno
+    two = dos
+
+	[es]
+	one = uno
+	two = dos
+
+[Other file formats (including custom) supported](https://github.com/xleon/I18N-Portable#custom-formats)
+
 ### Fluent initialization
 
 ```csharp
@@ -155,6 +182,8 @@ I18N.Current
     .Init(GetType().Assembly);
 ```
 
+For single file resources mode use `SetSingleFileLocaleReader(ISingleFileLocaleReader singleFileReader, string extension)`
+
 ### Creating a custom reader for another file format:
 
 It´s very easy to create custom readers/parsers for any file format you wish.
@@ -169,12 +198,19 @@ Given this __en.json__ file
 }
 ```
 
-Creating a custom reader is as simple as implementing `ILocaleReader`:
+Creating a custom reader is as simple as implementing `ILocaleReader` or `ISingleFileLocaleReader`:
 
 ```csharp
 public interface ILocaleReader
 {
     Dictionary<string, string> Read(Stream stream);
+}
+```
+
+```csharp
+public interface ISingleFileLocaleReader
+{
+    Dictionary<string, string> Read(Stream stream, string locale);
 }
 ```
 
