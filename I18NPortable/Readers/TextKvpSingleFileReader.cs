@@ -22,19 +22,17 @@ namespace I18NPortable.Readers
 
                     if (!localeFound)
                     {
-                        if (line.Trim().Equals("###" + locale + "###"))
+                        if (line.Trim().Equals("[" + locale + "]"))
                         {
                             localeFound = true;
                         }
                         continue;
                     }
-                    else
+                    else if (line.Trim().StartsWith("[") && line.Trim().EndsWith("]"))
                     {
-                        if (line.Trim().Equals("###END###"))
-                        {
-                            break;
-                        }
+                        break;
                     }
+                   
 
                     var isEmpty = string.IsNullOrWhiteSpace(line);
                     var isComment = !isEmpty && line.Trim().StartsWith("#");

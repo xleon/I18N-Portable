@@ -1,4 +1,4 @@
-﻿###en###
+﻿[en]
 one = one
 two = two
 three = three
@@ -21,8 +21,7 @@ Fruit.Orange = great orange
 Fruit.Apple = big apple
 Fruit.Banana = nice banana
 
-###END###
-###es###
+[es]
 one = uno
 two = dos
 three = tres
@@ -44,4 +43,3 @@ Animals.Snake = Serpiente\nBuena
 Fruit.Orange = gran naranja
 Fruit.Apple = manzana grande
 Fruit.Banana = plátano
-###END###
