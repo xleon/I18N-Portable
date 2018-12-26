@@ -65,6 +65,8 @@
     <EmbeddedResource Include="CsvColSingleFileLocales\resources.csv" />
     <EmbeddedResource Include="JsonKvpSingleFileLocales\resources.json" />
     <EmbeddedResource Include="JsonListSingleFileLocales\resources.json" />
+    <EmbeddedResource Include="OtherSingleFileLocales\resources.json" />
+    <EmbeddedResource Include="OtherSingleFileLocales\resourcesWeird.weird5" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -141,6 +143,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="SingleFileLocales\customResources.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="OtherSingleFileLocales\localeManifest.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="OtherSingleFileLocales\localeManifestWeird.weird4" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

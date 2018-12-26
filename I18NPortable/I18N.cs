@@ -506,6 +506,7 @@ namespace I18NPortable
             _translations?.Clear();
             _locales?.Clear();
             _readers?.Clear();
+            _singleFileReader = null;
             _localeFileExtensionMap?.Clear();
             _locale = null;
 
