@@ -1,119 +1,45 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{266DE5DB-72CA-4655-ACFE-D3045D23D1D0}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <RootNamespace>I18NPortable.UnitTests</RootNamespace>
-    <AssemblyName>I18NPortable.UnitTests</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>DEBUG;</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.framework, Version=3.6.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\NUnit.3.6.1\lib\net45\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="BaseTest.cs" />
-    <Compile Include="BindingTests.cs" />
-    <Compile Include="CultureTests.cs" />
-    <Compile Include="ExtensionTests.cs" />
-    <Compile Include="I18NTests.cs" />
-    <Compile Include="AddLocaleReaderTests.cs" />
-    <Compile Include="LocaleLoadingTests.cs" />
-    <Compile Include="Util\Helpers.cs" />
-    <Compile Include="Util\Stuff.cs" />
-    <Compile Include="TranslationTests.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Locales\en.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Locales\es.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="JsonKvpLocales\es.json" />
-    <EmbeddedResource Include="JsonListLocales\es.json" />
-    <EmbeddedResource Include="JsonKvpLocales\en.json" />
-    <EmbeddedResource Include="JsonListLocales\en.json" />
-    <EmbeddedResource Include="CsvLineLocales\en.csv" />
-    <EmbeddedResource Include="CsvLineLocales\es.csv" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Locales\pt-BR.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\I18NPortable.CsvReader\I18NPortable.CsvReader.csproj">
-      <Project>{B7EE8045-18A3-469F-AE1F-68837052D280}</Project>
-      <Name>I18NPortable.CsvReader</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\I18NPortable.JsonReader\I18NPortable.JsonReader.csproj">
-      <Project>{fe719a18-689b-4239-9bd2-58c45719b6cb}</Project>
-      <Name>I18NPortable.JsonReader</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\I18NPortable\I18NPortable.csproj">
-      <Project>{4dc53c6b-9f4b-4168-80c9-5d6c8849892e}</Project>
-      <Name>I18NPortable</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TestHostAssembly\TestHostAssembly.csproj">
-      <Project>{0133fcc2-a9ec-4dec-b43e-f0b0f136bffa}</Project>
-      <Name>TestHostAssembly</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Locales\es-MX.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="DuplicatedLocales\es.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="DuplicatedLocales\es.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="OtherLocales\es.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="OtherLocales\en.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Locales\es-CO.badextension" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="OtherLocales\fr.weird1" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="OtherLocales\pt.weird3" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="OtherLocales\ru.weird2" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Connected Services\" />
-  </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.1</TargetFramework>
+
+        <IsPackable>false</IsPackable>
+
+        <LangVersion>latestmajor</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="nunit" Version="3.12.0" />
+        <PackageReference Include="NUnit3TestAdapter" Version="3.16.1" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\I18NPortable.JsonReader\I18NPortable.JsonReader.csproj" />
+      <ProjectReference Include="..\I18NPortable\I18NPortable.csproj" />
+      <ProjectReference Include="..\TestHostAssembly\TestHostAssembly.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Include="DuplicatedLocales\es.json" />
+      <EmbeddedResource Include="DuplicatedLocales\es.txt" />
+      <EmbeddedResource Include="JsonKvpLocales\en.json" />
+      <EmbeddedResource Include="JsonKvpLocales\es.json" />
+      <EmbeddedResource Include="JsonListLocales\en.json" />
+      <EmbeddedResource Include="JsonListLocales\es.json" />
+      <EmbeddedResource Include="Locales\en.txt" />
+      <EmbeddedResource Include="Locales\es-CO.badextension" />
+      <EmbeddedResource Include="Locales\es-MX.txt" />
+      <EmbeddedResource Include="Locales\es.txt" />
+      <EmbeddedResource Include="Locales\pt-BR.txt" />
+      <EmbeddedResource Include="OtherLocales\en.txt" />
+      <EmbeddedResource Include="OtherLocales\es.txt" />
+      <EmbeddedResource Include="OtherLocales\fr.weird1" />
+      <EmbeddedResource Include="OtherLocales\pt.weird3" />
+      <EmbeddedResource Include="OtherLocales\ru.weird2" />
+      <EmbeddedResource Include="CsvLineLocales\en.csv" />
+      <EmbeddedResource Include="CsvLineLocales\es.csv" />
+    </ItemGroup>
+
+    
 </Project>

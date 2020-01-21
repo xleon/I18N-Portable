@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using I18NPortable.CsvReader;
 using I18NPortable.JsonReader;
+using I18NPortable.Readers;
 using I18NPortable.UnitTests.Util;
 using NUnit.Framework;
 
@@ -64,7 +64,7 @@ namespace I18NPortable.UnitTests
 
             I18N.Current = new I18N()
                 .SetResourcesFolder("CsvLineLocales")
-                .AddLocaleReader(new CsvLineReader(), ".csv")
+                .AddLocaleReader(new CsvReader(), ".csv")
                 .Init(GetType().Assembly);
 
             I18N.Current.Locale = locale;
@@ -106,7 +106,7 @@ namespace I18NPortable.UnitTests
 
             I18N.Current = new I18N()
                 .SetResourcesFolder("CsvLineLocales")
-                .AddLocaleReader(new CsvLineReader(), ".csv")
+                .AddLocaleReader(new CsvReader(), ".csv")
                 .Init(GetType().Assembly);
 
             I18N.Current.Locale = locale;
@@ -159,7 +159,7 @@ namespace I18NPortable.UnitTests
 
             I18N.Current = new I18N()
                 .SetResourcesFolder("CsvLineLocales")
-                .AddLocaleReader(new CsvLineReader(), ".csv")
+                .AddLocaleReader(new CsvReader(), ".csv")
                 .Init(GetType().Assembly);
 
             I18N.Current.Locale = locale;
