@@ -11,7 +11,7 @@ namespace Sample.Forms.Core.ViewModels
         
         public Command ChangeLanguageCommand => _changeLangCommand ?? (_changeLangCommand = new Command(async () => await ChangeLanguage()));
 
-        #warning Do not do this
+        // Do not do this
         public Page CurrentPage { get; set; }
 
         private async Task ChangeLanguage()

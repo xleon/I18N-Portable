@@ -11,7 +11,7 @@ namespace Sample.Forms.Core.Views
 
             BindingContext = new MainPageViewModel
             {
-                #warning Do not do this
+                // Do not do this
                 CurrentPage = this
             };
 		}

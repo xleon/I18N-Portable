@@ -214,3 +214,5 @@ _Pvt_Extensions/
 ModelManifest.xml
 
 *.cache
+
+Sample.Forms/Sample.Forms.Android/Resources/Resource.designer.cs
