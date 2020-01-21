@@ -1,14 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.1</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <Version>0.6.0</Version>
     <Authors>Diego Ponce de Leon</Authors>
-    <Company></Company>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Company>xleon</Company>
     <PackageLicenseUrl>https://github.com/xleon/I18N-Portable/blob/master/LICENSE</PackageLicenseUrl>
     <Description>Simple cross platform internationalization/translations for Xamarin and Windows apps</Description>
-    <Copyright>Copyright 2017</Copyright>
     <PackageTags>I18N, Internationalization, Translations, Xamarin, Xamarin.Forms, Mvvm, Xamarin.iOS, Xamarin.Android, iOS, Android, UWP, Windows Universal</PackageTags>
     <PackageReleaseNotes>Relase notes at https://github.com/xleon/I18N-Portable/releases</PackageReleaseNotes>
     <PackageIconUrl>https://dl.dropboxusercontent.com/u/10633236/logo.png</PackageIconUrl>
@@ -16,6 +14,7 @@
     <RepositoryUrl>https://github.com/xleon/I18N-Portable</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <NeutralLanguage>en</NeutralLanguage>
+    <LangVersion>latestmajor</LangVersion>
   </PropertyGroup>
 
 </Project>
