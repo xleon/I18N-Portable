@@ -31,8 +31,6 @@
     <MtouchUseLlvm>False</MtouchUseLlvm>
     <MtouchUseThumb>False</MtouchUseThumb>
     <MtouchEnableBitcode>False</MtouchEnableBitcode>
-    <MtouchUseSGen>True</MtouchUseSGen>
-    <MtouchUseRefCounting>False</MtouchUseRefCounting>
     <OptimizePNGs>True</OptimizePNGs>
     <MtouchTlsProvider>Default</MtouchTlsProvider>
     <MtouchHttpClientHandler>HttpClientHandler</MtouchHttpClientHandler>
@@ -121,7 +119,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\I18NPortable\I18NPortable.csproj">
-      <Project>{e340cbb2-3b77-45a8-8997-e4098d82edbc}</Project>
+      <Project>{4DC53C6B-9F4B-4168-80C9-5D6C8849892E}</Project>
       <Name>I18NPortable</Name>
     </ProjectReference>
     <ProjectReference Include="..\Sample.Classic.Core\Sample.Classic.Core.csproj">

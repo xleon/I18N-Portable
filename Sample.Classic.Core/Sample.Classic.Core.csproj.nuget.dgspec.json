@@ -1,0 +1,32 @@
+{
+  "format": 1,
+  "restore": {
+    "/Users/xleon/Projects/I18N-Portable/Sample.Classic.Core/Sample.Classic.Core.csproj": {}
+  },
+  "projects": {
+    "/Users/xleon/Projects/I18N-Portable/Sample.Classic.Core/Sample.Classic.Core.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/xleon/Projects/I18N-Portable/Sample.Classic.Core/Sample.Classic.Core.csproj",
+        "projectName": "Sample.Classic.Core",
+        "projectPath": "/Users/xleon/Projects/I18N-Portable/Sample.Classic.Core/Sample.Classic.Core.csproj",
+        "projectJsonPath": "/Users/xleon/Projects/I18N-Portable/Sample.Classic.Core/project.json",
+        "packagesPath": "/Users/xleon/.nuget/packages/",
+        "projectStyle": "ProjectJson",
+        "configFilePaths": [
+          "/Users/xleon/.config/NuGet/NuGet.Config"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        }
+      },
+      "dependencies": {
+        "Microsoft.NETCore.Portable.Compatibility": "[1.0.1, )",
+        "NETStandard.Library": "[1.6.0, )"
+      },
+      "frameworks": {
+        "netstandard1.1": {}
+      }
+    }
+  }
+}
