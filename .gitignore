@@ -216,3 +216,5 @@ ModelManifest.xml
 *.cache
 
 Sample.Forms/Sample.Forms.Android/Resources/Resource.designer.cs
+
+.DS_Store
