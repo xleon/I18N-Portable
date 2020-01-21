@@ -68,7 +68,7 @@ namespace I18NPortable.Providers
 
             if (supportedResources.Count == 0)
             {
-                throw new I18NException("No locales have been found. Make sure you´ve got a folder " +
+                throw new I18NException("No locales have been found. Make sure you've got a folder " +
                                     $"called '{_resourceFolder}' containing embedded resource files " +
                                     $"(with extensions {string.Join(" or ", _knownFileExtensions)}) " +
                                     "in the host assembly");

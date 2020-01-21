@@ -13,7 +13,7 @@
   },
   {
     "key": "Mailbox.Notification",
-    "value": "Hello {0}, you´ve got {1} emails"
+    "value": "Hello {0}, you've got {1} emails"
   },
   {
     "key": "TextWithLineBreakCharacters",

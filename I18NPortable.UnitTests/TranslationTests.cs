@@ -75,7 +75,7 @@ namespace I18NPortable.UnitTests
             Assert.AreEqual(translation, key.TranslateOrNull());
         }
 
-        [TestCase("en", "Mailbox.Notification", "Hello Marta, you´ve got 56 emails")]
+        [TestCase("en", "Mailbox.Notification", "Hello Marta, you've got 56 emails")]
         [TestCase("es", "Mailbox.Notification", "Hola Marta, tienes 56 emails")]
         public void Translate_Should_FormatString(string locale, string key, string translation)
         {
