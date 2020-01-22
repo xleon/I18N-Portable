@@ -4,7 +4,7 @@ using System.IO;
 
 namespace I18NPortable.Readers
 {
-    public class SingleLocaleCsvReader : ILocaleReader
+    public class MultipleLocaleCsvReader : ILocaleReader
     {
         public Dictionary<string, string> Read(Stream stream)
         {
