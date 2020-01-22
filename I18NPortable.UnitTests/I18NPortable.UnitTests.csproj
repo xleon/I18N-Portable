@@ -37,6 +37,9 @@
       <EmbeddedResource Include="OtherLocales\fr.weird1" />
       <EmbeddedResource Include="OtherLocales\pt.weird3" />
       <EmbeddedResource Include="OtherLocales\ru.weird2" />
+      <EmbeddedResource Include="CsvLineLocales\en.csv" />
+      <EmbeddedResource Include="CsvLineLocales\es.csv" />
     </ItemGroup>
 
+    
 </Project>

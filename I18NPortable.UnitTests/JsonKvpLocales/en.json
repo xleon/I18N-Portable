@@ -2,7 +2,7 @@
   "one": "one",
   "two": "two",
   "three": "three",
-  "Mailbox.Notification": "Hello {0}, you´ve got {1} emails",
+  "Mailbox.Notification": "Hello {0}, you've got {1} emails",
   "TextWithLineBreakCharacters": "Line One\nLine Two\nLine Three",
   "Animals": "List of animals",
   "Animals.Dog": "Dog",

@@ -75,7 +75,7 @@ I18N.Current
 
 ```csharp
 string one = "one".Translate();
-string notification = "Mailbox.Notification".Translate("Diego", 3); // same as string.Format(params). Output: Hello Diego, you´ve got 3 emails
+string notification = "Mailbox.Notification".Translate("Diego", 3); // same as string.Format(params). Output: Hello Diego, you've got 3 emails
 string missingKey = "missing".Translate(); // if the key is not found the output will be $key$. Output: $missing$
 string giveMeNull = "missing".TranslateOrNull(); // Output: null
 
@@ -157,7 +157,7 @@ I18N.Current
 
 ### Creating a custom reader for another file format:
 
-It´s very easy to create custom readers/parsers for any file format you wish.
+It's very easy to create custom readers/parsers for any file format you wish.
 For instance, lets take a loot at the above mentioned `JsonKvpReader`:
 
 Given this __en.json__ file

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using I18NPortable.JsonReader;
+using I18NPortable.Readers;
 using I18NPortable.UnitTests.Util;
 using NUnit.Framework;
 
@@ -18,7 +19,7 @@ namespace I18NPortable.UnitTests
         [TestCase("en", "Animals.Rat", "Rat")]
         [TestCase("en", "Fruit.Orange", "great orange")]
         [TestCase("en", "Fruit.Apple", "big apple")]
-
+        // --
         [TestCase("es", "one", "uno")]
         [TestCase("es", "two", "dos")]
         [TestCase("es", "three", "tres")]
@@ -30,109 +31,86 @@ namespace I18NPortable.UnitTests
         [TestCase("es", "Fruit.Apple", "manzana grande")]
         public void Keys_ShouldBe_Translated(string locale, string key, string translation)
         {
+            void AssertTranslations()
+            {
+                Assert.AreEqual(translation, I18N.Current.Translate(key));
+                Assert.AreEqual(translation, I18N.Current[key]);
+                Assert.AreEqual(translation, key.Translate());
+                Assert.AreEqual(translation, key.TranslateOrNull());
+            }
+            
             I18N.Current.Locale = locale;
+            AssertTranslations();
 
-            Assert.AreEqual(translation, I18N.Current.Translate(key));
-            Assert.AreEqual(translation, I18N.Current[key]);
-            Assert.AreEqual(translation, key.Translate());
-            Assert.AreEqual(translation, key.TranslateOrNull());
-
-            I18N.Current = new I18N()
-                .SetResourcesFolder("JsonKvpLocales")
-                .AddLocaleReader(new JsonKvpReader(), ".json")
-                .Init(GetType().Assembly);
-
+            Reload("JsonKvpLocales", new JsonKvpReader(), ".json");
             I18N.Current.Locale = locale;
-
-            Assert.AreEqual(translation, I18N.Current.Translate(key));
-            Assert.AreEqual(translation, I18N.Current[key]);
-            Assert.AreEqual(translation, key.Translate());
-            Assert.AreEqual(translation, key.TranslateOrNull());
-
-            I18N.Current = new I18N()
-                .SetResourcesFolder("JsonListLocales")
-                .AddLocaleReader(new JsonListReader(), ".json")
-                .Init(GetType().Assembly);
-
+            AssertTranslations();
+            
+            Reload("JsonListLocales", new JsonListReader(), ".json");
             I18N.Current.Locale = locale;
-
-            Assert.AreEqual(translation, I18N.Current.Translate(key));
-            Assert.AreEqual(translation, I18N.Current[key]);
-            Assert.AreEqual(translation, key.Translate());
-            Assert.AreEqual(translation, key.TranslateOrNull());
+            AssertTranslations();
+            
+            Reload("CsvLineLocales", new SingleLocaleCsvReader(), ".csv");
+            I18N.Current.Locale = locale;
+            AssertTranslations();
         }
 
-        [TestCase("en", "Mailbox.Notification", "Hello Marta, you´ve got 56 emails")]
+        [TestCase("en", "Mailbox.Notification", "Hello Marta, you've got 56 emails")]
         [TestCase("es", "Mailbox.Notification", "Hola Marta, tienes 56 emails")]
         public void Translate_Should_FormatString(string locale, string key, string translation)
         {
+            void AssertTranslations()
+            {
+                Assert.AreEqual(translation, I18N.Current.Translate(key, "Marta", 56));
+                Assert.AreEqual(translation, key.Translate("Marta", 56));
+            }
+            
             I18N.Current.Locale = locale;
+            AssertTranslations();
 
-            Assert.AreEqual(translation, I18N.Current.Translate(key, "Marta", 56));
-            Assert.AreEqual(translation, key.Translate("Marta", 56));
-
-            I18N.Current = new I18N()
-                .SetResourcesFolder("JsonKvpLocales")
-                .AddLocaleReader(new JsonKvpReader(), ".json")
-                .Init(GetType().Assembly);
-
+            Reload("JsonKvpLocales", new JsonKvpReader(), ".json");
             I18N.Current.Locale = locale;
+            AssertTranslations();
 
-            Assert.AreEqual(translation, I18N.Current.Translate(key, "Marta", 56));
-            Assert.AreEqual(translation, key.Translate("Marta", 56));
-
-            I18N.Current = new I18N()
-                .SetResourcesFolder("JsonListLocales")
-                .AddLocaleReader(new JsonListReader(), ".json")
-                .Init(GetType().Assembly);
-
+            Reload("JsonListLocales", new JsonListReader(), ".json");
             I18N.Current.Locale = locale;
+            AssertTranslations();
 
-            Assert.AreEqual(translation, I18N.Current.Translate(key, "Marta", 56));
-            Assert.AreEqual(translation, key.Translate("Marta", 56));
+            Reload("CsvLineLocales", new SingleLocaleCsvReader(), ".csv");
+            I18N.Current.Locale = locale;
+            AssertTranslations();
         }
 
         [TestCase("en", "Line One", "Line Two", "Line Three")]
         [TestCase("es", "Línea Uno", "Línea dos", "Línea Tres")]
         public void Translation_ShouldConsider_LineBreakCharacters(string locale, string line1, string line2, string line3)
         {
-            I18N.Current.Locale = locale;
-
             const string key = "TextWithLineBreakCharacters";
-            var textWithLineBreaks = I18N.Current.Translate(key);
-            var textWithLineBreaksOrNull = I18N.Current.TranslateOrNull(key);
-            var expected = $"{line1}{Environment.NewLine}{line2}{Environment.NewLine}{line3}";
+            
+            void AssertTranslations()
+            {
+                var textWithLineBreaks = I18N.Current.Translate(key);
+                var textWithLineBreaksOrNull = I18N.Current.TranslateOrNull(key);
+                var expected = $"{line1}{Environment.NewLine}{line2}{Environment.NewLine}{line3}";
 
-            Assert.AreEqual(expected, textWithLineBreaks);
-            Assert.AreEqual(expected, textWithLineBreaksOrNull);
-
-            I18N.Current = new I18N()
-                .SetResourcesFolder("JsonKvpLocales")
-                .AddLocaleReader(new JsonKvpReader(), ".json")
-                .Init(GetType().Assembly);
-
+                Assert.AreEqual(expected, textWithLineBreaks);
+                Assert.AreEqual(expected, textWithLineBreaksOrNull);
+            }
+            
             I18N.Current.Locale = locale;
-
-            textWithLineBreaks = I18N.Current.Translate(key);
-            textWithLineBreaksOrNull = I18N.Current.TranslateOrNull(key);
-            expected = $"{line1}{Environment.NewLine}{line2}{Environment.NewLine}{line3}";
-
-            Assert.AreEqual(expected, textWithLineBreaks);
-            Assert.AreEqual(expected, textWithLineBreaksOrNull);
-
-            I18N.Current = new I18N()
-                .SetResourcesFolder("JsonListLocales")
-                .AddLocaleReader(new JsonListReader(), ".json")
-                .Init(GetType().Assembly);
-
+            AssertTranslations();
+            
+            Reload("JsonKvpLocales", new JsonKvpReader(), ".json");
             I18N.Current.Locale = locale;
+            AssertTranslations();
 
-            textWithLineBreaks = I18N.Current.Translate(key);
-            textWithLineBreaksOrNull = I18N.Current.TranslateOrNull(key);
-            expected = $"{line1}{Environment.NewLine}{line2}{Environment.NewLine}{line3}";
+            Reload("JsonListLocales", new JsonListReader(), ".json");
+            I18N.Current.Locale = locale;
+            AssertTranslations();
 
-            Assert.AreEqual(expected, textWithLineBreaks);
-            Assert.AreEqual(expected, textWithLineBreaksOrNull);
+            Reload("CsvLineLocales", new SingleLocaleCsvReader(), ".csv");
+            I18N.Current.Locale = locale;
+            AssertTranslations();
         }
 
         [TestCase("en", "Good", "Snake")]
@@ -236,6 +214,14 @@ namespace I18NPortable.UnitTests
             I18N.Current.SetNotFoundSymbol(string.Empty);
 
             Assert.AreEqual("##missing##", "missing".Translate());
+        }
+        
+        private void Reload(string folder, ILocaleReader reader, string extension)
+        {
+            I18N.Current = new I18N()
+                .SetResourcesFolder(folder)
+                .AddLocaleReader(reader, extension)
+                .Init(GetType().Assembly);
         }
     }
 }
