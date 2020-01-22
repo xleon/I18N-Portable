@@ -50,7 +50,7 @@ namespace I18NPortable.UnitTests
             I18N.Current.Locale = locale;
             AssertTranslations();
             
-            Reload("CsvLineLocales", new SingleLocaleCsvReader(), ".csv");
+            Reload("CsvLineLocales", new MultipleLocaleCsvReader(), ".csv");
             I18N.Current.Locale = locale;
             AssertTranslations();
         }
@@ -76,7 +76,7 @@ namespace I18NPortable.UnitTests
             I18N.Current.Locale = locale;
             AssertTranslations();
 
-            Reload("CsvLineLocales", new SingleLocaleCsvReader(), ".csv");
+            Reload("CsvLineLocales", new MultipleLocaleCsvReader(), ".csv");
             I18N.Current.Locale = locale;
             AssertTranslations();
         }
@@ -108,7 +108,7 @@ namespace I18NPortable.UnitTests
             I18N.Current.Locale = locale;
             AssertTranslations();
 
-            Reload("CsvLineLocales", new SingleLocaleCsvReader(), ".csv");
+            Reload("CsvLineLocales", new MultipleLocaleCsvReader(), ".csv");
             I18N.Current.Locale = locale;
             AssertTranslations();
         }
