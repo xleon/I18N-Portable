@@ -64,7 +64,7 @@ namespace I18NPortable.UnitTests
 
             I18N.Current = new I18N()
                 .SetResourcesFolder("CsvLineLocales")
-                .AddLocaleReader(new CsvReader(), ".csv")
+                .AddLocaleReader(new SingleLocaleCsvReader(), ".csv")
                 .Init(GetType().Assembly);
 
             I18N.Current.Locale = locale;
@@ -106,7 +106,7 @@ namespace I18NPortable.UnitTests
 
             I18N.Current = new I18N()
                 .SetResourcesFolder("CsvLineLocales")
-                .AddLocaleReader(new CsvReader(), ".csv")
+                .AddLocaleReader(new SingleLocaleCsvReader(), ".csv")
                 .Init(GetType().Assembly);
 
             I18N.Current.Locale = locale;
@@ -159,7 +159,7 @@ namespace I18NPortable.UnitTests
 
             I18N.Current = new I18N()
                 .SetResourcesFolder("CsvLineLocales")
-                .AddLocaleReader(new CsvReader(), ".csv")
+                .AddLocaleReader(new SingleLocaleCsvReader(), ".csv")
                 .Init(GetType().Assembly);
 
             I18N.Current.Locale = locale;
