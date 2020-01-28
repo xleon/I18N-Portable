@@ -67,13 +67,13 @@ namespace TranslatorCore
 
     public class TranslatorSetup
     {
-        public bool ThrowWhenKeyNotFound { get; private set; }
-        public string NotFoundSymbol { get; private set; } = "?";
-        public string FallbackLocale { get; private set; }
-        public Action<string> Logger { get; private set; }
-        public string[] SupportedLocales { get; private set; }
-        public List<ILocaleLoader> Loaders { get; } = new List<ILocaleLoader>();
-        public bool AutoReleaseResources { get; private set; } = true;
+        internal bool ThrowExceptionWhenKeyNotFound { get; private set; }
+        internal string NotFoundSymbol { get; private set; } = "?";
+        internal string FallbackLocale { get; private set; }
+        internal Action<string> Logger { get; private set; }
+        internal string[] SupportedLocales { get; private set; }
+        internal List<Func<ILocaleLoader>> Loaders { get; } = new List<Func<ILocaleLoader>>();
+        internal bool ShouldAutoReleaseResources { get; private set; } = true;
 
         /// <summary>
         /// Add an `ILocaleLoader` implementation.
@@ -82,7 +82,13 @@ namespace TranslatorCore
         /// </summary>
         public TranslatorSetup AddLoader(ILocaleLoader loader)
         {
-            Loaders.Add(loader);
+            Loaders.Add(() => loader);
+            return this;
+        }
+
+        public TranslatorSetup AddLoader(Func<ILocaleLoader> loaderFunc)
+        {
+            Loaders.Add(loaderFunc);
             return this;
         }
         
@@ -110,16 +116,16 @@ namespace TranslatorCore
         /// <summary>
         /// Throw an exception whenever a key is not found in the locale file (fail early, fail fast)
         /// </summary>
-        public TranslatorSetup SetThrowWhenKeyNotFound(bool enabled)
+        public TranslatorSetup ThrowWhenKeyNotFound(bool enabled)
         {
-            ThrowWhenKeyNotFound = enabled;
+            ThrowExceptionWhenKeyNotFound = enabled;
             return this;
         }
         
         /// <summary>
         /// Set the locale that will be loaded in case the system language is not supported
         /// </summary>
-        public TranslatorSetup SetFallbackLocale(string locale)
+        public TranslatorSetup FallbackWhenCurrentCultureNotSupported(string locale)
         {
             FallbackLocale = locale;
             return this;
@@ -128,7 +134,7 @@ namespace TranslatorCore
         /// <summary>
         /// Array of supported locale codes
         /// </summary>
-        public TranslatorSetup SetSupportedLocales(params string[] locales)
+        public TranslatorSetup SupportLocales(params string[] locales)
         {
             SupportedLocales = locales;
             return this;
@@ -137,17 +143,20 @@ namespace TranslatorCore
         /// <summary>
         /// Release memory allocation of a loaded resource when a new one (non default resource) is loaded
         /// </summary>
-        public TranslatorSetup SetAutoReleaseResources(bool release)
+        public TranslatorSetup AutoReleaseResources(bool release)
         {
-            AutoReleaseResources = release;
+            ShouldAutoReleaseResources = release;
             return this;
+        }
+
+        public TranslatorSetup DontReleaseResources(params string[] alwaysKeep)
+        {
+            throw new NotImplementedException();
         }
     }
     
     public class Translator : ITranslator
     {
-        private Dictionary<string, string> _overrides;
-        
         #region Singleton
 
         private static ITranslator _current;
@@ -187,6 +196,8 @@ namespace TranslatorCore
             }
         }
 
+        private Dictionary<string, string> _overrides;
+        
         public ITranslator SetOverrides(Dictionary<string, string> translationOverrides)
         {
             _overrides = translationOverrides;
@@ -256,10 +267,19 @@ namespace TranslatorCore
                 throw new TranslatorException(
                     $"Could not load resource. Please add a loader on {nameof(TranslatorSetup)}");
 
-            foreach (var loader in _setup.Loaders)
+            foreach (var loaderFunc in _setup.Loaders)
             {
+                string loaderTypeName = null;
+                
                 try
                 {
+                    var loader = loaderFunc();
+                    
+                    if(loader == null)
+                        throw new TranslatorException("One of the loader functions is returning null");
+                    
+                    loaderTypeName = loader.GetType().Name;
+                    
                     var translations = loader.Load(CultureCode, resource);
                     _resources[resource] = translations 
                         ?? throw new TranslatorException($"Loader {loader.GetType().Name} returned null when " +
@@ -268,18 +288,18 @@ namespace TranslatorCore
                 }
                 catch (Exception ex)
                 {
-                    var message = $"Loader {loader.GetType().Name} failed to load " +
+                    if (ex is TranslatorException)
+                    {
+                        Log(ex.Message);
+                        throw;
+                    }
+                    
+                    var message = $"Loader {loaderTypeName} failed to load " +
                                   $"resource '{resource}' with locale '{CultureCode}'";
                     
                     Log(message);
 
-                    if (_setup.Loaders.Count == 1)
-                    {
-                        if(ex is TranslatorException)
-                            throw;
-                        
-                        throw new TranslatorException(message, ex);
-                    }
+                    throw new TranslatorException(message, ex);
                 }
             }
 
@@ -352,16 +372,13 @@ namespace TranslatorCore
                         $"{nameof(TranslatorSetup)} with {nameof(TranslatorSetup.SupportedLocales)} " +
                         $"must be set before accesing {nameof(CultureCode)}");
                 
+                // TODO create a CultureInfoProvider that comes from platform to work around iOS / Android specific issues
                 var currentCulture = CultureInfo.CurrentCulture;
-                var code = _setup.SupportedLocales.FirstOrDefault(x => x.Equals(currentCulture.Name)) 
-                    ?? _setup.SupportedLocales.FirstOrDefault(x => x.Equals(currentCulture.TwoLetterISOLanguageName));
-
-                if (code == null)
-                {
-                    code = _setup.SupportedLocales.Contains(_setup.FallbackLocale)
-                        ? _setup.FallbackLocale
-                        : _setup.SupportedLocales.First();
-                }
+                var code = (_setup.SupportedLocales.FirstOrDefault(x => x.Equals(currentCulture.Name)) 
+                            ?? _setup.SupportedLocales.FirstOrDefault(x => x.Equals(currentCulture.TwoLetterISOLanguageName))) 
+                            ?? (_setup.SupportedLocales.Contains(_setup.FallbackLocale)
+                               ? _setup.FallbackLocale
+                               : _setup.SupportedLocales.First());
 
                 _cultureCode = code;
                 
@@ -406,7 +423,7 @@ namespace TranslatorCore
         #endregion
     }
 
-    public static class Extensions
+    public static class TranslatorExtensions
     {
 //        Dictionary<TEnum, string> TranslateEnumToDictionary<TEnum>();
 //        List<string> TranslateEnumToList<TEnum>();

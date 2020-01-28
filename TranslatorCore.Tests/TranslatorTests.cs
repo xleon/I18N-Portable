@@ -1,8 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Threading;
-using Moq;
 using NUnit.Framework;
 
 namespace TranslatorCore.Tests
@@ -45,24 +42,29 @@ namespace TranslatorCore.Tests
         [Test]
         public void Translation_overrides_work_without_setup()
         {
-            Translator.Current.SetOverrides(new Dictionary<string, string>
+            var translator = Translator.Current;
+            
+            translator.SetOverrides(new Dictionary<string, string>
             {
                 { "key", "value" }
             });
 
-            Translator.Current.AddOverrides(new Dictionary<string, string>
+            translator.AddOverrides(new Dictionary<string, string>
             {
                 {"key2", "value2"}
             });
             
-            Translator.Current["key3"] = "value3";
+            translator["key3"] = "value3";
             
-            Assert.AreEqual("value", Translator.Current.Translate("key"));
-            Assert.AreEqual("value", Translator.Current.TranslateFrom("key", "res"));
-            Assert.AreEqual("value2", Translator.Current.Translate("key2"));
-            Assert.AreEqual("value2", Translator.Current.TranslateFrom("key2", "res"));
-            Assert.AreEqual("value3", Translator.Current.Translate("key3"));
-            Assert.AreEqual("value3", Translator.Current.TranslateFrom("key3", "res"));
+            Assert.AreEqual("value", translator.Translate("key"));
+            // make sure that using a resource has no effect when using overrides
+            Assert.AreEqual("value", translator.TranslateFrom("key", "res"));
+            
+            Assert.AreEqual("value2", translator.Translate("key2"));
+            Assert.AreEqual("value2", translator.TranslateFrom("key2", "res"));
+            
+            Assert.AreEqual("value3", translator.Translate("key3"));
+            Assert.AreEqual("value3", translator.TranslateFrom("key3", "res"));
         }
 
         #endregion
@@ -103,7 +105,7 @@ namespace TranslatorCore.Tests
             };
             
             Helpers.SetCulture("es");
-            var l = Translator.Current.Setup(s => s.SetSupportedLocales("es", "en")).CultureCode;
+            var l = Translator.Current.Setup(s => s.SupportLocales("es", "en")).CultureCode;
             
             Assert.AreEqual("es", locale);
             Assert.AreEqual("es", l);
@@ -121,21 +123,22 @@ namespace TranslatorCore.Tests
         [Test]
         public void Translation_overrides_trigger_indexer_bindings()
         {
+            var translator = Translator.Current;
             string translation = null;
 
-            Translator.Current.PropertyChanged += (sender, args) =>
+            translator.PropertyChanged += (sender, args) =>
             {
                 if (args.PropertyName.Equals("Item[]"))
-                    translation = Translator.Current.Translate("key");
+                    translation = translator.Translate("key");
             };
             
-            Translator.Current.SetOverrides(new Dictionary<string, string> { {"key", "value"} });
+            translator.SetOverrides(new Dictionary<string, string> { {"key", "value"} });
             Assert.AreEqual("value", translation);
             
-            Translator.Current.AddOverrides(new Dictionary<string, string> { {"key", "value2"} });
+            translator.AddOverrides(new Dictionary<string, string> { {"key", "value2"} });
             Assert.AreEqual("value2", translation);
 
-            Translator.Current["key"] = "value3";
+            translator["key"] = "value3";
             Assert.AreEqual("value3", translation);
         }
 
@@ -147,7 +150,7 @@ namespace TranslatorCore.Tests
         public void Culture_2letter_isocode_is_used_when_culture_name_not_supported()
         {
             Helpers.SetCulture("en-GB"); // culture name
-            Translator.Current.Setup(s => s.SetSupportedLocales("es", "en")); // only 2-letter iso codes
+            Translator.Current.Setup(s => s.SupportLocales("es", "en")); // only 2-letter iso codes
             Assert.AreEqual("en", Translator.Current.CultureCode);
         }
 
@@ -155,7 +158,7 @@ namespace TranslatorCore.Tests
         public void Culture_name_has_preference_over_iso_codes()
         {
             Helpers.SetCulture("es-MX");
-            Translator.Current.Setup(s => s.SetSupportedLocales("es", "es-ES", "es-MX"));
+            Translator.Current.Setup(s => s.SupportLocales("es", "es-ES", "es-MX"));
             Assert.AreEqual("es-MX", Translator.Current.CultureCode);
         }
 
@@ -163,56 +166,10 @@ namespace TranslatorCore.Tests
         public void When_current_culture_not_supported_then_first_supported_culture_is_taken()
         {
             Helpers.SetCulture("pt");
-            Translator.Current.Setup(s => s.SetSupportedLocales("es", "en"));
+            Translator.Current.Setup(s => s.SupportLocales("es", "en"));
             Assert.AreEqual("es", Translator.Current.CultureCode);
         }
 
         #endregion
-    }
-
-    public static class Helpers
-    {
-        public static Mock<ILocaleLoader> GetLoaderMock()
-        {
-            var mock = new Mock<ILocaleLoader>();
-            
-            mock
-                .Setup(loader => loader.Load("es", null))
-                .Returns(new Dictionary<string, string>
-                {
-                    {"one", "uno"}
-                });
-            
-            mock
-                .Setup(loader => loader.Load("en", null))
-                .Returns(new Dictionary<string, string>
-                {
-                    {"one", "one"}
-                });
-            
-            mock
-                .Setup(loader => loader.Load("es", "screen1"))
-                .Returns(new Dictionary<string, string>
-                {
-                    {"two", "dos"}
-                });
-            
-            mock
-                .Setup(loader => loader.Load("en", "screen1"))
-                .Returns(new Dictionary<string, string>
-                {
-                    {"two", "two"}
-                });
-
-            return mock;
-        }
-        
-        public static void SetCulture(string cultureName)
-        {
-            CultureInfo.DefaultThreadCurrentCulture =
-                CultureInfo.DefaultThreadCurrentUICulture =
-                    Thread.CurrentThread.CurrentCulture =
-                        Thread.CurrentThread.CurrentUICulture = new CultureInfo(cultureName);
-        }
     }
 }
