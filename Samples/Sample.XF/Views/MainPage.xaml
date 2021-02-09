@@ -2,30 +2,31 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:Sample.XF.ViewModels;assembly=Sample.XF"
+             xmlns:i18n="clr-namespace:I18NPortable.Xamarin.Xaml.Extensions;assembly=I18NPortable.Xamarin"
              x:Class="Sample.XF.Views.MainPage"
              x:DataType="viewModels:MainPageViewModel">
     <ScrollView>
         <Grid>
             <StackLayout Margin="12">
-                <Label Text="{Binding Strings[LoadedLanguageTitle]}" Style="{StaticResource HeaderLabel}" />
+                <Label Text="{i18n:Translate LoadedLanguageTitle}" Style="{StaticResource HeaderLabel}" />
                 <Label Text="{Binding LoadedLanguage}" />
 
-                <Label Text="{Binding Strings[AvailableLanguages]}" Style="{StaticResource HeaderLabel}" />
+                <Label Text="{i18n:Translate AvailableLanguages}" Style="{StaticResource HeaderLabel}" />
                 <Label Text="{Binding AvailableLanguages}" />
 
-                <Label Text="{Binding Strings[SingleEnumTitle]}" Style="{StaticResource HeaderLabel}" />
+                <Label Text="{i18n:Translate SingleEnumTitle}" Style="{StaticResource HeaderLabel}" />
                 <Label Text="{Binding Dog}" />
 
-                <Label Text="{Binding Strings[EnumValuesTitle]}" Style="{StaticResource HeaderLabel}"/>
+                <Label Text="{i18n:Translate EnumValuesTitle}" Style="{StaticResource HeaderLabel}"/>
                 <Label Text="{Binding EnumValues}" />
 
-                <Label Text="{Binding Strings[GreetingTitle]}" Style="{StaticResource HeaderLabel}" />
+                <Label Text="{i18n:Translate GreetingTitle}" Style="{StaticResource HeaderLabel}" />
                 <Label Text="{Binding GreetingValue}" />
 
-                <Label Text="{Binding Strings[MultilineTitle]}" Style="{StaticResource HeaderLabel}" />
+                <Label Text="{i18n:Translate MultilineTitle}" Style="{StaticResource HeaderLabel}" />
                 <Label Text="{Binding MultilineValue}" />
-                
-                <Button Text="{Binding Strings[ChooseLanguage]}" Command="{Binding ChangeLanguageCommand}" Margin="0,30,0,0" />
+
+                <Button Text="{i18n:Translate ChooseLanguage}" Command="{Binding ChangeLanguageCommand}" Margin="0,30,0,0" />
             </StackLayout>
         </Grid>
     </ScrollView>
