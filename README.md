@@ -135,6 +135,41 @@ set.Bind(anyUIText).To("Strings[key]");
 ```
 
 
+### Xamarin Static Binding
+You can use static values instead of binding texts.
+
+- Install `I18NPortable.Xamarin` extension to your Xamarin Forms Project.
+
+- Go your XAML page and add following xml namespace:
+```xml
+xmlns:i18n="clr-namespace:I18NPortable.Xamarin.Xaml.Extensions;assembly=I18NPortable.Xamarin"
+```
+
+- Then use it with calling `i18n:Translate`
+
+```xml
+<Label Text="{l:Localize HelloWorld}" />
+```
+
+Entire page sample:
+```xml
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:i18n="clr-namespace:I18NPortable.Xamarin.Xaml.Extensions;assembly=I18NPortable.Xamarin"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             mc:Ignorable="d"
+             x:Class="Sample.MainContentPage">
+    <ContentPage.Content>
+       <StackLayout>
+            <Label Text="{i18n:Translate HelloWorld}"
+                VerticalOptions="CenterAndExpand" 
+                HorizontalOptions="CenterAndExpand" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
+```
 
 ### Supported formats
 
