@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -11,12 +11,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Xamarin.Forms" Version="4.4.0.991477" />
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.1931" />
     <PackageReference Include="Xamarin.Essentials" Version="1.3.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\I18NPortable\I18NPortable.csproj" />
+    <ProjectReference Include="..\..\I18NPortable\I18NPortable.csproj" />
+    <ProjectReference Include="..\..\I18NPortable.Xamarin\I18NPortable.Xamarin.csproj" />
   </ItemGroup>
 
   <ItemGroup>
