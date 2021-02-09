@@ -1,6 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.XF", "Sample.XF\Sample.XF.csproj", "{F33490F2-630F-47A6-AAAC-46DA3B1FE920}"
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30803.129
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.XF", "Sample.XF\Sample.XF.csproj", "{F33490F2-630F-47A6-AAAC-46DA3B1FE920}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.XF.Android", "Sample.XF.Android\Sample.XF.Android.csproj", "{5F8F436E-4A8E-4025-A176-F24762942617}"
 EndProject
@@ -18,11 +21,18 @@ Global
 		{F33490F2-630F-47A6-AAAC-46DA3B1FE920}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5F8F436E-4A8E-4025-A176-F24762942617}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5F8F436E-4A8E-4025-A176-F24762942617}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F8F436E-4A8E-4025-A176-F24762942617}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{5F8F436E-4A8E-4025-A176-F24762942617}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F8F436E-4A8E-4025-A176-F24762942617}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4F208E2A-345B-4AAD-8EAD-7F60CC6628E5}.Debug|Any CPU.ActiveCfg = Debug|iPhoneSimulator
 		{4F208E2A-345B-4AAD-8EAD-7F60CC6628E5}.Debug|Any CPU.Build.0 = Debug|iPhoneSimulator
 		{4F208E2A-345B-4AAD-8EAD-7F60CC6628E5}.Release|Any CPU.ActiveCfg = Release|iPhoneSimulator
 		{4F208E2A-345B-4AAD-8EAD-7F60CC6628E5}.Release|Any CPU.Build.0 = Release|iPhoneSimulator
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {02A882FB-9B7D-43BD-9CA5-C1A029DBE4A5}
 	EndGlobalSection
 EndGlobal
