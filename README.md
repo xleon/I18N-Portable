@@ -136,7 +136,7 @@ set.Bind(anyUIText).To("Strings[key]");
 
 
 ### Xamarin Static Binding
-You can use static values instead of binding texts.
+You can use static values instead of binding texts. It's more effective and has better performance.
 
 - Install `I18NPortable.Xamarin` extension to your Xamarin Forms Project.
 
