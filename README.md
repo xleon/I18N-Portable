@@ -1,3 +1,6 @@
+> This project is now archived as there are no plans to update it.
+> Please consider it before using it.
+
 
 # I18N-Portable
 Simple and cross platform internationalization/translations for Xamarin and .NET
